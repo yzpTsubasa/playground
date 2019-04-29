@@ -1,0 +1,19 @@
+/**index.wxss**/
+page {
+  overflow: hidden;
+}
+.bg {
+  width: 100%;
+}
+.upload-btn {
+  position: fixed;
+  bottom: 100rpx;
+  width: 100%;
+  background-color: #89c;
+  color: #fff;
+}
+.title {
+  text-align: center;
+  display: block;
+  color: #d30;
+}

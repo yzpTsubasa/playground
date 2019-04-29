@@ -1,0 +1,20 @@
+<!--pages/second/second.wxml-->
+<view class='scene'>
+  <view class='scene-editor'>
+    <canvas class='scene-editor-main' canvas-id='scene'></canvas>
+  </view>
+  <swiper 
+    class='scene-template' 
+    display-multiple-items='{{5}}' 
+    circular="{{true}}" 
+    previous-margin="5rpx" 
+    next-margin="5rpx" 
+  >
+    <swiper-item wx:for="{{covers}}" wx:key="id">
+      <view class="scene-item" bind:tap="onTapSceneItem" data-index="{{index}}" data-id="{{item.id}}">
+        <image class="scene-item-cover" src='{{item.path}}'  mode='aspectFit'/>
+      </view>
+    </swiper-item>
+  </swiper>
+  <button class='scene-save' bindtap='onSaveClick' type='primary'>保存图片</button>
+</view>
