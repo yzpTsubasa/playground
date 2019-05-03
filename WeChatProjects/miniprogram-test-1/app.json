@@ -1,13 +1,14 @@
 {
-	"pages": [
-		"pages/index/index",
-		"pages/scene/scene",
-		"pages/demo/demo"
-	],
-	"window": {
-		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#999",
-		"navigationBarTitleText": "WeChat",
-		"navigationBarTextStyle": "white"
-	}
+  "pages": [
+    "pages/index/index",
+    "pages/scene/scene",
+    "pages/demo/demo"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#999",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json"
 }

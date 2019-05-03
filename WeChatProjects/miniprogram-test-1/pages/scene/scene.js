@@ -113,12 +113,15 @@ Page({
       canvasId: 'scene',
       success(res) {
         console.log(res.tempFilePath)
-        wx.saveFile({
-          tempFilePath: res.tempFilePath,
-          success(res) {
-            const savedFilePath = res.savedFilePath;
-            console.log("Save successfully", savedFilePath);
-          }
+        // wx.saveFile({
+        //   tempFilePath: res.tempFilePath,
+        //   success(res) {
+        //     const savedFilePath = res.savedFilePath;
+        //     console.log("Save successfully", savedFilePath);
+        //   }
+        // })
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
         })
       }
     })
