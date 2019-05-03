@@ -32,6 +32,10 @@ page {
   height: 180rpx;
   margin: 0 10rpx;
 }
+.scene-item-active {
+	background-color: gray;
+	outline: 2px dotted yellow;
+}
 .scene-item-cover {
   width: 100%;
   height: 100%;

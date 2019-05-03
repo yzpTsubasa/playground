@@ -11,7 +11,7 @@
     next-margin="5rpx" 
   >
     <swiper-item wx:for="{{covers}}" wx:key="id">
-      <view class="scene-item" bind:tap="onTapSceneItem" data-index="{{index}}" data-id="{{item.id}}">
+      <view class="scene-item {{currSceneIndex == index ? 'scene-item-active' : ''}}"  bind:tap="onTapSceneItem" data-index="{{index}}" data-id="{{item.id}}">
         <image class="scene-item-cover" src='{{item.path}}'  mode='aspectFit'/>
       </view>
     </swiper-item>
