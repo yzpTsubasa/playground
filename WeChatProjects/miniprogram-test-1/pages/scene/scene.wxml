@@ -1,7 +1,7 @@
 <!--pages/second/second.wxml-->
 <view class='scene'>
   <view class='scene-editor'>
-    <canvas class='scene-editor-main' canvas-id='scene'></canvas>
+    <canvas class='scene-editor-main' style="width:{{cfg.canvasWidth}}px; height:{{cfg.canvasHeight}}px" canvas-id='scene' bindtouchstart='onTouchStart' bindtouchmove='onTouchMove' bindtouchend='onTouchEnd' bindtouchcancel='onTouchCancel'></canvas>
   </view>
   <swiper 
     class='scene-template' 

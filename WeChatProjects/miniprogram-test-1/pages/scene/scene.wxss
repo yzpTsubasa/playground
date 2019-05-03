@@ -17,6 +17,9 @@ page {
 	height: 100rpx;
 	width: 100%;
 	background-color: rgb(223, 120, 120);
+	display: flex;
+	align-items: center; /* 竖直居中 */
+	justify-content: center; /* 水平居中 */
 }
 .scene-editor-main {
 	width: 100%;
