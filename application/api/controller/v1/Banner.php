@@ -2,6 +2,7 @@
 
 namespace app\api\controller\v1;
 
+use think\Exception;
 use think\Validate;
 use app\api\validate\IDIsPositiveInt;
 use app\api\model\Banner as BannerModel;
@@ -29,7 +30,15 @@ class Banner {
         * 2. 验证器
         */
         (new IDIsPositiveInt())->goCheck();
-        $banner = BannerModel::getBannerByID($id);
+        try {
+            $banner = BannerModel::getBannerByID($id);
+        } catch (Exception $exception) {
+            $err = [
+                'code' => 10001,
+                'msg' => $exception->getMessage()
+            ];
+            return json($err, 400);
+        }
         return $banner;
     }
 }
