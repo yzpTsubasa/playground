@@ -6,6 +6,7 @@ use think\Exception;
 use think\Validate;
 use app\api\validate\IDIsPositiveInt;
 use app\api\model\Banner as BannerModel;
+use app\lib\exception\BannerMissException;
 
 class Banner {
     /**
@@ -40,6 +41,9 @@ class Banner {
 //            ];
 //            return json($err, 400);
 //        }
+        if (!$banner) {
+            throw new BannerMissException();
+        }
         return $banner;
     }
 }
