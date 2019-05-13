@@ -30,15 +30,16 @@ class Banner {
         * 2. 验证器
         */
         (new IDIsPositiveInt())->goCheck();
-        try {
+        // 异常处理
+//        try {
             $banner = BannerModel::getBannerByID($id);
-        } catch (Exception $exception) {
-            $err = [
-                'code' => 10001,
-                'msg' => $exception->getMessage()
-            ];
-            return json($err, 400);
-        }
+//        } catch (Exception $exception) {
+//            $err = [
+//                'code' => 10001,
+//                'msg' => $exception->getMessage()
+//            ];
+//            return json($err, 400);
+//        }
         return $banner;
     }
 }
