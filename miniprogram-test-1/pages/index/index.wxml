@@ -1,6 +1,0 @@
-<!--index.wxml-->
-<text class='title'>Hello {{name}}</text>
-<image class='bg' src='../../assets/timg.jpg' mode='widthFix'/>
-
-<button class='upload-btn' bindtap='onUploadBtnClick'>上传照片</button>
-<!-- <button class='upload-btn' bindtap='onNavigateBtnClick'>跳转</button> -->
