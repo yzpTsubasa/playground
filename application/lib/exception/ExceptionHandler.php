@@ -4,8 +4,8 @@
 namespace app\lib\exception;
 
 
-use Exception;
 use think\Config;
+use Exception;
 use think\exception\Handle;
 use think\Log;
 use think\Request;

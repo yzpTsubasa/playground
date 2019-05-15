@@ -2,10 +2,8 @@
 
 namespace app\api\controller\v1;
 
-use think\Exception;
-use think\Validate;
-use app\api\validate\IDIsPositiveInt;
 use app\api\model\Banner as BannerModel;
+use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\BannerMissException;
 
 class Banner {
