@@ -3,6 +3,7 @@
 namespace app\api\controller\v1;
 
 use app\api\model\Banner as BannerModel;
+use app\api\model\BannerItem as BannerItemModel;
 use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\BannerMissException;
 
@@ -31,7 +32,8 @@ class Banner {
         (new IDIsPositiveInt())->goCheck();
         // 异常处理
 //        try {
-            $banner = BannerModel::getBannerByID($id);
+//            $banner = BannerModel::getBannerByID($id);
+        $banner = BannerItemModel::all($id);
 //        } catch (Exception $exception) {
 //            $err = [
 //                'code' => 10001,

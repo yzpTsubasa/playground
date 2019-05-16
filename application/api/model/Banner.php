@@ -12,8 +12,9 @@ namespace app\api\model;
 use think\Db;
 use think\db\Query;
 use think\Exception;
+use think\Model;
 
-class Banner
+class Banner extends Model
 {
     public static function getBannerByID($id) {
         // 测试 异常
