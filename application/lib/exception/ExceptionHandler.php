@@ -28,6 +28,9 @@ class ExceptionHandler extends Handle
             $this->msg = $e->msg;
             $this->errorCode = $e->errorCode;
         } else {
+            // 记录日志
+            $this->recordException($e);
+
             /** 是否启用默认的异常页面*/
             $enableExceptionPage = Config::get('app_debug'); // config('app_debug')
             if ($enableExceptionPage) {
@@ -36,8 +39,6 @@ class ExceptionHandler extends Handle
             $this->code = 500;
             $this->msg = '服务器内部错误';
             $this->errorCode = 999;
-            // 记录日志
-            $this->recordException($e);
         }
         $request = Request::instance();
         $result = [
@@ -49,12 +50,6 @@ class ExceptionHandler extends Handle
     }
 
     private function recordException(Exception $e) {
-        Log::init([
-            'type' => 'file',
-            'path' => LOG_PATH,
-            'level' => ['error'],
-        ]);
-
-        Log::record($e->getMessage(), 'error');
+        Log::write($e->getMessage(), 'error', true);
     }
 }

@@ -10,6 +10,7 @@ namespace app\api\model;
 
 
 use think\Db;
+use think\db\Query;
 use think\Exception;
 
 class Banner
@@ -27,11 +28,17 @@ class Banner
         // 1.SQL语句
         $result = Db::query('select * from banner_item where banner_id=?', [$id]); //  and img_id=?
         // 2.构造器
+        $result = Db::table("banner_item")
+//            ->where("banner_id", "=", $id)
+//            ->where("banner_id", $id)
+                ->where(function(Query $query) use ($id){
+                    $query->where('banner_id', '=', $id);
+                })
+                // ->fetchSql()
+                ->select();
+        // 3.模型和关联模型 ORM(Object Relational Mapping)
 
-        // 3.模型和关联模型
-
-
-
+        // throw new Exception("Test");
         return $result;
     }
 }
