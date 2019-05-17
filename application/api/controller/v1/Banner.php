@@ -33,7 +33,7 @@ class Banner {
         // 异常处理
 //        try {
 //            $banner = BannerModel::getBannerByID($id);
-        $banner = BannerItemModel::all($id);
+        $banner = BannerModel::get($id, ['items', 'items.img']);
 //        } catch (Exception $exception) {
 //            $err = [
 //                'code' => 10001,

@@ -16,6 +16,12 @@ use think\Model;
 
 class Banner extends Model
 {
+    // 关联， 1 对 n
+    public function items() {
+        return $this->hasMany('BannerItem', 'banner_id', 'id');
+    }
+
+
     public static function getBannerByID($id) {
         // 测试 异常
 //        try {
