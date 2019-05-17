@@ -32,8 +32,8 @@ class Banner {
         (new IDIsPositiveInt())->goCheck();
         // 异常处理
 //        try {
-//            $banner = BannerModel::getBannerByID($id);
-        $banner = BannerModel::get($id, ['items', 'items.img']);
+            $banner = BannerModel::getBannerByID($id);
+//            $banner = BannerModel::get($id, ['items', 'items.img']);
 //        } catch (Exception $exception) {
 //            $err = [
 //                'code' => 10001,
