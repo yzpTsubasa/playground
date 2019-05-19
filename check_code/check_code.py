@@ -8,7 +8,8 @@ import json # json
 class CheckCode:
     @staticmethod
     def check(srcDir = None, dstDir = None, dstPath = None):
-        srcDir = srcDir or 'C:/Users/Tsubasa/Documents/projects/egret_Scaffold/resource'
+        cwd = os.getcwd()
+        srcDir = srcDir or os.path.join(cwd, 'resource')
         dstDir = dstDir or os.path.expanduser("~/Desktop")
         dstPath = dstPath or os.path.join(dstDir, 'result.json')
 
@@ -17,6 +18,7 @@ class CheckCode:
             "$$检查时间$$": [time_str],
             "$$检查路径$$": [srcDir],
         }
+        print (json.dumps(groupNameMap, ensure_ascii=False, indent=2))
 
         for root, dirs, filenames in os.walk(srcDir):
             for i in range(0, len(filenames)):
