@@ -6,7 +6,7 @@ use think\Model;
 
 class BaseModel extends Model {
 
-    public function getUrlAttr($value, $data) {
+    protected function prefixImgUrl($value, $data) {
         $result = $value;
         if ($data['from'] == 1) {
             $result = config('setting.img_prefix') . $value;
