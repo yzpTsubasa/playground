@@ -2,9 +2,10 @@ module.exports = function(app) {
     var express = require('express');
     var serveIndex = require('serve-index');
     var path = require('path');
+    var os = require('os');
     var open = require('open');
     
-    open("http://localhost:8686/index.html");
+    open("http://localhost:8686");
 
     const log4js = require('log4js');
     log4js.configure({
@@ -17,9 +18,9 @@ module.exports = function(app) {
 
     //简单判断是在mac osx或者在windows中
     var isMac = __dirname.indexOf('/') == 0;
+    var defaultDir = path.join(os.homedir()); // , "Desktop"
     var urlMap = {
-        '/': path.resolve(__dirname, "../web-mobile/"),
-        '/frontend': process.cwd() + "/../../frontend",
+        '/': defaultDir, //
     };
     console.log("[Route]\t\t\t[Path]");
     console.log("-------\t\t\t------");
