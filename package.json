@@ -1,0 +1,19 @@
+{
+  "name": "httpserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tsubasa",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "log4js": "^3.0.5",
+    "multer": "^1.2.0",
+    "serve-index": "^1.8.0",
+    "open": "^0.0.5"
+  }
+}
