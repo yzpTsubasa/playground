@@ -24,12 +24,6 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // app.use(multer()); // for parsing multipart/form-data
 
-
-//启用文件上传demo
-uploadFile(app);
-//启用静态服务器
-staticServer(app);
-
 //由于是访问1024以下端口，在mac osx 或者 linux系统中，要使用 sudo 运行
 var PORT = 8686;
 var SSLPORT = 18686;
@@ -57,6 +51,11 @@ Object.keys(ifaces).forEach(function (ifname) {
 	});
 });
 
+
+//启用文件上传demo
+uploadFile(app);
+//启用静态服务器
+staticServer(app, localIP);
 
 var privateKey  = fs.readFileSync('./crt/private.pem', 'utf8');
 var certificate = fs.readFileSync('./crt/file.crt', 'utf8');

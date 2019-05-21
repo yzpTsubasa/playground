@@ -1,11 +1,11 @@
-module.exports = function(app) {
+module.exports = function(app, localIP) {
     var express = require('express');
     var serveIndex = require('serve-index');
     var path = require('path');
     var os = require('os');
     var open = require('open');
     
-    open("http://localhost:8686");
+    open(`http://${localIP || "localhost"}:8686`);
 
     const log4js = require('log4js');
     log4js.configure({
