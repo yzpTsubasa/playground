@@ -4,7 +4,16 @@ namespace app\api\model;
 
 class Product extends BaseModel
 {
-    public function theme() {
-        return $this->hasMany('Theme', 'product_id', 'id');
+    protected $hidden = ['delete_time', 'update_time', 'create_time', 'pivot', 'category_id', 'from', 'img_id'];
+
+    public function getMainImgUrlAttr($value, $data) {
+        return $this->prefixImgUrl($value, $data);
+    }
+
+    public static function getMostRecent($count) {
+        $results = self::limit($count)
+            ->order('create_time desc')
+            ->select();
+        return $results;
     }
 }
