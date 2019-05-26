@@ -14,7 +14,8 @@ class Banner {
      * @http GET
      * @param $id 指定bannerid
      */
-    public function getBanner($id) {
+    public function getBanner() {
+        $id = input('id');
         /**
          * 1. 独立验证
          */

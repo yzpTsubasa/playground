@@ -15,7 +15,8 @@ class Theme
      * @url /theme?ids=id1,id2,id3...
      * @return 一组Theme模型
      */
-    public function getSimpleList($ids='') {
+    public function getSimpleList() {
+        $ids = input('ids', '');
         (new IDCollection())->goCheck();
         $ids = explode(',', $ids);
         $result = ThemeModel::all($ids, ['topicImg', 'headImg']);
@@ -28,7 +29,8 @@ class Theme
     /**
      * @url /theme/:id
      */
-    public function getThemeDetail($id) {
+    public function getThemeDetail() {
+        $id = input('id');
         (new IDIsPositiveInt())->goCheck();
         $result = ThemeModel::getThemeWithProducts($id);
         if (!$result) {

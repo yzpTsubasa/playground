@@ -12,7 +12,8 @@ use app\lib\exception\ProductMissException;
 
 class Product
 {
-    public function getRecent($count=15) {
+    public function getRecent() {
+        $count = input('count', 3);
         (new Count())->goCheck();
         $results = ProductModel::getMostRecent($count);
         if ($results->isEmpty()) {
