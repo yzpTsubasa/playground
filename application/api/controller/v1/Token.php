@@ -4,7 +4,7 @@
 namespace app\api\controller\v1;
 
 
-use app\api\service\UsrToken;
+use app\api\service\UserToken;
 use app\api\validate\TokenCode;
 
 class Token
@@ -13,7 +13,7 @@ class Token
         $code = input('code');
 
         (new TokenCode())->goCheck();
-        $usrToken = new UsrToken($code);
+        $usrToken = new UserToken($code);
         $token = $usrToken->get();
         return $token;
     }
