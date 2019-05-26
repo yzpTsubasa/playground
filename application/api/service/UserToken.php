@@ -6,6 +6,7 @@ namespace app\api\service;
 
 use app\lib\exception\WeChatException;
 use think\Exception;
+use app\api\model\User as UserModel;
 
 class UserToken {
     protected $code;
@@ -35,19 +36,44 @@ class UserToken {
         $this->grantToken($result);
     }
 
-    protected function grantToken($wxResult) {
+    private function grantToken($wxResult) {
         // 取openid
         $openid = $wxResult['openid'];
         // 在数据库中没有这个openid，则添加到User中
-
+        $user = UserModel::getByOpenID($openid);
+        if (!$user) {
+            $user = $this->createUser($openid);
+        }
+        $uid = $user->id;
+        // {token: {wxResult, uid, scope(权限)}}
         // 生成Token，准备缓存数据
+        $cachedValue = $this->prepareCache($wxResult, $uid);
         // 返回Token
     }
 
-    protected function processLoginError($wxResult) {
+    private function saveCache($cachedValue) {
+        $key = generateToken();
+
+    }
+
+    private function prepareCache($wxResult, $uid) {
+        $cacheValue = $wxResult;
+        $cacheValue['uid'] = $uid;
+        $cacheValue['scope'] = 16;
+        return $cacheValue;
+    }
+
+    private function processLoginError($wxResult) {
         throw new WeChatException([
             'msg' => $wxResult['errmsg'],
             'errorCode' => $wxResult['errcode'],
         ]);
+    }
+
+    private function createUser($openid) {
+        $user = UserModel::create([
+           "openid" => $openid,
+        ]);
+        return $user;
     }
 }
