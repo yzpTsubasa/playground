@@ -1,8 +1,6 @@
-999 未知错误
-1 通用错误
-2 商品错误
-3 主题类错误
+999 未知错误 Unknown error
 
-10000 通用参数错误
-
-30000 请求的Theme不存在
+1xxxx Common error
+2xxxx Product error
+3xxxx Theme error
+5xxxx Category error

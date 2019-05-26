@@ -6,16 +6,31 @@ namespace app\api\controller\v1;
 
 use app\api\validate\Count;
 use app\api\model\Product as ProductModel;
+use app\api\model\Category as CategoryModel;
+use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\ProductMissException;
 
 class Product
 {
     public function getRecent($count=15) {
         (new Count())->goCheck();
-        $result = ProductModel::getMostRecent($count);
-        if (!$result) {
+        $results = ProductModel::getMostRecent($count);
+        if ($results->isEmpty()) {
             throw new ProductMissException();
         }
-        return json($result);
+//        $results = collection($results);
+        $results->hidden(['summery']);
+        return json($results);
+    }
+
+    public function getByCategoryID() {
+        (new IDIsPositiveInt())->goCheck();
+        $id = input['id'];
+        $results = ProductModel::getByCategoryID($id);
+        if ($results->isEmpty()) {
+            throw new ProductMissException();
+        }
+        $results->hidden(['summery']);
+        return json($results);
     }
 }

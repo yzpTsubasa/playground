@@ -9,7 +9,7 @@ class IDIsPositiveInt extends BaseValidate {
 //        'num' => 'in:1,2,3'
     ];
     protected $message = [
-        'id' => 'id必须为正整数'
+        'id' => 'id必须为非空的正整数'
     ];
 
 }
