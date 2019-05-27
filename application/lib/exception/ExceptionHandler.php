@@ -50,6 +50,6 @@ class ExceptionHandler extends Handle
     }
 
     private function recordException(Exception $e) {
-        Log::write($e->getMessage(), 'error', true);
+        Log::write(get_class($e) . $e->getMessage(), 'error', true);
     }
 }

@@ -25,3 +25,17 @@ function curl_get($url, &$httpCode) {
     curl_close($ch);
     return $file_contents;
 }
+
+/**
+ * 需要有更好用的，更安全的随机字符串生成
+ * @param $length
+ */
+function getRandChars($length) {
+    $str = null;
+    $strPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    $poolSize = strlen($strPool);
+
+    for ($i = 0; $i < $length; $i++) {
+        $str .= $strPool[rand(0, $poolSize - 1)];
+    }
+}

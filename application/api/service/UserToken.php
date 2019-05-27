@@ -4,11 +4,12 @@
 namespace app\api\service;
 
 
+use app\lib\exception\TokenException;
 use app\lib\exception\WeChatException;
 use think\Exception;
 use app\api\model\User as UserModel;
 
-class UserToken {
+class UserToken extends Token {
     protected $code;
     protected $wxAppID;
     protected $wxAppSecret;
@@ -23,17 +24,18 @@ class UserToken {
 
     public function get() {
         $httpCode = 0;
-        $result = curl_get($this->wxLoginUrl, $httpCode);
-        $result = json_decode($result, true);
-        if (empty($result)) {
+        $wxResult = curl_get($this->wxLoginUrl, $httpCode);
+        $wxResult = json_decode($wxResult, true);
+        if (empty($wxResult)) {
             throw new Exception('获取sessionKey及openID时异常，微信内部错误');
         }
         // session_key, expires_in, openid...
-        $isSuccess = !array_key_exists('errcode', $result);
+        $isSuccess = !array_key_exists('errcode', $wxResult);
         if (!$isSuccess) {
-            return $this->processLoginError($result);
+            return $this->processLoginError($wxResult);
         }
-        $this->grantToken($result);
+        $token = $this->grantToken($wxResult);
+        return $token;
     }
 
     private function grantToken($wxResult) {
@@ -49,11 +51,22 @@ class UserToken {
         // 生成Token，准备缓存数据
         $cachedValue = $this->prepareCache($wxResult, $uid);
         // 返回Token
+        $token = $this->saveCache($cachedValue);
+        return $token;
     }
 
     private function saveCache($cachedValue) {
-        $key = generateToken();
-
+        $key = self::generateToken();
+        $value = json_encode($cachedValue);
+        $expire_in = config('setting.token_expire_in');
+        $result = cache($key, $value, $expire_in);
+        if (!$result) {
+            throw new TokenException([
+                'msg' => '服务器缓存异常',
+                'errorCode' => 10005,
+            ]);
+        }
+        return $key;
     }
 
     private function prepareCache($wxResult, $uid) {
