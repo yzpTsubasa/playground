@@ -26,12 +26,23 @@ class Product
 
     public function getByCategoryID() {
         (new IDIsPositiveInt())->goCheck();
-        $id = input['id'];
+        $id = input('id');
         $results = ProductModel::getByCategoryID($id);
         if ($results->isEmpty()) {
             throw new ProductMissException();
         }
-        $results->hidden(['summery']);
+        $results->hidden(['summary']);
         return json($results);
+    }
+
+    public function getDetail() {
+        (new IDIsPositiveInt())->goCheck();
+        $id = input('id');
+        $result = ProductModel::getDetail($id);
+        if (!$result) {
+            throw new ProductMissException();
+        }
+        $result->hidden(['summary']);
+        return json($result);
     }
 }
