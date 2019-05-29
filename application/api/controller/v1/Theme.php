@@ -7,7 +7,7 @@ use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\ThemeMissException;
 use think\Controller;
 use think\Request;
-use app\api\model\Theme as ThemeModel;
+use app\api\model\ThemeModel;
 
 class Theme
 {

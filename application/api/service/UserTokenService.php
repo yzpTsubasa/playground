@@ -9,7 +9,7 @@ use app\lib\exception\WeChatException;
 use think\Exception;
 use app\api\model\User as UserModel;
 
-class UserToken extends Token {
+class UserTokenService extends BaseTokenService {
     protected $code;
     protected $wxAppID;
     protected $wxAppSecret;

@@ -2,7 +2,7 @@
 
 namespace app\api\model;
 
-class Theme extends BaseModel
+class ThemeModel extends BaseModel
 {
     protected $hidden = ['topic_img_id', 'head_img_id', 'delete_time', 'update_time'];
     public function topicImg() {

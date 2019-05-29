@@ -4,7 +4,7 @@
 namespace app\api\model;
 
 
-class Category extends BaseModel
+class CategoryModel extends BaseModel
 {
     protected $hidden = ['update_time', 'delete_time', 'create_time', 'topic_img_id'];
     public function img() {

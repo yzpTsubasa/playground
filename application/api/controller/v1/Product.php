@@ -5,8 +5,8 @@ namespace app\api\controller\v1;
 
 
 use app\api\validate\Count;
-use app\api\model\Product as ProductModel;
-use app\api\model\Category as CategoryModel;
+use app\api\model\ProductModel;
+use app\api\model\CategoryModel;
 use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\ProductMissException;
 

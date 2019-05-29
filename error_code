@@ -3,4 +3,5 @@
 1xxxx Common error
 2xxxx Product error
 3xxxx Theme error
+4xxxx User error
 5xxxx Category error

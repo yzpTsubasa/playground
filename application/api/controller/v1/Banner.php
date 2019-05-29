@@ -2,8 +2,8 @@
 
 namespace app\api\controller\v1;
 
-use app\api\model\Banner as BannerModel;
-use app\api\model\BannerItem as BannerItemModel;
+use app\api\model\BannerModel;
+use app\api\model\BannerItemModel;
 use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\BannerMissException;
 

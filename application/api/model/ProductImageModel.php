@@ -4,7 +4,7 @@
 namespace app\api\model;
 
 
-class ProductImage extends BaseModel {
+class ProductImageModel extends BaseModel {
     protected $hidden = ['id', 'img_id', 'delete_time', 'product_id'];
 
     public function imgUrl() {
