@@ -7,9 +7,9 @@ use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\ThemeMissException;
 use think\Controller;
 use think\Request;
-use app\api\model\ThemeModel;
+use app\api\model\Theme;
 
-class Theme
+class ThemeController
 {
     /**
      * @url /theme?ids=id1,id2,id3...
@@ -19,7 +19,7 @@ class Theme
         $ids = input('ids', '');
         (new IDCollection())->goCheck();
         $ids = explode(',', $ids);
-        $result = ThemeModel::all($ids, ['topicImg', 'headImg']);
+        $result = Theme::all($ids, ['topicImg', 'headImg']);
         if (!$result) {
             throw new ThemeMissException();
         }

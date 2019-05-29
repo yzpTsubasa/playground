@@ -3,14 +3,14 @@
 
 namespace app\api\controller\v1;
 
-use app\api\model\Category as CategoryModel;
+use app\api\model\Category;
 use app\lib\exception\CategoryMissException;
 
-class Category
+class CategoryController
 {
     public function getAllCategories() {
         $data = [];
-        $results = CategoryModel::all($data, ['img']);
+        $results = Category::all($data, ['img']);
         if ($results->isEmpty()) {
             throw new CategoryMissException();
         }

@@ -2,16 +2,16 @@
 
 namespace app\api\model;
 
-class ProductModel extends BaseModel
+class Product extends BaseModel
 {
     protected $hidden = ['delete_time', 'update_time', 'create_time', 'pivot', 'category_id', 'from', 'img_id'];
 
     public function imgs() {
-        return $this->hasMany('ProductImageModel', 'product_id', 'id');
+        return $this->hasMany('ProductImage', 'product_id', 'id');
     }
 
     public function properties() {
-        return $this->hasMany('ProductPropertyModel', 'product_id', 'id');
+        return $this->hasMany('ProductProperty', 'product_id', 'id');
     }
 
     public function getMainImgUrlAttr($value, $data) {

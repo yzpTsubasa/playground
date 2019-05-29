@@ -2,12 +2,12 @@
 
 namespace app\api\controller\v1;
 
-use app\api\model\BannerModel;
-use app\api\model\BannerItemModel;
+use app\api\model\Banner;
+use app\api\model\BannerItem;
 use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\BannerMissException;
 
-class Banner {
+class BannerController {
     /**
      * 获取指定id的banner数据
      * @url /banner/:id
@@ -33,8 +33,8 @@ class Banner {
         (new IDIsPositiveInt())->goCheck();
         // 异常处理
 //        try {
-            $banner = BannerModel::getBannerByID($id);
-//            $banner = BannerModel::get($id, ['items', 'items.img']);
+            $banner = Banner::getBannerByID($id);
+//            $banner = Banner::get($id, ['items', 'items.img']);
 //        } catch (Exception $exception) {
 //            $err = [
 //                'code' => 10001,

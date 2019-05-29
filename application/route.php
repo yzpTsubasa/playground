@@ -28,20 +28,20 @@ use think\Route;
 //Route::get('banner/:id', 'api/v1.Banner/getBanner');
 
 // api开头;携带版本号
-Route::get('api/:version/banner/:id', 'api/:version.Banner/getBanner');
+Route::get('api/:version/banner/:id', 'api/:version.BannerController/getBanner');
 
-Route::get('api/:version/theme', 'api/:version.Theme/getSimpleList');
-Route::get('api/:version/theme/:id', 'api/:version.Theme/getThemeDetail');
+Route::get('api/:version/theme', 'api/:version.ThemeController/getSimpleList');
+Route::get('api/:version/theme/:id', 'api/:version.ThemeController/getThemeDetail');
 
 // 路由分组
 Route::group('api/:version/product', function() {
-    Route::get('/by_category', 'api/:version.Product/getByCategoryID');
-    Route::get('/:id', 'api/:version.Product/getDetail', [], ['id' => '\d+']);
-    Route::get('/recent', 'api/:version.Product/getRecent');
+    Route::get('/by_category', 'api/:version.ProductController/getByCategoryID');
+    Route::get('/:id', 'api/:version.ProductController/getDetail', [], ['id' => '\d+']);
+    Route::get('/recent', 'api/:version.ProductController/getRecent');
 });
 
-Route::get('api/:version/category/all', 'api/:version.Category/getAllCategories');
+Route::get('api/:version/category/all', 'api/:version.CategoryController/getAllCategories');
 
-Route::post('api/:version/token/user', 'api/:version.Token/getToken');
+Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
 
-Route::post('api/:version/address', 'api/:version.Address/createOrUpdateAddress');
+Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');

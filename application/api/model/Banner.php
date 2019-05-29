@@ -14,7 +14,7 @@ use think\db\Query;
 use think\Exception;
 use think\Model;
 
-class BannerModel extends BaseModel
+class Banner extends BaseModel
 {
     protected $hidden = ['delete_time', 'update_time'];
 

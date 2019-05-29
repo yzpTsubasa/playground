@@ -7,7 +7,7 @@ namespace app\api\controller\v1;
 use app\api\validate\TokenCode;
 use app\api\service\UserTokenService;
 
-class Token
+class TokenController
 {
     public function getToken() {
         $code = input('code');
