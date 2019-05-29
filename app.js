@@ -55,7 +55,7 @@ Object.keys(ifaces).forEach(function (ifname) {
 //启用文件上传demo
 uploadFile(app);
 //启用静态服务器
-staticServer(app, localIP);
+staticServer(app, null && localIP);
 
 var privateKey  = fs.readFileSync('./crt/private.pem', 'utf8');
 var certificate = fs.readFileSync('./crt/file.crt', 'utf8');
