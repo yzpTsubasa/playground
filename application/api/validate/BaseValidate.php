@@ -39,10 +39,31 @@ class BaseValidate extends Validate {
         }
     }
 
-    protected  function isNotEmpty($value) {
+    protected function isNotEmpty($value) {
         if (empty($value)) {
             return false;
         }
         return true;
+    }
+
+    public function getDataByRule($array) {
+        if (array_key_exists('user_id', $array) | array_key_exists('uid', $array)) {
+            throw new ParameterException([
+                'msg' => '参数中包含非法参数名user_id 或 uid'
+            ]);
+        }
+        $newArray = [];
+        foreach ($this->rule as $key => $value) {
+            $newArray[$key] = $array[$key];
+        }
+        return $newArray;
+    }
+
+    public function getData($method = null) {
+        $newArray = [];
+        foreach ($this->rule as $key => $value) {
+            $newArray[$key] = input($method ? $method . '.' . $key : $key);
+        }
+        return $newArray;
     }
 }

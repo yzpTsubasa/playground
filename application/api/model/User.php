@@ -4,7 +4,7 @@
 namespace app\api\model;
 
 
-class UserModel extends BaseModel
+class User extends BaseModel
 {
     public static function getByOpenID($openid) {
         $result = self::where("openid", '=', $openid)
