@@ -46,6 +46,15 @@ class BaseValidate extends Validate {
         return true;
     }
 
+    /**
+     * 是否为手机号码
+     */
+    protected function isMobile($value) {
+        $pattern = '^1(3|4|5|7|8)[0-9]\d{8}$^';
+        $result = preg_match($pattern, $value);
+        return !!$result;
+    }
+
     public function getDataByRule($array) {
         if (array_key_exists('user_id', $array) | array_key_exists('uid', $array)) {
             throw new ParameterException([

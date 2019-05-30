@@ -7,7 +7,7 @@ use app\api\service\BaseTokenService;
 use app\api\model\User;
 use app\lib\exception\UserException;
 use app\api\model\UserAddress;
-use app\lib\exception\SuccessfulUpdate;
+use app\lib\exception\SuccessfulMessage;
 
 class AddressController {
 
@@ -31,16 +31,16 @@ class AddressController {
         //     'country' => input['country'],
         //     'detail' => input['detail'],
         // ];
-        $dataArray = $addressUpdate->getData('post');
+        $dataArray = $addressUpdate->getData();
         if (!$userAddress) {
             // $userAddress = UserAddress::create($dataArray);
             // 使用模型的关联模型创建
-            $user->address->save($dataArray);
+            $user->address()->save($dataArray);
         } else {
             $userAddress->save($dataArray);
         }
         // return $user;
-        throw new SuccessfulUpdate();
+        return json(new SuccessfulMessage(), 201);
     }
 
 }

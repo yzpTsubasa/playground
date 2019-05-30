@@ -3,7 +3,7 @@
 
 namespace app\lib\exception;
 
-class NoneException extends BaseException
+class SuccessfulMessage
 {
     public $code = 201;
     public $msg = 'ok';
