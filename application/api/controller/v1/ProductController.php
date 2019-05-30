@@ -45,4 +45,5 @@ class ProductController
         $result->hidden(['summary']);
         return json($result);
     }
+
 }
