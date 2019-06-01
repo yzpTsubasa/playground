@@ -47,4 +47,8 @@ class BaseTokenService
     public static function getCurrentOpenID() {
         return self::getCurrentTokenValue('openid');
     }
+
+    public static function getCurrentUserScope() {
+        return self::getCurrentTokenValue('scope');
+    }
 }

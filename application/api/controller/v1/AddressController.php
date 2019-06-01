@@ -8,8 +8,21 @@ use app\api\model\User;
 use app\lib\exception\UserException;
 use app\api\model\UserAddress;
 use app\lib\exception\SuccessfulMessage;
+use think\Controller;
 
-class AddressController {
+class AddressController extends BaseController {
+
+    protected $beforeActionList = [
+        'requireUserScope' => ['only' => 'createOrUpdateAddress'],
+    ];
+
+    protected function first() {
+        echo 'first';
+    }
+
+    public function second() {
+        echo 'second';
+    }
 
     public function createOrUpdateAddress() {
         $addressUpdate = new AddressUpdate();

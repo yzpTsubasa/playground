@@ -45,3 +45,5 @@ Route::get('api/:version/category/all', 'api/:version.CategoryController/getAllC
 Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
 
 Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');
+
+Route::rule('test', 'api/v1.AddressController/second');
