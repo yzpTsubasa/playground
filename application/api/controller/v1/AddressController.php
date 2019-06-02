@@ -13,16 +13,8 @@ use think\Controller;
 class AddressController extends BaseController {
 
     protected $beforeActionList = [
-        'requireUserScope' => ['only' => 'createOrUpdateAddress'],
+        'checkUserScope' => ['only' => 'createOrUpdateAddress'],
     ];
-
-    protected function first() {
-        echo 'first';
-    }
-
-    public function second() {
-        echo 'second';
-    }
 
     public function createOrUpdateAddress() {
         $addressUpdate = new AddressUpdate();

@@ -5,7 +5,7 @@ namespace app\lib\exception;
 
 
 class ScopeException extends BaseException {
-    public $code = 404;
-    public $msg = '无权限';
-    public $errorCode = 80001;
+    public $code = 403;
+    public $msg = '权限不足';
+    public $errorCode = 10001;
 }
