@@ -3,6 +3,8 @@
 
 namespace app\lib\exception;
 
+use app\lib\exception\core\BaseException;
+
 /**
  * 参数异常
  * @package app\lib\exception

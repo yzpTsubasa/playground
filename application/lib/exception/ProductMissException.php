@@ -3,6 +3,7 @@
 
 namespace app\lib\exception;
 
+use app\lib\exception\core\BaseException;
 
 class ProductMissException extends BaseException
 {

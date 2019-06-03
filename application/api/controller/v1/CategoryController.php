@@ -5,6 +5,7 @@ namespace app\api\controller\v1;
 
 use app\api\model\Category;
 use app\lib\exception\CategoryMissException;
+use app\api\controller\v1\core\BaseController;
 
 class CategoryController
 {

@@ -9,6 +9,7 @@ use app\api\model\Product;
 use app\api\model\Category;
 use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\ProductMissException;
+use app\api\controller\v1\core\BaseController;
 
 class ProductController
 {

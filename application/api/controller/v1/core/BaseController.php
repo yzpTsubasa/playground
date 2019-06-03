@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller\v1;
+namespace app\api\controller\v1\core;
 
 use think\Controller;
 use app\api\service\BaseTokenService;
@@ -12,12 +12,28 @@ use app\lib\exception\TokenException;
 
 class BaseController extends Controller {
 
-    protected function checkUserScope() {
+    /**
+     * 检查普通用户及以上的权限
+     */
+    protected function checkUserAboveScope() {
         $scope = BaseTokenService::getCurrentUserScope();
         if (!$scope) {
             throw new TokenException();
         }
         if ($scope < ScopeEnum::User) {
+            throw new ScopeException();
+        }
+    }
+
+    /**
+     * 只检查普通用户的权限
+     */
+    protected function checkUserScope() {
+        $scope = BaseTokenService::getCurrentUserScope();
+        if (!$scope) {
+            throw new TokenException();
+        }
+        if ($scope != ScopeEnum::User) {
             throw new ScopeException();
         }
     }

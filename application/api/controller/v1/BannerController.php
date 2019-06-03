@@ -6,6 +6,7 @@ use app\api\model\Banner;
 use app\api\model\BannerItem;
 use app\api\validate\IDIsPositiveInt;
 use app\lib\exception\BannerMissException;
+use app\api\controller\v1\core\BaseController;
 
 class BannerController {
     /**

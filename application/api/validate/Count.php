@@ -3,6 +3,7 @@
 
 namespace app\api\validate;
 
+use app\api\validate\core\BaseValidate;
 
 class Count extends BaseValidate
 {

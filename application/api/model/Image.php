@@ -2,7 +2,7 @@
 
 namespace app\api\model;
 
-use think\Model;
+use app\api\model\core\BaseModel;
 
 class Image extends BaseModel
 {

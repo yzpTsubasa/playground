@@ -6,6 +6,7 @@ namespace app\api\controller\v1;
 
 use app\api\validate\TokenCode;
 use app\api\service\UserTokenService;
+use app\api\controller\v1\core\BaseController;
 
 class TokenController
 {

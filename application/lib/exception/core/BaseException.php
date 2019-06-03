@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\lib\exception;
+namespace app\lib\exception\core;
 
 
 use think\Exception;

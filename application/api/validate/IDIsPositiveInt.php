@@ -2,6 +2,7 @@
 
 namespace app\api\validate;
 
+use app\api\validate\core\BaseValidate;
 
 class IDIsPositiveInt extends BaseValidate {
     protected $rule = [

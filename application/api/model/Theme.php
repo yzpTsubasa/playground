@@ -2,6 +2,8 @@
 
 namespace app\api\model;
 
+use app\api\model\core\BaseModel;
+
 class Theme extends BaseModel
 {
     protected $hidden = ['topic_img_id', 'head_img_id', 'delete_time', 'update_time'];

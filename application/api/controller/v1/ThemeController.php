@@ -8,6 +8,7 @@ use app\lib\exception\ThemeMissException;
 use think\Controller;
 use think\Request;
 use app\api\model\Theme;
+use app\api\controller\v1\core\BaseController;
 
 class ThemeController
 {

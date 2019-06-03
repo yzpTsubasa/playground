@@ -46,4 +46,6 @@ Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
 
 Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');
 
-Route::rule('test', 'api/v1.AddressController/second');
+Route::post('api/:version/order', 'api/v1.OrderController/submitOrder');
+
+// Route::rule('test', 'api/v1.AddressController/second');

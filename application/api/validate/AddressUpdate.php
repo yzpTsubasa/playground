@@ -2,6 +2,7 @@
 
 namespace app\api\validate;
 
+use app\api\validate\core\BaseValidate;
 
 class AddressUpdate extends BaseValidate{
     protected $rule = [

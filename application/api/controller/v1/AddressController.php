@@ -7,13 +7,14 @@ use app\api\service\BaseTokenService;
 use app\api\model\User;
 use app\lib\exception\UserException;
 use app\api\model\UserAddress;
-use app\lib\exception\SuccessfulMessage;
+use app\lib\exception\core\SuccessfulMessage;
 use think\Controller;
+use app\api\controller\v1\core\BaseController;
 
 class AddressController extends BaseController {
 
     protected $beforeActionList = [
-        'checkUserScope' => ['only' => 'createOrUpdateAddress'],
+        'checkUserAboveScope' => ['only' => 'createOrUpdateAddress'],
     ];
 
     public function createOrUpdateAddress() {

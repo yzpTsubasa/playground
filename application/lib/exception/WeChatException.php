@@ -3,6 +3,7 @@
 
 namespace app\lib\exception;
 
+use app\lib\exception\core\BaseException;
 
 class WeChatException extends BaseException {
     public $code = 404;
