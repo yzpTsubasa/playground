@@ -16,25 +16,13 @@ class BaseController extends Controller {
      * 检查普通用户及以上的权限
      */
     protected function checkUserAboveScope() {
-        $scope = BaseTokenService::getCurrentUserScope();
-        if (!$scope) {
-            throw new TokenException();
-        }
-        if ($scope < ScopeEnum::User) {
-            throw new ScopeException();
-        }
+        return BaseTokenService::checkUserAboveScope();
     }
 
     /**
      * 只检查普通用户的权限
      */
     protected function checkUserScope() {
-        $scope = BaseTokenService::getCurrentUserScope();
-        if (!$scope) {
-            throw new TokenException();
-        }
-        if ($scope != ScopeEnum::User) {
-            throw new ScopeException();
-        }
+        return BaseTokenService::checkUserScope();
     }
 }

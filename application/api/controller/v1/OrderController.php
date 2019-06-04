@@ -2,6 +2,10 @@
 
 namespace app\api\controller\v1;
 use app\api\controller\v1\core\BaseController;
+use app\api\validate\ProductsValidator;
+use app\api\service\BaseTokenService;
+use app\lib\exception\core\SuccessfulMessage;
+use app\api\service\OrderService;
 
 class OrderController extends BaseController {
 
@@ -19,6 +23,13 @@ class OrderController extends BaseController {
     // 成功...库存量检测...扣除库存量  失败...
 
     public function submitOrder() {
-
+        // 验证数组数据 [[id: number], ...]
+        (new ProductsValidator())->goCheck();
+        // 为什么 /a 为影响 Validator???
+        $products = input('products/a');
+        $uid = BaseTokenService::getCurrentUID();
+        $oderModel = new OrderService();
+        $oderModel->submit($uid, $products);
+        return json(new SuccessfulMessage(), 201);
     }
 }

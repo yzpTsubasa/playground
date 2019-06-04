@@ -5,7 +5,7 @@ namespace app\api\validate;
 
 use app\api\validate\core\BaseValidate;
 
-class IDCollection extends BaseValidate
+class IDCollectionValidator extends BaseValidate
 {
     protected $rule = [
         'ids' => 'require|checkIDs',

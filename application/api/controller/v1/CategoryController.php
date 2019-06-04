@@ -4,7 +4,7 @@
 namespace app\api\controller\v1;
 
 use app\api\model\Category;
-use app\lib\exception\CategoryMissException;
+use app\lib\exception\CategoryException;
 use app\api\controller\v1\core\BaseController;
 
 class CategoryController
@@ -13,7 +13,7 @@ class CategoryController
         $data = [];
         $results = Category::all($data, ['img']);
         if ($results->isEmpty()) {
-            throw new CategoryMissException();
+            throw new CategoryException();
         }
         return json($results);
     }

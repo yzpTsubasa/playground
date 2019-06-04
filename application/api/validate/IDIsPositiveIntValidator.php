@@ -4,7 +4,7 @@ namespace app\api\validate;
 
 use app\api\validate\core\BaseValidate;
 
-class IDIsPositiveInt extends BaseValidate {
+class IDIsPositiveIntValidator extends BaseValidate {
     protected $rule = [
         'id' => 'require|isPositiveInt',
 //        'num' => 'in:1,2,3'

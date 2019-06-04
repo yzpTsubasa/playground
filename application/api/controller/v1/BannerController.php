@@ -4,7 +4,7 @@ namespace app\api\controller\v1;
 
 use app\api\model\Banner;
 use app\api\model\BannerItem;
-use app\api\validate\IDIsPositiveInt;
+use app\api\validate\IDIsPositiveIntValidator;
 use app\lib\exception\BannerMissException;
 use app\api\controller\v1\core\BaseController;
 
@@ -31,7 +31,7 @@ class BannerController {
         /**
         * 2. 验证器
         */
-        (new IDIsPositiveInt())->goCheck();
+        (new IDIsPositiveIntValidator())->goCheck();
         // 异常处理
 //        try {
             $banner = Banner::getBannerByID($id);

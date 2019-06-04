@@ -8,9 +8,13 @@ use think\Request;
 use think\Exception;
 
 class BaseValidate extends Validate {
-    public function goCheck() {
+    public function goCheck($inputparams = null) {
         $request = Request::instance();
-        $params = $request->param();
+        if (!$inputparams) {
+            $params = $request->param();
+        } else {
+            $params = $inputparams;
+        }
 
         $result = $this->batch()->check($params);
 

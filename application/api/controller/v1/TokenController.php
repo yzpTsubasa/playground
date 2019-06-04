@@ -4,7 +4,7 @@
 namespace app\api\controller\v1;
 
 
-use app\api\validate\TokenCode;
+use app\api\validate\TokenCodeValidator;
 use app\api\service\UserTokenService;
 use app\api\controller\v1\core\BaseController;
 
@@ -13,7 +13,7 @@ class TokenController
     public function getToken() {
         $code = input('code');
 
-        (new TokenCode())->goCheck();
+        (new TokenCodeValidator())->goCheck();
         $usrToken = new UserTokenService($code);
         $token = $usrToken->get();
         $result = [

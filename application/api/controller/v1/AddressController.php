@@ -2,7 +2,7 @@
 
 namespace app\api\controller\v1;
 
-use app\api\validate\AddressUpdate;
+use app\api\validate\AddressValidator;
 use app\api\service\BaseTokenService;
 use app\api\model\User;
 use app\lib\exception\UserException;
@@ -18,7 +18,7 @@ class AddressController extends BaseController {
     ];
 
     public function createOrUpdateAddress() {
-        $addressUpdate = new AddressUpdate();
+        $addressUpdate = new AddressValidator();
         $addressUpdate->goCheck();
         // 根据 token 获取 uid
         $uid = BaseTokenService::getCurrentUID();

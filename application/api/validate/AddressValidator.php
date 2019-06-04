@@ -4,7 +4,7 @@ namespace app\api\validate;
 
 use app\api\validate\core\BaseValidate;
 
-class AddressUpdate extends BaseValidate{
+class AddressValidator extends BaseValidate{
     protected $rule = [
         'name' => 'require|isNotEmpty',
         'mobile' => 'require|isMobile',

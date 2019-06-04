@@ -7,6 +7,7 @@ use think\Request;
 use think\Cache;
 use app\lib\exception\TokenException;
 use think\Exception;
+use app\lib\enum\ScopeEnum;
 
 class BaseTokenService
 {
@@ -50,5 +51,33 @@ class BaseTokenService
 
     public static function getCurrentUserScope() {
         return self::getCurrentTokenValue('scope');
+    }
+
+    /**
+     * 检查普通用户及以上的权限
+     */
+    public static function checkUserAboveScope() {
+        $scope = self::getCurrentUserScope();
+        if (!$scope) {
+            throw new TokenException();
+        }
+        if ($scope < ScopeEnum::User) {
+            throw new ScopeException();
+        }
+        return true;
+    }
+
+    /**
+     * 只检查普通用户的权限
+     */
+    public static function checkUserScope() {
+        $scope = self::getCurrentUserScope();
+        if (!$scope) {
+            throw new TokenException();
+        }
+        if ($scope != ScopeEnum::User) {
+            throw new ScopeException();
+        }
+        return true;
     }
 }

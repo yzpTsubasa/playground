@@ -5,13 +5,13 @@ namespace app\api\validate;
 
 use app\api\validate\core\BaseValidate;
 
-class TokenCode extends BaseValidate
+class CountValidator extends BaseValidate
 {
     protected $rule = [
-        'code' => 'require|isNotEmpty'
+        'count' => 'isPositiveInt|between:1,15'
     ];
 
     protected $message = [
-        'code' => 'code不能为空'
+        'count' => 'count参数必须为1~15的正整数'
     ];
 }
