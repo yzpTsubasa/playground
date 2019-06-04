@@ -7,6 +7,8 @@ use app\lib\exception\ProductException;
 use app\lib\exception\OrderException;
 use app\api\model\UserAddress;
 use app\lib\exception\UserException;
+use app\api\model\Order;
+use app\api\model\OrderProduct;
 
 class OrderService {
     /** 客户端下单提交的products参数 */
@@ -29,6 +31,58 @@ class OrderService {
         }
         // 创建订单
         $orderSnap = $this->snapOrder($orderStatus);
+        $this->createOrder($orderSnap);
+    }
+
+    private function createOrder($snap) {
+        try {
+            // 写 order 表
+            $orderSN = self::generateOrderSN();
+            $order = new Order();
+            $order->save([
+                'order_no' => $orderSN, 
+                'user_id' => $this->uid,
+                'total_price' => $snap['totalPrice'],
+                'total_count' => $snap['totalCount'],
+                'snap_name' => $snap['snapName'],
+                'snap_img' => $snap['snapImg'],
+                'snap_address' => json_encode($snap['snapAddress']),
+                'snap_items' => json_encode($snap['pStatus']),
+            ]);
+            $order_id = $order->id;
+            // 写 order_product 表
+            // foreach ($this->orderProducts as $value) {
+            //     $orderProductModel = new OrderProduct();
+            //     $orderProductModel->save([
+            //         'order_id' => $order_id,
+            //         'product_id' => $value['product_id'],
+            //         'count' => $value['count'],
+            //     ]);
+            // }
+            foreach ($this->orderProducts as &$value) {
+                $value['order_id'] = $order_id;
+            }
+            (new OrderProduct())->saveAll($this->orderProducts);
+
+            return [
+                'order_no' => $orderSN,
+                'order_id' => $order_id,
+                'create_time' => $order->create_time,
+            ];
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public static function generateOrderSN() {
+        $yCode = ['A','B','C','D','E','F','G','H','I','J'];
+        $orderSN = $yCode[intval(date('Y')) - 2019] // 第n年，取yCode
+                . strtoupper(dechex(date('m'))) // 月份十进制->十六进制
+                . date('d') // 日
+                . substr(time(), -5) // unix时间戳
+                . substr(microtime(), 2, 5) // 时间戳微秒数
+                . sprintf('%02d', rand(0, 99)); // 随机值
+        return $orderSN;
     }
 
     /**
@@ -47,7 +101,7 @@ class OrderService {
         $snap['orderPrice'] = $orderStatus['orderPrice'];
         $snap['totalCount'] = $orderStatus['totalCount'];
         $snap['pStatus'] = $orderStatus['pStatusArray'];
-        $snap['snapAddress'] = json_encode($this->getUserAddress());
+        $snap['snapAddress'] = $this->getUserAddress();
         $snap['snapName'] = $this->products[0]['name'];
         if (count($this->products) > 1) {
             $snap['snapName'] .= '等';
