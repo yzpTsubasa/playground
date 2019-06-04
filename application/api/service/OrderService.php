@@ -5,6 +5,8 @@ namespace app\api\service;
 use app\api\model\Product;
 use app\lib\exception\ProductException;
 use app\lib\exception\OrderException;
+use app\api\model\UserAddress;
+use app\lib\exception\UserException;
 
 class OrderService {
     /** 客户端下单提交的products参数 */
@@ -21,12 +23,56 @@ class OrderService {
         $this->orderProducts = $_prodcuts;
         $this->products = $this->getByOrder($this->orderProducts);
         $orderStatus = $this->getOrderStatus();
+        if (!$orderStatus['pass']) { // 未通过
+            $orderStatus['order_id'] = -1;
+            return $orderStatus;
+        }
+        // 创建订单
+        $orderSnap = $this->snapOrder($orderStatus);
+    }
+
+    /**
+     * 生成订单快照
+     */
+    private function snapOrder($orderStatus) {
+        $snap = [
+            'orderPrice' => 0, // 总价
+            'totalCount' => 0, // 总数
+            'pStatus' => [],
+            'snapAddress' => null,
+            'snapName' => null,
+            'snapImg' => null,
+        ];
+
+        $snap['orderPrice'] = $orderStatus['orderPrice'];
+        $snap['totalCount'] = $orderStatus['totalCount'];
+        $snap['pStatus'] = $orderStatus['pStatusArray'];
+        $snap['snapAddress'] = json_encode($this->getUserAddress());
+        $snap['snapName'] = $this->products[0]['name'];
+        if (count($this->products) > 1) {
+            $snap['snapName'] .= '等';
+        }
+        $snap['snapImg'] = $this->products[0]['main_img_url'];
+
+    }
+
+    private function getUserAddress() {
+        $userAddress = UserAddress::where('user_id', '=', $this->uid)
+                ->find();
+        if (!$userAddress) {
+            throw new UserException([
+                'msg' => '用户收货地址不存在',
+                'errorCode' => 60001,
+            ]);
+        }
+        return $userAddress->toArray();
     }
 
     private function getOrderStatus() {
         $status = [
             'pass' => true,
             'orderPrice' => 0,
+            'totalCount' => 0,
             'pStatusArray' => [],
         ];
         // $productMap = [];
@@ -39,6 +85,7 @@ class OrderService {
                 $status['pass'] = false;
             }
             $status['orderPrice'] += $productStatus['totalPrice'];
+            $status['totalCount'] += $productStatus['count'];
             array_push($status['pStatusArray'], $productStatus);
         }
         return $status;
