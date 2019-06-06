@@ -8,7 +8,9 @@
     </block>
   </view>
   <view class='tool'>
-    <button bindtap='onRequestToken'>申请令牌</button>
+    <button bindtap='onReqToken'>申请令牌</button>
+    <button bindtap='onReqUpdateAddress'>更新地址</button>
+    <button bindtap='onReqPay'>支付</button>
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>

@@ -51,7 +51,7 @@ Page({
       hasUserInfo: true
     })
   },
-  onRequestToken: function(e) {
+  onReqToken: function(e) {
     wx.request({
       url: baseUrl + '/token/user',
       method: 'post',
@@ -60,11 +60,65 @@ Page({
       },
       success: function(res) {
         console.log(res.data);
-        app.globalData.token = res.data.token;
+        // app.globalData.token = res.data.token;
+        var key = 'token';
+        var data = res.data.token;
+        wx.setStorageSync(key, data);
       },
       fail: function(res) {
         console.error(res);
       }
     })
+  },
+  onReqUpdateAddress: function(e) {
+    var token = wx.getStorageSync('token');
+    wx.request({
+      url: baseUrl + '/address',
+      header: {
+        token: token
+      },
+      data: {
+        name: 'TsubasaYeung',
+        mobile: '13235918682',
+        province: '福建',
+        city: '福州',
+        country: '中国',
+        detail: '未来区远方路无穷号',
+      },
+      method: 'POST',
+      success: function(res) {
+        console.log(res.data);
+      },
+      fail: function(res) {
+        console.log(res);
+      }
+    });
+  },
+  onReqPay: function(e) {
+    var token = wx.getStorageSync('token');
+    wx.request({
+      url: baseUrl + '/order',
+      header: {
+        token: token
+      },
+      data: {
+        products: [
+          { product_id: 1, count: 4},
+          { product_id: 2, count: 2},
+          { product_id: 3, count: 5},
+          { product_id: 5, count: 999999999},
+        ]
+      },
+      method: 'POST',
+      success: function(res) {
+        console.log(res.data);
+        if (res.data.pass) {
+          wx.setStorageSync('order_id', res.data.order_id);
+        }
+      },
+      fail: function(res) {
+        console.log(res);
+      }
+    });
   }
 })
