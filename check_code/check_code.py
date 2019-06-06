@@ -43,7 +43,7 @@ class CheckCode:
                         filecontent = file.read()
                         matches = re.findall(regexp, filecontent)
                         for m in range(0, len(matches)):
-                            match = matches[0]
+                            match = matches[m]
                             if not match in groupNameMap:
                                 matchArr = []
                                 groupNameMap[match] = matchArr
