@@ -23,7 +23,7 @@ class OrderService {
         // 对比$orderProducts 和 $products
         $this->uid = $_uid;
         $this->orderProducts = $_prodcuts;
-        $this->products = $this->getByOrder($this->orderProducts);
+        $this->products = $this->getProductsByOrder($this->orderProducts);
         $orderStatus = $this->getOrderStatus();
         if (!$orderStatus['pass']) { // 未通过
             $orderStatus['order_id'] = -1;
@@ -31,7 +31,8 @@ class OrderService {
         }
         // 创建订单
         $orderSnap = $this->snapOrder($orderStatus);
-        $this->createOrder($orderSnap);
+        $order = $this->createOrder($orderSnap);
+        return $order;
     }
 
     private function createOrder($snap) {
@@ -42,7 +43,7 @@ class OrderService {
             $order->save([
                 'order_no' => $orderSN, 
                 'user_id' => $this->uid,
-                'total_price' => $snap['totalPrice'],
+                'total_price' => $snap['orderPrice'],
                 'total_count' => $snap['totalCount'],
                 'snap_name' => $snap['snapName'],
                 'snap_img' => $snap['snapImg'],
@@ -107,7 +108,7 @@ class OrderService {
             $snap['snapName'] .= '等';
         }
         $snap['snapImg'] = $this->products[0]['main_img_url'];
-
+        return $snap;
     }
 
     private function getUserAddress() {
@@ -170,7 +171,7 @@ class OrderService {
     }
 
     /** 根据订单获取数据库的库存 */
-    private function getByOrder($orderProducts) {
+    private function getProductsByOrder($orderProducts) {
         $orderproduct_ids = [];
         foreach ($orderProducts as $orderProduct) {
             array_push($orderproduct_ids, $orderProduct['product_id']);

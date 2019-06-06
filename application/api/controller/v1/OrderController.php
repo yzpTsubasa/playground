@@ -29,7 +29,7 @@ class OrderController extends BaseController {
         $products = input('products/a');
         $uid = BaseTokenService::getCurrentUID();
         $oderModel = new OrderService();
-        $oderModel->submit($uid, $products);
-        return json(new SuccessfulMessage(), 201);
+        $order = $oderModel->submit($uid, $products);
+        return json($order);
     }
 }
