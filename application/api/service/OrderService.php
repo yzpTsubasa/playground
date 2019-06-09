@@ -9,6 +9,7 @@ use app\api\model\UserAddress;
 use app\lib\exception\UserException;
 use app\api\model\Order;
 use app\api\model\OrderProduct;
+use think\Db;
 
 class OrderService {
     /** 客户端下单提交的products参数 */
@@ -36,6 +37,7 @@ class OrderService {
     }
 
     private function createOrder($snap) {
+        Db::startTrans(); // 开始事务
         try {
             // 写 order 表
             $orderSN = self::generateOrderSN();
@@ -64,13 +66,14 @@ class OrderService {
                 $value['order_id'] = $order_id;
             }
             (new OrderProduct())->saveAll($this->orderProducts);
-
+            Db::commit();
             return [
                 'order_no' => $orderSN,
                 'order_id' => $order_id,
                 'create_time' => $order->create_time,
             ];
         } catch (\Throwable $th) {
+            Db::rollback();
             throw $th;
         }
     }
