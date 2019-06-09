@@ -48,4 +48,6 @@ Route::post('api/:version/address', 'api/:version.AddressController/createOrUpda
 
 Route::post('api/:version/order', 'api/v1.OrderController/submitOrder');
 
+Route::post('api/:version/pay/preorder', 'api/v1.PayController/getPreorder');
+
 // Route::rule('test', 'api/v1.AddressController/second');

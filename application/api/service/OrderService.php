@@ -20,6 +20,9 @@ class OrderService {
 
     protected $uid;
 
+    /**
+     * 提交订单
+     */
     public function submit($_uid, $_prodcuts) {
         // 对比$orderProducts 和 $products
         $this->uid = $_uid;
@@ -34,6 +37,19 @@ class OrderService {
         $orderSnap = $this->snapOrder($orderStatus);
         $order = $this->createOrder($orderSnap);
         return $order;
+    }
+
+    /**
+     * 检查订单库存
+     */
+    public function checkOrderStock($order_id) {
+        $this->orderProducts = OrderProduct::where('order_id', '=', $order_id)->select();
+        if (!($this->orderProducts)) {
+            throw new OrderException();
+        }
+        $this->products = $this->getProductsByOrder($this->orderProducts);
+        $orderStatus = $this->getOrderStatus();
+        return $orderStatus;
     }
 
     private function createOrder($snap) {
