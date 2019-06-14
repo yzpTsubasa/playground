@@ -11,12 +11,19 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
+    def on_radio_button_check(self, value):
+        print('on_radio_button_check')
+        self.radio_value = self.buttonGroup.checkedId()
+        
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(255, 250)
         MainWindow.setAcceptDrops(True)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        # vbox_layout = QtWidgets.QVBoxLayout()
+        # self.centralwidget.setLayout(vbox_layout)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, 241, 251))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
@@ -32,6 +39,24 @@ class Ui_MainWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setMargin(0)
         self.label.setObjectName("label")
+
+        self.buttonGroup = QtWidgets.QButtonGroup(self.centralwidget)
+        self.radio_value = 0
+        radio_btn_datas = [
+            {'id': 0, 'title': '检查EXML'},
+            {'id': 1, 'title': '压缩JS'}
+        ]
+        for radio_btn_data in radio_btn_datas:
+            radio_btn = QtWidgets.QRadioButton(self.centralwidget)
+            radio_btn.setText(radio_btn_data['title'])
+            # radio_btn.setFixedWidth(100)
+            # radio_btn.setFixedHeight(100)
+            radio_btn.setGeometry(QtCore.QRect(0, radio_btn_data['id'] * 20, 100, 20))
+            radio_btn.setChecked(radio_btn_data['id'] == self.radio_value)
+            self.buttonGroup.addButton(radio_btn, radio_btn_data['id'])
+        self.buttonGroup.buttonClicked.connect(self.on_radio_button_check)
+        # self.buttonGroup.checkedId = self.radio_value
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")

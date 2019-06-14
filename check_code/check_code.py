@@ -15,9 +15,9 @@ def openFileSys(path):
     else:
         subprocess.call(["open", path])
 
-class CheckCode:
+class Main:
     @staticmethod
-    def check(srcDir = None, dstDir = None, dstPath = None):
+    def process(srcDir = None, dstDir = None, dstPath = None):
         cwd = os.getcwd()
         srcDir = srcDir or os.path.join(cwd, 'resource')
         dstDir = dstDir or os.path.expanduser("~/Desktop")
@@ -67,4 +67,4 @@ class CheckCode:
         openFileSys(dstPath)
 
 if __name__ == '__main__':
-    CheckCode.check()
+    Main.process()
