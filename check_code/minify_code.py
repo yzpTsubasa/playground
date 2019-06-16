@@ -20,30 +20,23 @@ def openFileSys(path):
 class Main:
     """Class docstrings go here."""
     @staticmethod
-    def process(src_dir=None, dst_dir=None, dst_path=None):
+    def process(path=None, dst_dir=None, dst_path=None):
         """Class method docstrings go here."""
         cwd = os.getcwd()
-        src_dir = src_dir or os.path.join(cwd, 'resource')
-        dst_dir = dst_dir or os.path.expanduser("~/Desktop")
-        dst_path = dst_path or os.path.join(dst_dir, 'result.json')
-
-        # time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        # groupNameMap = {
-        #     "检查时间": [time_str, "$$"],
-        #     # "检查路径": [srcDir, "$$"],
-        # }
-        # print (json.dumps(groupNameMap, ensure_ascii=False, indent=2))
-
-        for root, dirs, filenames in os.walk(src_dir):
-            for i in range(0, len(filenames)):
-                filename = filenames[i]
-                fileshortname, ext = os.path.splitext(filename) # 后缀名
-                fullpath = os.path.join(root, filename) # 完整路径
-                relativepath = os.path.relpath(fullpath, src_dir) # 相对路径
-                # regexp = '\\sgroupName="(\\S+)"'
-                if ext == '.js': # 后缀名为 .js 的文件
-                    print(fullpath)
-                    process_single_js_file(fullpath, timestamp=False, overwrite=False)
+        path = path or os.path.join(cwd, 'resource')
+        if os.path.isdir(path): # 如果是目录
+            for root, dirs, filenames in os.walk(path):
+                for i in range(0, len(filenames)):
+                    filename = filenames[i]
+                    fileshortname, ext = os.path.splitext(filename) # 后缀名
+                    fullpath = os.path.join(root, filename) # 完整路径
+                    relativepath = os.path.relpath(fullpath, path) # 相对路径
+                    # regexp = '\\sgroupName="(\\S+)"'
+                    if ext == '.js': # 后缀名为 .js 的文件
+                        print(fullpath)
+                        process_single_js_file(fullpath, timestamp=False, overwrite=False)
+        elif os.path.isfile(path):
+            process_single_js_file(path, timestamp=False, overwrite=False)
 
 if __name__ == '__main__':
     Main.process()
