@@ -9,7 +9,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for banner
 -- ----------------------------
-DROP TABLE IF EXISTS `banner_test`;
+DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL COMMENT 'Banner名称，通常作为标识',
