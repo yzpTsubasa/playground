@@ -28,8 +28,8 @@ class OrderController extends BaseController {
         // 为什么 /a 为影响 Validator???
         $products = input('products/a');
         $uid = BaseTokenService::getCurrentUID();
-        $orderService = new OrderService();
-        $orderStatus = $orderService->submit($uid, $products);
-        return $orderStatus;
+        $oderModel = new OrderService();
+        $order = $oderModel->submit($uid, $products);
+        return json($order);
     }
 }

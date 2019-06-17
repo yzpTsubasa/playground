@@ -9,6 +9,7 @@ use app\api\model\UserAddress;
 use app\lib\exception\UserException;
 use app\api\model\Order;
 use app\api\model\OrderProduct;
+use think\Db;
 
 class OrderService {
     /** 客户端下单提交的products参数 */
@@ -19,11 +20,14 @@ class OrderService {
 
     protected $uid;
 
+    /**
+     * 提交订单
+     */
     public function submit($_uid, $_prodcuts) {
         // 对比$orderProducts 和 $products
         $this->uid = $_uid;
         $this->orderProducts = $_prodcuts;
-        $this->products = $this->getByOrder($this->orderProducts);
+        $this->products = $this->getProductsByOrder($this->orderProducts);
         $orderStatus = $this->getOrderStatus();
         if (!$orderStatus['pass']) { // 未通过
             $orderStatus['order_id'] = -1;
@@ -33,11 +37,24 @@ class OrderService {
         $orderSnap = $this->snapOrder($orderStatus);
         $order = $this->createOrder($orderSnap);
         $order['pass'] = true;
-
         return $order;
     }
 
+    /**
+     * 检查订单库存
+     */
+    public function checkOrderStock($order_id) {
+        $this->orderProducts = OrderProduct::where('order_id', '=', $order_id)->select();
+        if (!($this->orderProducts)) {
+            throw new OrderException();
+        }
+        $this->products = $this->getProductsByOrder($this->orderProducts);
+        $orderStatus = $this->getOrderStatus();
+        return $orderStatus;
+    }
+
     private function createOrder($snap) {
+        Db::startTrans(); // 开始事务
         try {
             // 写 order 表
             $orderSN = self::generateOrderSN();
@@ -45,7 +62,7 @@ class OrderService {
             $order->save([
                 'order_no' => $orderSN, 
                 'user_id' => $this->uid,
-                'total_price' => $snap['totalPrice'],
+                'total_price' => $snap['orderPrice'],
                 'total_count' => $snap['totalCount'],
                 'snap_name' => $snap['snapName'],
                 'snap_img' => $snap['snapImg'],
@@ -66,13 +83,14 @@ class OrderService {
                 $value['order_id'] = $order_id;
             }
             (new OrderProduct())->saveAll($this->orderProducts);
-
+            Db::commit();
             return [
                 'order_no' => $orderSN,
                 'order_id' => $order_id,
                 'create_time' => $order->create_time,
             ];
         } catch (\Throwable $th) {
+            Db::rollback();
             throw $th;
         }
     }
@@ -110,7 +128,7 @@ class OrderService {
             $snap['snapName'] .= '等';
         }
         $snap['snapImg'] = $this->products[0]['main_img_url'];
-
+        return $snap;
     }
 
     private function getUserAddress() {
@@ -173,7 +191,7 @@ class OrderService {
     }
 
     /** 根据订单获取数据库的库存 */
-    private function getByOrder($orderProducts) {
+    private function getProductsByOrder($orderProducts) {
         $orderproduct_ids = [];
         foreach ($orderProducts as $orderProduct) {
             array_push($orderproduct_ids, $orderProduct['product_id']);
