@@ -57,6 +57,18 @@ class PayService {
 
     private function getPaySignature($wxPayUnifiedOrder) {
         $order = \WxPayApi::unifiedOrder(new \WxPayConfig(), $wxPayUnifiedOrder);
+        // 测试成功
+        $order = [
+            "appid" => "aaaaaaaaaa", // 10
+            "mch_id" => "bbbbbbbbbbbb", // 12
+            "nonce_str" => "w6z07V2wlwiFcQwv",
+            "prepay_id" => "wx20170602132601ab553394958934589345", // 可用于向用户微信发送一条消息
+            "result_code" => "SUCCESS",
+            "return_code" => "SUCCESS",
+            "return_msg" => "OK",
+            "sign" => "0A2BCC8F997FFBEFEE160DUYDSD8745832",
+            "trade_type" => "JSAPI",
+        ];
         if ($order['return_code'] != 'SUCCESS' ||
             $order['result_code'] != 'SUCCESS') {
             Log::write($order, 'error');
