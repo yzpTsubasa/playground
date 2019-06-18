@@ -74,7 +74,15 @@ class PayService {
             Log::write($order, 'error');
             Log::write('获取预支付订单失败', 'error');
         }
+        $this->recordPreorder($order);
         return null;
+    }
+
+    private function recordPreorder($order) {
+        Order::where('id', $this->order_id)
+            ->update([
+                'prepay_id' => $order->prepay_id,
+            ]);
     }
 
     private function checkOrderValid() {
