@@ -20,7 +20,7 @@ class BaseValidate extends Validate {
 
         if (!$result) {
             $error = $this->error;
-            $e = new ParameterException($error);
+            $e = new ParameterException(json_encode($error, JSON_UNESCAPED_UNICODE));
             throw $e;
         } else {
             return true;
