@@ -94,7 +94,7 @@ Page({
       }
     });
   },
-  onReqPay: function(e) {
+  onReqOrder: function(e) {
     var token = wx.getStorageSync('token');
     wx.request({
       url: baseUrl + '/order',
@@ -106,7 +106,7 @@ Page({
           { product_id: 1, count: 4},
           { product_id: 2, count: 2},
           { product_id: 3, count: 5},
-          { product_id: 5, count: 999999999},
+          { product_id: 5, count: 10},
         ]
       },
       method: 'POST',
@@ -117,6 +117,40 @@ Page({
         }
       },
       fail: function(res) {
+        console.log(res);
+      }
+    });
+  },
+  onReqPay() {
+    var token = wx.getStorageSync('token');
+    var order_id = wx.getStorageSync('order_id');
+    wx.request({
+      url: baseUrl + '/pay/preorder',
+      header: {
+        token: token
+      },
+      data: {
+        id: order_id
+      },
+      method: 'POST',
+      success: function (res) {
+        var preData = res.data;
+        console.log(preData);
+        // wx.requestPayment({
+        //   timeStamp: preData.timeStamp.toString(),
+        //   nonceStr: preData.nonceStr,
+        //   package: preData.package,
+        //   signType: preData.signType,
+        //   paySign: preData.paySign,
+        //   success: function(res) {
+        //     console.log(res.data);
+        //   },
+        //   fail: function(res) {
+        //     console.error(res);
+        //   }
+        // });
+      },
+      fail: function (res) {
         console.log(res);
       }
     });
