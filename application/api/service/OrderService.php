@@ -135,10 +135,7 @@ class OrderService {
         $userAddress = UserAddress::where('user_id', '=', $this->uid)
                 ->find();
         if (!$userAddress) {
-            throw new UserException([
-                'msg' => '用户收货地址不存在',
-                'errorCode' => 60001,
-            ]);
+            throw new UserException('用户收货地址不存在', 60001);
         }
         return $userAddress->toArray();
     }
@@ -182,9 +179,7 @@ class OrderService {
             $pStatus['name'] = $product['name'];
             $pStatus['totalPrice'] = $product['price'] * $order_count;
         } else {
-            throw new OrderException([
-                'msg' => sprintf('订单中id为 %d 的商品不存在', $order_product_id)
-            ]);
+            throw new OrderException(sprintf('订单中id为 %d 的商品不存在', $order_product_id));
         }
 
         return $pStatus;

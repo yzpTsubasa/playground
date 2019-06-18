@@ -19,8 +19,11 @@ class BaseException extends Exception
     // 自定义的错误码
     public $errorCode = 10000;
 
-    function __construct($params = [])
+    function __construct(string $msg = null, int $errorCode = null, int $code = null, $params = [])
     {
+        $this->code = $code != null ? $code : $this->code;
+        $this->msg = $msg != null ? $msg : $this->msg;
+        $this->errorCode = $errorCode != null ? $errorCode : $this->errorCode;
         if (!is_array($params)) {
             return;
 //            throw new Exception("参数必须为数组");

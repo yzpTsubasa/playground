@@ -3,7 +3,7 @@
 namespace app\api\controller\v1;
 use app\api\controller\v1\core\BaseController;
 use app\api\validate\ProductsValidator;
-use app\api\service\BaseTokenService;
+use app\api\service\TokenService;
 use app\lib\exception\core\SuccessfulMessage;
 use app\api\service\OrderService;
 
@@ -27,7 +27,7 @@ class OrderController extends BaseController {
         (new ProductsValidator())->goCheck();
         // 为什么 /a 为影响 Validator???
         $products = input('products/a');
-        $uid = BaseTokenService::getCurrentUID();
+        $uid = TokenService::getCurrentUID();
         $oderModel = new OrderService();
         $order = $oderModel->submit($uid, $products);
         return json($order);

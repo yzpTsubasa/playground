@@ -9,7 +9,7 @@ use app\lib\exception\TokenException;
 use think\Exception;
 use app\lib\enum\ScopeEnum;
 
-class BaseTokenService
+class TokenService
 {
     /**
      * 生成随机的令牌
@@ -77,6 +77,19 @@ class BaseTokenService
         }
         if ($scope != ScopeEnum::User) {
             throw new ScopeException();
+        }
+        return true;
+    }
+
+    public static function isValidOperation($checkdUid, $errMsg = null, $errCode = null) {
+        if (!$checkdUid) {
+            throw new Exception('检测UID不能为空');
+        }
+        $currentUID = self::getCurrentUID();
+        if ($currentUID != $checkdUid) {
+            $errMsg = $errMsg == null ? '非法操作' : $errMsg;
+            $errCode = $errCode == null ? 403 : $errCode;
+            throw new TokenException($errMsg, $errCode);
         }
         return true;
     }

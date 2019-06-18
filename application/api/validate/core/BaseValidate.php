@@ -20,11 +20,7 @@ class BaseValidate extends Validate {
 
         if (!$result) {
             $error = $this->error;
-            $e = new ParameterException([
-                'msg' => $error,
-//                'errorCode' => 10001,
-//                'foo' => 'foo',
-            ]);
+            $e = new ParameterException($error);
             throw $e;
         } else {
             return true;
@@ -61,9 +57,7 @@ class BaseValidate extends Validate {
 
     public function getDataByRule($array) {
         if (array_key_exists('user_id', $array) | array_key_exists('uid', $array)) {
-            throw new ParameterException([
-                'msg' => '参数中包含非法参数名user_id 或 uid'
-            ]);
+            throw new ParameterException('参数中包含非法参数名user_id 或 uid');
         }
         $newArray = [];
         foreach ($this->rule as $key => $value) {

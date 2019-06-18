@@ -10,7 +10,7 @@ use think\Exception;
 use app\api\model\User as UserModel;
 use app\lib\enum\ScopeEnum;
 
-class UserTokenService extends BaseTokenService {
+class UserTokenService extends TokenService {
     protected $code;
     protected $wxAppID;
     protected $wxAppSecret;
@@ -62,10 +62,7 @@ class UserTokenService extends BaseTokenService {
         $expire_in = config('setting.token_expire_in');
         $result = cache($key, $value, $expire_in);
         if (!$result) {
-            throw new TokenException([
-                'msg' => '服务器缓存异常',
-                'errorCode' => 10005,
-            ]);
+            throw new TokenException('服务器缓存异常', 10005);
         }
         return $key;
     }
@@ -78,10 +75,7 @@ class UserTokenService extends BaseTokenService {
     }
 
     private function processLoginError($wxResult) {
-        throw new WeChatException([
-            'msg' => $wxResult['errmsg'],
-            'errorCode' => $wxResult['errcode'],
-        ]);
+        throw new WeChatException($wxResult['errmsg'], $wxResult['errcode']);
     }
 
     private function createUser($openid) {

@@ -3,7 +3,7 @@
 namespace app\api\controller\v1;
 
 use app\api\validate\AddressValidator;
-use app\api\service\BaseTokenService;
+use app\api\service\TokenService;
 use app\api\model\User;
 use app\lib\exception\UserException;
 use app\api\model\UserAddress;
@@ -21,7 +21,7 @@ class AddressController extends BaseController {
         $addressUpdate = new AddressValidator();
         $addressUpdate->goCheck();
         // 根据 token 获取 uid
-        $uid = BaseTokenService::getCurrentUID();
+        $uid = TokenService::getCurrentUID();
         // 根据uid查找用户数据，判断用户是否存在
         $user = User::get($uid);
         if (!$user) {
