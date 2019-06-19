@@ -44,19 +44,27 @@ class PayService {
         if (!$openid) {
             throw new TokenException();
         }
-        $wxPayUnifiedOrder = new \WxPayUnifiedOrder();
-        $wxPayUnifiedOrder->SetOut_trade_no($this->order_num);
-        $wxPayUnifiedOrder->SetTrade_type('JSAPI');
-        $wxPayUnifiedOrder->SetTotal_fee($totalPrice * 100); // 以分为单位
-        $wxPayUnifiedOrder->SetBody('零售商贩'); 
-        $wxPayUnifiedOrder->SetOpenid($openid); 
-        $wxPayUnifiedOrder->SetNotify_url(''); // 回调地址
+        $wxOrder = new \WxPayUnifiedOrder();
+        $wxOrder->SetOut_trade_no($this->order_num);
+        $wxOrder->SetTrade_type('JSAPI');
+        $wxOrder->SetTotal_fee($totalPrice * 100); // 以分为单位
+        $wxOrder->SetBody('零售商贩'); 
+        $wxOrder->SetOpenid($openid); 
+        $wxOrder->SetNotify_url(''); // 回调地址
 
-        $this->getPaySignature($wxPayUnifiedOrder);
+        $this->getPaySignature($wxOrder);
     }
 
-    private function getPaySignature($wxPayUnifiedOrder) {
-        $order = \WxPayApi::unifiedOrder(new \WxPayConfig(), $wxPayUnifiedOrder);
+    private function sign($wxOrder) {
+        $jsApiPayData = new \WxPayJsApiPay();
+        $jsApiPayData->SetAppid(config('wx.app_id'));
+        $jsApiPayData->SetTimeStamp(string(time())); // 时间戳，需要使用字符串类型
+        $nonceStr = md5(time() . mt_rand(0, 1000));
+        $jsApiPayData->SetNonceStr($nonceStr);
+    }
+
+    private function getPaySignature($wxOrder) {
+        $order = \WxPayApi::unifiedOrder(new \WxPayConfig(), $wxOrder);
         // 测试成功
         $order = [
             "appid" => "aaaaaaaaaa", // 10
@@ -81,7 +89,7 @@ class PayService {
     private function recordPreorder($order) {
         Order::where('id', $this->order_id)
             ->update([
-                'prepay_id' => $order->prepay_id,
+                'prepay_id' => $order['prepay_id'],
             ]);
     }
 
