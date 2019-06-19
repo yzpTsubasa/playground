@@ -2,6 +2,15 @@
 //获取应用实例
 const app = getApp()
 var baseUrl = 'http://tsubasayeung.cn/api/v1';
+
+function showTip(title, content) {
+  wx.showModal({
+    title: title || '',
+    content: content || '',
+    showCancel: false,
+  });
+}
+
 Page({
   data: {
     motto: 'Hello World',
@@ -64,9 +73,11 @@ Page({
         var key = 'token';
         var data = res.data.token;
         wx.setStorageSync(key, data);
+        showTip('申请令牌成功');
       },
       fail: function(res) {
         console.error(res);
+        showTip('申请令牌失败');
       }
     })
   },
@@ -88,9 +99,11 @@ Page({
       method: 'POST',
       success: function(res) {
         console.log(res.data);
+        showTip('更新地址成功');
       },
       fail: function(res) {
         console.log(res);
+        showTip('更新地址失败');
       }
     });
   },
@@ -114,14 +127,18 @@ Page({
         console.log(res.data);
         if (res.data.pass) {
           wx.setStorageSync('order_id', res.data.order_id);
+          showTip('下单成功');
+        } else {
+          showTip('下单失败');
         }
       },
       fail: function(res) {
         console.log(res);
+        showTip('下单失败');
       }
     });
   },
-  onReqPay() {
+  onReqPrePay() {
     var token = wx.getStorageSync('token');
     var order_id = wx.getStorageSync('order_id');
     wx.request({
@@ -136,22 +153,34 @@ Page({
       success: function (res) {
         var preData = res.data;
         console.log(preData);
-        // wx.requestPayment({
-        //   timeStamp: preData.timeStamp.toString(),
-        //   nonceStr: preData.nonceStr,
-        //   package: preData.package,
-        //   signType: preData.signType,
-        //   paySign: preData.paySign,
-        //   success: function(res) {
-        //     console.log(res.data);
-        //   },
-        //   fail: function(res) {
-        //     console.error(res);
-        //   }
-        // });
+        wx.setStorageSync('preorder_data', preData);
+        showTip('获取预支付信息成功');
       },
       fail: function (res) {
         console.log(res);
+        showTip('获取预支付信息失败');
+      }
+    });
+  },
+  onReqPay() {
+    var preData = wx.getStorageSync('preorder_data');
+    if (!preData) {
+      showTip('无预支付信息');
+      return;
+    }
+    wx.requestPayment({
+      timeStamp: preData.timeStamp.toString(),
+      nonceStr: preData.nonceStr,
+      package: preData.package,
+      signType: preData.signType,
+      paySign: preData.paySign,
+      success: function (res) {
+        console.log(res.data);
+        showTip('支付成功');
+      },
+      fail: function (res) {
+        console.error(res);
+        showTip('支付失败', JSON.stringify(res));
       }
     });
   }

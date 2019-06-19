@@ -11,7 +11,8 @@
     <button bindtap='onReqToken'>申请令牌</button>
     <button bindtap='onReqUpdateAddress'>更新地址</button>
     <button bindtap='onReqOrder'>下单</button>
-    <button bindtap='onReqPay'>支付</button>
+    <button bindtap='onReqPrePay'>获取预支付信息</button>
+    <button bindtap='onReqPay'>调用支付</button>
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
