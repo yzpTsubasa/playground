@@ -47,7 +47,8 @@ class WxPayConfig extends WxPayConfigInterface
 	}
 	public function GetSignType()
 	{
-		return "HMAC-SHA256";
+		// return "HMAC-SHA256";
+		return 'md5';
 	}
 
 	//=======【curl代理设置】===================================
@@ -89,11 +90,13 @@ class WxPayConfig extends WxPayConfigInterface
 	 */
 	public function GetKey()
 	{
-		return '';
+		// return '';
+		return config('wx.mch_key');
 	}
 	public function GetAppSecret()
 	{
-		return '';
+		// return '';
+		return config('wx.app_secret');
 	}
 
 

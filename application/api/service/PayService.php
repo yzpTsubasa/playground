@@ -52,7 +52,8 @@ class PayService {
         $wxOrder->SetOpenid($openid); 
         $wxOrder->SetNotify_url(''); // 回调地址
 
-        $this->getPaySignature($wxOrder);
+        $sign = $this->getPaySignature($wxOrder);
+        return $sign;
     }
 
     private function sign($wxOrder) {
@@ -61,6 +62,14 @@ class PayService {
         $jsApiPayData->SetTimeStamp(string(time())); // 时间戳，需要使用字符串类型
         $nonceStr = md5(time() . mt_rand(0, 1000));
         $jsApiPayData->SetNonceStr($nonceStr);
+        $jsApiPayData->SetPackage('prepay_id=' . $wxOrder['prepay_id']);
+        $jsApiPayData->SetSignType('md5');
+        $sign = $jsApiPayData->MakeSign(new \WxPayConfig());
+        $rawValues = $jsApiPayData->GetValues();
+        $rawValues['paySign'] = $sign;
+        // 不返回 appId
+        unset($rawValues['appId']);
+        return $rawValues;
     }
 
     private function getPaySignature($wxOrder) {
@@ -83,7 +92,8 @@ class PayService {
             Log::write('获取预支付订单失败', 'error');
         }
         $this->recordPreorder($order);
-        return null;
+        $sign = $this->sign($order);
+        return $sign;
     }
 
     private function recordPreorder($order) {
