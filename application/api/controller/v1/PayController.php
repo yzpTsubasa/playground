@@ -21,6 +21,6 @@ class PayController extends BaseController {
         $order_id = input('id');
         $payService = new PayService($order_id);
         $payResult = $payService->pay();
-        return $payResult;
+        return json($payResult);
     }
 }
