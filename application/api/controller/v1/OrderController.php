@@ -6,6 +6,8 @@ use app\api\validate\ProductsValidator;
 use app\api\service\TokenService;
 use app\lib\exception\core\SuccessfulMessage;
 use app\api\service\OrderService;
+use app\lib\enum\OrderStatusEnum;
+use app\api\service\WxNotify;
 
 class OrderController extends BaseController {
 
@@ -19,6 +21,7 @@ class OrderController extends BaseController {
     // 调用支付接口
     // 还需要再次进行库存量检测
     // 服务器调用微信支付接口进行支付
+    // 小程序拉起支付
     // 根据微信返回结果(异步推送)
     // 成功...库存量检测...扣除库存量  失败...
 
@@ -31,5 +34,27 @@ class OrderController extends BaseController {
         $oderModel = new OrderService();
         $order = $oderModel->submit($uid, $products);
         return json($order);
+    }
+
+    /**
+     * 小程序支付成功后
+     * 微信定时调用该接口
+     * 调用频率 15 / 15 / 30 / 180 / 1800 / 1800 / 3600 (s)
+     * 
+     * @method POST xml格式，无query参数
+     * 
+     * 
+     * 
+     */
+    public function recvNotifyFromWxPay() {
+        // 检查库存
+        // 更新订单状态
+        OrderStatusEnum::PAID;
+        // 更新库存
+        // 返回成功 / 失败
+
+        $config = new \WxPayConfig();
+        $result = (new WxNotify())->Handle($config);
+        return $result;
     }
 }
