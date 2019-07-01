@@ -2,6 +2,8 @@
 namespace app\api\service;
 
 use app\lib\enum\OrderStatusEnum;
+use app\api\model\Product;
+use app\lib\exception\core\ExceptionHandler;
 
 Loader::import('WxPay.WxPay', EXTEND_PATH, '.Notify.php');
 
@@ -62,25 +64,32 @@ class WxNotify extends \WxPayNotify {
                 }
                 $orderService = new OrderService();
                 $orderStatus = $orderService->checkOrderStock($order['id']);
-                if (!$orderStatus['pass']) {
-                    return false;
-                }
-                $this->updateOrderStatus();
-                $this->reduceStock();
+                // if (!$orderStatus['pass']) {
+                //     return false;
+                // }
+                $this->updateOrderStatus($order['id'], $orderStatus['pass']);
+                $this->reduceStock($orderStatus);
             }
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
+            ExceptionHandler::recordException($th);
             return false;
         }
-
-
         return true;
     }
 
-    private function updateOrderStatus() {
-
+    private function updateOrderStatus($order_id, $success) {
+        $status = $success ? OrderStatusEnum::PAID : OrderStatusEnum::PAID_STOCKOUT;
+        Order::where('id', '=', $order_id) 
+            ->update("status", $status);
+        
     }
 
-    private function reduceStock() {
-        
+    private function reduceStock($orderStatus) {
+        if ($orderStatus['pass']) {
+            foreach ($orderStatus['pStatusArray'] as $singleStatus) {
+                Product::where('id', '=', $singleStatus['id'])
+                    ->setDec('stock', $singleStatus['count']);
+            }
+        }
     }
 }

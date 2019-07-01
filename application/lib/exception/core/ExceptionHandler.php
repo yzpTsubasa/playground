@@ -29,6 +29,7 @@ class ExceptionHandler extends Handle
             $this->errorCode = $e->errorCode;
         } else {
             // 记录日志
+            // $$ recordException($e);
             $this->recordException($e);
 
             /** 是否启用默认的异常页面*/
@@ -49,7 +50,7 @@ class ExceptionHandler extends Handle
         return json($result, $this->code);
     }
 
-    private function recordException(Exception $e) {
+    public static function recordException(Exception $e) {
         Log::write(get_class($e) . $e->getMessage(), 'error', true);
     }
 }
