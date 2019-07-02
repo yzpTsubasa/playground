@@ -4,6 +4,7 @@ namespace app\api\service;
 use app\lib\enum\OrderStatusEnum;
 use app\api\model\Product;
 use app\lib\exception\core\ExceptionHandler;
+use think\Db;
 
 Loader::import('WxPay.WxPay', EXTEND_PATH, '.Notify.php');
 
@@ -50,11 +51,13 @@ class WxNotify extends \WxPayNotify {
 	 */
     public function NotifyProcess($objData, $config, $msg)
     {
+        Db::startTrans(); // 启用事务，因为有对多个模型进行更新
         try {
             $values = $objData->GetValues();
             if ($values['result_code'] === 'SUCCESS') { // 支付成功
                 $order_no = $values['out_trade_no'];
                 $order = Order::where("order_no", "=", $order_no)
+                                ->lock(true) // 锁，SQL的并行->串行
                                 ->find();
                 if (!$order) {
                     return false;
@@ -69,8 +72,10 @@ class WxNotify extends \WxPayNotify {
                 // }
                 $this->updateOrderStatus($order['id'], $orderStatus['pass']);
                 $this->reduceStock($orderStatus);
+                Db::commit();
             }
         } catch (\Exception $th) {
+            Db::rollback();
             ExceptionHandler::recordException($th);
             return false;
         }
