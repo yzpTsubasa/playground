@@ -1,6 +1,7 @@
 <?php
 namespace app\api\service;
 
+use app\api\model\Order;
 use app\lib\enum\OrderStatusEnum;
 use app\api\model\Product;
 use app\lib\exception\core\ExceptionHandler;
@@ -85,7 +86,7 @@ class WxNotify extends \WxPayNotify {
 
     private function updateOrderStatus($order_id, $success) {
         $status = $success ? OrderStatusEnum::PAID : OrderStatusEnum::PAID_STOCKOUT;
-        Order::where('id', '=', $order_id) 
+        Order::where('id', '=', $order_id)
             ->update("status", $status);
         
     }

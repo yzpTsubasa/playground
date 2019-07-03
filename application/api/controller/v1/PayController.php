@@ -53,4 +53,11 @@ class PayController extends BaseController {
         $result = (new WxNotify())->Handle($config);
         return $result;
     }
+
+    //// 重定向
+    public function redirectRequest() {
+        $requestData = file_get_contents('php://input');
+        $result = curl_post_raw('http://xxxxxxx....?xxxx', $requestData);
+        return $result;
+    }
 }
