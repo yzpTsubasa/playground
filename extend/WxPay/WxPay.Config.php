@@ -43,7 +43,7 @@ class WxPayConfig extends WxPayConfigInterface
 	**/
 	public function GetNotifyUrl()
 	{
-		return "";
+		return config('secure.pay_callback_url');
 	}
 	public function GetSignType()
 	{

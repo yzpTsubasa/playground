@@ -46,9 +46,9 @@ Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
 
 Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');
 
-Route::post('api/:version/order', 'api/v1.OrderController/submitOrder');
+Route::post('api/:version/order', 'api/:version.OrderController/submitOrder');
 
-Route::post('api/:version/pay/preorder', 'api/v1.PayController/getPreorder');
-Route::post('api/:version/pay/notify', 'api/v1.PayController/recvNotifyFromWxPay');
+Route::post('api/:version/pay/preorder', 'api/:version.PayController/getPreorder');
+Route::post('api/:version/pay/notify', 'api/:version.PayController/recvNotifyFromWxPay');
 
 // Route::rule('test', 'api/v1.AddressController/second');

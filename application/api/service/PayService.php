@@ -50,7 +50,7 @@ class PayService {
         $wxOrder->SetTotal_fee($totalPrice * 100); // 以分为单位
         $wxOrder->SetBody('零售商贩'); 
         $wxOrder->SetOpenid($openid); 
-        $wxOrder->SetNotify_url(''); // 回调地址
+        $wxOrder->SetNotify_url(config('secure.pay_callback_url')); // 回调地址
 
         $sign = $this->getPaySignature($wxOrder);
         return $sign;
