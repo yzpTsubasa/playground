@@ -36,25 +36,4 @@ class OrderController extends BaseController {
         return json($order);
     }
 
-    /**
-     * 小程序支付成功后
-     * 微信定时调用该接口
-     * 调用频率 15 / 15 / 30 / 180 / 1800 / 1800 / 3600 (s)
-     * 
-     * @method POST xml格式，无query参数
-     * 
-     * 
-     * 
-     */
-    public function recvNotifyFromWxPay() {
-        // 检查库存
-        // 更新订单状态
-        OrderStatusEnum::PAID;
-        // 更新库存
-        // 返回成功 / 失败
-
-        $config = new \WxPayConfig();
-        $result = (new WxNotify())->Handle($config);
-        return $result;
-    }
 }

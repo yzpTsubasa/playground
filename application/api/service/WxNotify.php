@@ -5,8 +5,9 @@ use app\lib\enum\OrderStatusEnum;
 use app\api\model\Product;
 use app\lib\exception\core\ExceptionHandler;
 use think\Db;
+use think\Loader;
 
-Loader::import('WxPay.WxPay', EXTEND_PATH, '.Notify.php');
+Loader::import('WxPay.WxPay', EXTEND_PATH, '.Api.php');
 
 class WxNotify extends \WxPayNotify {
 
@@ -49,7 +50,7 @@ class WxNotify extends \WxPayNotify {
 	 * @param string $msg 如果回调处理失败，可以将错误信息输出到该方法
 	 * @return true回调出来完成不需要继续回调，false回调处理未完成需要继续回调
 	 */
-    public function NotifyProcess($objData, $config, $msg)
+    public function NotifyProcess($objData, $config, &$msg)
     {
         Db::startTrans(); // 启用事务，因为有对多个模型进行更新
         try {
