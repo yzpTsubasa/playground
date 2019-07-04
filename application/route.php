@@ -47,6 +47,8 @@ Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
 Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');
 
 Route::post('api/:version/order', 'api/:version.OrderController/submitOrder');
+Route::get('api/:version/order/summary', 'api/:version.OrderController/getSummary');
+Route::get('api/:version/order/:id', 'api/:version.OrderController/getDetail', [], ['id' => '\d+']);
 
 Route::post('api/:version/pay/preorder', 'api/:version.PayController/getPreorder');
 Route::post('api/:version/pay/notify', 'api/:version.PayController/recvNotifyFromWxPay');

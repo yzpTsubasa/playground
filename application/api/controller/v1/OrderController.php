@@ -8,11 +8,16 @@ use app\lib\exception\core\SuccessfulMessage;
 use app\api\service\OrderService;
 use app\lib\enum\OrderStatusEnum;
 use app\api\service\WxNotify;
+use app\api\validate\PageParamValidator;
+use app\api\model\Order;
+use app\api\validate\IDIsPositiveIntValidator;
+use app\lib\exception\OrderException;
 
 class OrderController extends BaseController {
 
     protected $beforeActionList = [
         'checkUserScope' => ['only' => 'submitOrder'],
+        'checkUserAboveScope' => ['only' => 'getDetail,getSummary'],
     ];
     // 订单主要流程：
     // 选择商品后，提交所选的商品
@@ -36,4 +41,32 @@ class OrderController extends BaseController {
         return json($order);
     }
 
+    public function getSummary() {
+        (new PageParamValidator())->goCheck();
+        $uid = TokenService::getCurrentUID();
+        $page = input('page');
+        if (!$page) {
+            $page = 1;
+        }
+        $size = input('size');
+        if (!$size) {
+            $size = 15;
+        }
+        $paginateData = Order::getByUser($uid, $page, $size);
+        $data = $paginateData->hidden(['snap_items', 'prepay_id', 'snap_address'])->toArray();
+        return json([
+            'data' => $data,
+            'current_page' => $paginateData->getCurrentPage()
+        ]);
+    }
+
+    public function getDetail() {
+        (new IDIsPositiveIntValidator())->goCheck();
+        $id = input('id');
+        $data = Order::get($id);
+        if (!$data) {
+            throw new OrderException();
+        }
+        return json($data->hidden(['prepay_id']));
+    }
 }
