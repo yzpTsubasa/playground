@@ -1,1 +1,6 @@
-<text>home.wxml</text>
+<view >
+    <swiper >
+        <swiper-item></swiper-item>
+    </swiper>
+    <view ></view>
+</view>
