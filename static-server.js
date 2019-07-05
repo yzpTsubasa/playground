@@ -60,14 +60,14 @@ module.exports = function(app, localIP) {
         }
 
 
-        var driverReg = /\/[a-zA-Z]\:\//;
+        var driverReg = /\/([a-zA-Z]+)(\:||%3A)\//;
         var driverResult = req.url.match(driverReg);
-        if(driverResult && driverResult.index == 0){// 有驱动盘符标识
-            var driverName = driverResult[0];
-            driverName = driverName.substr(1, 1);
+        if(driverResult){// 有驱动盘符标识
+            var driverName = driverResult[1];
             if(driversRegistered.indexOf(driverName) == -1){
                 driversRegistered.push(driverName);
                 registerRoute(`/${driverName}:`, !isMac ? (driverName + ":\\") : ("/"));
+                registerRoute(`/${driverName}%3A`, !isMac ? (driverName + ":\\") : ("/"));
             }
         }
 
