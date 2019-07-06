@@ -1,3 +1,6 @@
+var Home = require('home_model.js').Home;
+// import {Home} from 'home_model.js';
+
 Page({
 
     /**
@@ -11,7 +14,16 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-  
+      this._loadData();
+    },
+
+    _loadData: function() {
+      var home = new Home();
+      if (!home) {
+        return;
+      }
+      var id = 1;
+      home.getBannerData(id, ret => {console.log(ret)});
     },
   
     /**

@@ -2,5 +2,5 @@
     <swiper >
         <swiper-item></swiper-item>
     </swiper>
-    <view ></view>
+    <view >Test</view>
 </view>
