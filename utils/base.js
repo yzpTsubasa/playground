@@ -25,7 +25,7 @@ export class Base {
       method: method,
       header: header,
       success: function (ret) {
-        callback && callback(ret);
+        callback && callback(ret.data);
       },
       fail: function (ret) {
         console.log(ret);

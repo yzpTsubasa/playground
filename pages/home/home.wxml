@@ -1,6 +1,14 @@
 <view >
-    <swiper >
-        <swiper-item></swiper-item>
+    <!-- 首页轮播图 beg -->
+    <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" indicator-color="#ffffffaa" indicator-active-color="#8d2222">        
+        <block wx:key="key_word" wx:for = "{{banner_items}}">
+            <swiper-item class="banner-item" item-id="{{item.key_word}}">
+                <image mode="aspectFill" src="{{item.img.url}}" />
+            </swiper-item>
+        </block>
     </swiper>
+    <!-- 首页轮播图 end -->
+
+
     <view >Test</view>
 </view>

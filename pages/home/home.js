@@ -7,7 +7,7 @@ Page({
      * 页面的初始数据
      */
     data: {
-  
+      banner_items: [],
     },
   
     /**
@@ -23,7 +23,10 @@ Page({
         return;
       }
       var id = 1;
-      home.getBannerData(id, ret => {console.log(ret)});
+      var that = this;
+      home.getBannerData(id, ret => {
+        that.setData({banner_items: ret});
+      });
     },
   
     /**
