@@ -1,3 +1,5 @@
+<import src="../tpls/products/products-tpl.wxml"></import>
+
 <view>
     <!-- 首页轮播图 beg -->
     <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" indicator-color="#ffffffaa" indicator-active-color="#8d2222">
@@ -22,7 +24,10 @@
         </view>
         <!-- 专题 end -->
         <!-- 单品 beg -->
-        <view class="home-main-products"></view>
+        <view class="home-main-products">
+            <view class="home-main-header">最近新品</view>
+            <template is="products" data="{{products:product_datas}}"></template>
+        </view>
         <!-- 单品 end -->
     </view>
 </view>

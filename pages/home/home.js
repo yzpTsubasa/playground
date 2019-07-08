@@ -9,6 +9,7 @@ Page({
     data: {
       banner_datas: [],
       theme_datas: [],
+      product_datas: [],
     },
   
     /**
@@ -29,10 +30,14 @@ Page({
         that.setData({banner_datas: ret});
       });
       home.getThemeData(ret => {
-        console.log(ret);
         that.setData({
           theme_datas: ret
         })
+      });
+      home.getProductData(10, ret => {
+        that.setData({
+          product_datas: ret
+        });
       });
     },
 
