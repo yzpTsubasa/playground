@@ -1,5 +1,5 @@
-var Home = require('home_model.js').Home;
-// import {Home} from 'home_model.js';
+var Home = require('./home_model.js').Home;
+// import {Home} from './home_model.js';
 
 Page({
 
@@ -7,7 +7,8 @@ Page({
      * 页面的初始数据
      */
     data: {
-      banner_items: [],
+      banner_datas: [],
+      theme_datas: [],
     },
   
     /**
@@ -25,8 +26,19 @@ Page({
       var id = 1;
       var that = this;
       home.getBannerData(id, ret => {
-        that.setData({banner_items: ret});
+        that.setData({banner_datas: ret});
       });
+      home.getThemeData(ret => {
+        console.log(ret);
+        that.setData({
+          theme_datas: ret
+        })
+      });
+    },
+
+    onThemesItemTap(event) {
+      var dataset = event.currentTarget.dataset;
+      console.log(dataset);
     },
   
     /**

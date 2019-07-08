@@ -1,14 +1,28 @@
-<view >
+<view>
     <!-- 首页轮播图 beg -->
-    <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" indicator-color="#ffffffaa" indicator-active-color="#8d2222">        
-        <block wx:key="key_word" wx:for = "{{banner_items}}">
+    <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" indicator-color="#ffffffaa" indicator-active-color="#8d2222">
+        <block wx:key="key_word" wx:for="{{banner_datas}}">
             <swiper-item class="banner-item" item-id="{{item.key_word}}">
                 <image mode="aspectFill" src="{{item.img.url}}" />
             </swiper-item>
         </block>
     </swiper>
     <!-- 首页轮播图 end -->
-
-
-    <view >Test</view>
+    <view class="home-main">
+        <!-- 专题 beg -->
+        <view class="home-main-theme">
+            <view class="home-main-header">精选主题</view>
+            <view class="theme-box">
+                <block wx:key="id" wx:for="{{theme_datas}}">
+                    <view class="{{ index == theme_datas.length - 1 ? 'theme-item big' : 'theme-item'}}" bindtap="onThemesItemTap" data-id="{{item.id}}" data-name="{{item.name}}">
+                        <image src="{{item.topic_img.url}}"></image>
+                    </view>
+                </block>
+            </view>
+        </view>
+        <!-- 专题 end -->
+        <!-- 单品 beg -->
+        <view class="home-main-products"></view>
+        <!-- 单品 end -->
+    </view>
 </view>
