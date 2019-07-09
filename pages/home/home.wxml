@@ -1,6 +1,6 @@
 <import src="../tpls/products/products-tpl.wxml"></import>
 
-<view>
+<view class="container">
     <!-- 首页轮播图 beg -->
     <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" indicator-color="#ffffffaa" indicator-active-color="#8d2222">
         <block wx:key="key_word" wx:for="{{banner_datas}}">
