@@ -9,7 +9,13 @@ Page({
    * 页面的初始数据
    */
   data: {
-    product_data: {}
+    id: 0,
+    product: {},
+    select_range: [],
+    select_index: 0,
+    select_count: 1,
+    detail_tabs: ['商品详情', '产品参数', '售后保障'],
+    tab_index: 0,
   },
 
   /**
@@ -17,12 +23,38 @@ Page({
    */
   onLoad: function (options) {
     console.log("onLoad product ", options);
-    var id = +options.id;
+    this.data.id = +options.id;
+    var select_range = [];
+    for (var i = 0; i < 10; ++i) {
+      select_range.push(i + 1);
+    }
+    this.setData({
+      select_range: select_range
+    });
+    this._loadData();
+  },
+
+  _loadData() {
+    var id = this.data.id;
     prodcut.getProductDetail(id, ret => {
       console.log(ret);
       this.setData({
-        product_data: ret
+        product: ret
       });
+    });
+  },
+
+  onCountChange(event) {
+    console.log(event);
+    this.setData({
+      select_index: event.detail.value,
+      select_count: this.data.select_range[event.detail.value],
+    });
+  },
+
+  onTabTap(event) {
+    this.setData({
+      tab_index: prodcut.getEventData(event, 'index'),
     });
   },
 

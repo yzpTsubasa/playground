@@ -1,1 +1,66 @@
 <!--pages/product.wxml-->
+
+<view class="container detail-container">
+    <!-- 上半部分 -->
+    <view class="detail-header-box">
+        <view class="fixed-btns-box">
+            <view class="fiexd-cart">
+                <image src="../../imgs/icon/cart@top.png" />
+            </view>
+        </view>
+        <view class="detail-topic-img">
+            <image src="{{product.main_img_url}}" mode="aspectFit"/>
+        </view>
+        <view class="cart-box">
+            <view class="product-counts">
+                <picker class="{{product.stock?'':'disabled'}}" range="{{select_range}}" value="{{select_index}}" bind:change="onCountChange">
+                    <view>
+                        <text class="counts-tips">数量</text>
+                        <text class="counts-data">{{select_count}}</text>
+                        <image class="counts-icon" src="../../imgs/icon/arrow@down.png" />
+                    </view>
+                </picker>
+            </view>
+            <view class="middle-border"></view>
+            <view class="add-cart-btn">
+                <text >加入购物车</text>
+                <image class="cart-icon" src="../../imgs/icon/cart.png" />
+            </view>
+        </view>
+        <view class="basic-info-box">
+            <view class="{{product.stock > 0 ? 'stock' : 'stock no'}} ">{{product.stock > 0? '有货' : '缺货'}}</view>
+            <view class="name">{{product.name}}</view>
+            <view class="price">￥{{product.price}}</view>
+        </view>
+    </view>
+    <!-- 下半部分 -->
+    <view class="detail-bottom-box">
+        <view class="tabs-box">
+            <block wx:for="{{detail_tabs}}" wx:key="">
+                <view class="tabs-item {{tab_index == index && 'selected'}}" data-index="{{index}}" bind:tap="onTabTap">
+                    {{item}}
+                </view>
+            </block>
+        </view>
+        <view class="product-detail-box">
+            <view class="product-detail-imgs" wx:if="{{tab_index == 0}}">
+                <block wx:for="{{product.imgs}}" wx:key="img_url.url">
+                    <image src="{{item.img_url.url}}" />
+                </block>
+            </view>
+            <view class="product-detail-properties" wx:if="{{tab_index == 1}}">
+                <block wx:for="{{product.properties}}" wx:key="name">
+                    <view class="properties-item">
+                        <text class="properties-name">{{item.name}}</text>
+                        <text class="properties-detail">{{item.detail}}</text>
+                    </view>
+                </block>
+            </view>
+            <view class="product-detail-protect" wx:if="{{tab_index == 2}}">
+                <view >
+                    一天包退
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

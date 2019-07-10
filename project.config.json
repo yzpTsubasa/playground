@@ -40,8 +40,16 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
-			"list": []
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "debug",
+					"pathName": "pages/product/product",
+					"query": "id=11",
+					"scene": null
+				}
+			]
 		}
 	}
 }
