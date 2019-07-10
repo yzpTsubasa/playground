@@ -1,5 +1,8 @@
-var Home = require('./home_model.js').Home;
-// import {Home} from './home_model.js';
+import {Tool} from '../../utils/tool';
+// var Home = require('./home_model.js').Home;
+import {Home} from './home_model.js';
+
+var home = new Home();
 
 Page({
 
@@ -20,10 +23,6 @@ Page({
     },
 
     _loadData: function() {
-      var home = new Home();
-      if (!home) {
-        return;
-      }
       var id = 1;
       var that = this;
       home.getBannerData(id, ret => {
@@ -42,8 +41,40 @@ Page({
     },
 
     onThemesItemTap(event) {
-      var dataset = event.currentTarget.dataset;
-      console.log(dataset);
+      var id = home.getEventData(event, 'id');
+      var name = home.getEventData(event, 'name');
+      wx.navigateTo({
+        url: `/pages/theme/theme?id=${id}&name=${name}`,
+        success: (result)=>{
+          
+        },
+        fail: ()=>{},
+        complete: ()=>{}
+      });
+    },
+
+    onProductsItemTap(event) {
+      var id = home.getEventData(event, 'id');
+      wx.navigateTo({
+        url: `/pages/product/product?id=${id}`,
+        success: (result)=>{
+          
+        },
+        fail: ()=>{},
+        complete: ()=>{}
+      });
+    },
+
+    onBannerItemTap(event) {
+      var id = home.getEventData(event, 'id');
+      wx.navigateTo({
+        url: `/pages/product/product?id=${id}`,
+        success: (result)=>{
+          
+        },
+        fail: ()=>{},
+        complete: ()=>{}
+      });
     },
   
     /**

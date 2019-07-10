@@ -36,4 +36,8 @@ export class Base {
   getToken() {
     return wx.getStorageSync("token");
   }
+
+  getEventData(event, key) {
+    return event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset[key];
+  }
 }

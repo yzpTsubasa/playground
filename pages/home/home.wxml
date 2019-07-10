@@ -4,7 +4,7 @@
     <!-- 首页轮播图 beg -->
     <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" indicator-color="#ffffffaa" indicator-active-color="#8d2222">
         <block wx:key="key_word" wx:for="{{banner_datas}}">
-            <swiper-item class="banner-item" item-id="{{item.key_word}}">
+            <swiper-item class="banner-item" data-id="{{item.key_word}}" bind:tap="onBannerItemTap">
                 <image mode="aspectFill" src="{{item.img.url}}" />
             </swiper-item>
         </block>
