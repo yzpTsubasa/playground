@@ -24,7 +24,6 @@ Page({
 
   _loadData() {
     theme.getThemeDetail(this.data.id, ret => {
-      console.log(ret);
       this.setData({
         theme_data: ret
       });
@@ -48,7 +47,9 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    wx.setNavigationBarTitle({
+      title: this.data.name,
+    });
   },
 
   /**
