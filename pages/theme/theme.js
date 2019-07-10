@@ -1,18 +1,47 @@
-// pages/theme/theme.js
+import {Theme} from './theme_model';
+
+var theme = new Theme();
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    theme_data: [],
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var id = options.id;
+    var name = options.name;
+    this.data.id = id;
+    this.data.name = name;
+    this._loadData();
+  },
 
+  _loadData() {
+    theme.getThemeDetail(this.data.id, ret => {
+      console.log(ret);
+      this.setData({
+        theme_data: ret
+      });
+    });
+  },
+
+  
+  onProductsItemTap(event) {
+    var id = theme.getEventData(event, 'id');
+    wx.navigateTo({
+      url: `/pages/product/product?id=${id}`,
+      success: (result)=>{
+        
+      },
+      fail: ()=>{},
+      complete: ()=>{}
+    });
   },
 
   /**

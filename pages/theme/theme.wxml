@@ -1,2 +1,11 @@
 <!--pages/theme/theme.wxml-->
-<text>pages/theme/theme.wxml</text>
+<import src="../tpls/products/products-tpl.wxml"></import>
+
+<view class="container">
+    <view class="theme-header">
+        <image src="{{theme_data.head_img.url}}" mode="aspectFill"/>
+    </view>
+    <view class="theme-main">
+        <template is="products" data="{{products: theme_data.products}}"></template>
+    </view>
+</view>

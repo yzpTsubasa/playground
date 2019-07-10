@@ -1,2 +1,1 @@
 <!--pages/product.wxml-->
-<text>{{product_data.name}}</text>
