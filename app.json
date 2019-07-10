@@ -17,6 +17,10 @@
     "enablePullDownRefresh": false
   },
   "tabBar": {
+    "borderStyle": "white",
+    "color": "#989898",
+    "selectedColor": "#AB956D",
+    "backgroundColor": "#f5f5f5",
     "list": [
       {
         "pagePath": "pages/home/home",
