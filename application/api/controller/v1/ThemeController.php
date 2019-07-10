@@ -33,7 +33,7 @@ class ThemeController
     public function getThemeDetail() {
         $id = input('id');
         (new IDIsPositiveIntValidator())->goCheck();
-        $result = ThemeModel::getThemeWithProducts($id);
+        $result = Theme::getThemeWithProducts($id);
         if (!$result) {
             throw new ThemeMissException();
         }
