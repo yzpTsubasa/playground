@@ -22,7 +22,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log("onLoad product ", options);
     this.data.id = +options.id;
     var select_range = [];
     for (var i = 0; i < 10; ++i) {
@@ -37,7 +36,6 @@ Page({
   _loadData() {
     var id = this.data.id;
     prodcut.getProductDetail(id, ret => {
-      console.log(ret);
       this.setData({
         product: ret
       });
@@ -45,7 +43,6 @@ Page({
   },
 
   onCountChange(event) {
-    console.log(event);
     this.setData({
       select_index: event.detail.value,
       select_count: this.data.select_range[event.detail.value],
