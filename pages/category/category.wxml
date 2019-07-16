@@ -1,2 +1,19 @@
 <!--pages/category/category.wxml-->
-<text>pages/category/category.wxml</text>
+<view class="container">
+    <!-- 左侧菜单 -->
+    <view >
+        <block wx:for="{{categoryTypes}}">
+            <text >{{item.name}}</text>
+        </block>
+    </view>
+    <!-- 右侧详情 -->
+    <view >
+        <view >
+            <block wx:for="{{categoryProducts[select_id]}}">
+                <text >
+                    {{item.name}}
+                </text>
+            </block>
+        </view>
+    </view>
+</view>

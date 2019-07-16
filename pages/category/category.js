@@ -1,18 +1,47 @@
 // pages/category/category.js
+
+import {Category} from './category_model';
+
+var category = new Category();
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    select_index: 0,
+    select_id: null,
+    categoryTypes: [],
+    categoryProducts: {},
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this._loadData();
+  },
 
+  _loadData() {
+    var that = this;
+    category.getCategoryType(ret => {
+      that.setData({
+        categoryTypes: ret,
+        select_id: ret[0].id,
+      })
+      that._loadCategoryProducts(this.data.select_id);
+    });
+  },
+
+  _loadCategoryProducts(id) {
+    var that = this;
+    category.getCategoryProducts(id, ret => {
+      that.data.categoryProducts[id] = ret;
+      that.setData({
+        categoryProducts: that.data.categoryProducts
+      });
+    });
   },
 
   /**
