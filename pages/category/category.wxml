@@ -3,14 +3,14 @@
     <!-- 左侧菜单 -->
     <view >
         <block wx:for="{{categoryTypes}}">
-            <text >{{item.name}}</text>
+            <text data-id="{{item.id}}" bind:tap="onCategoryTypeTap">{{item.name}}</text>
         </block>
     </view>
     <!-- 右侧详情 -->
     <view >
         <view >
             <block wx:for="{{categoryProducts[select_id]}}">
-                <text >
+                <text data-id="{{item.id}}" bind:tap="onProductsItemTap">
                     {{item.name}}
                 </text>
             </block>

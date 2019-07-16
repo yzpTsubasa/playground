@@ -44,6 +44,26 @@ Page({
     });
   },
 
+  onCategoryTypeTap(event) {
+    var id = category.getEventData(event, 'id');
+    this.setData({
+      select_id: id
+    });
+    this._loadCategoryProducts(id);
+  },
+
+  onProductsItemTap(event) {
+    var id = category.getEventData(event, 'id');
+    wx.navigateTo({
+      url: `/pages/product/product?id=${id}`,
+      success: (result)=>{
+        
+      },
+      fail: ()=>{},
+      complete: ()=>{}
+    });
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
