@@ -59,6 +59,13 @@ module.exports = function(app, localIP) {
             return;
         }
 
+        var stopServerReg = /^\/kill/;
+        if (req.url.match(stopServerReg)) {
+            res.status(200).send(`{"code": 0, "data": "Kill server successfully!"}`);
+            setTimeout(() => process.exit(0), 10);
+            return;
+        }
+
 
         var driverReg = /\/([a-zA-Z]+)(\:||%3A)\//;
         var driverResult = req.url.match(driverReg);
