@@ -28,7 +28,7 @@ Page({
     category.getCategoryType(ret => {
       that.setData({
         categoryTypes: ret,
-        select_id: ret[0].id,
+        select_id: ret[that.data.select_index].id,
       })
       that._loadCategoryProducts(this.data.select_id);
     });
@@ -46,8 +46,10 @@ Page({
 
   onCategoryTypeTap(event) {
     var id = category.getEventData(event, 'id');
+    var index = category.getEventData(event, 'index');
     this.setData({
-      select_id: id
+      select_id: id,
+      select_index: index,
     });
     this._loadCategoryProducts(id);
   },

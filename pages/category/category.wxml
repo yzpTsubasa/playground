@@ -1,19 +1,18 @@
 <!--pages/category/category.wxml-->
-<view class="container">
-    <!-- 左侧菜单 -->
-    <view >
-        <block wx:for="{{categoryTypes}}">
-            <text data-id="{{item.id}}" bind:tap="onCategoryTypeTap">{{item.name}}</text>
-        </block>
-    </view>
-    <!-- 右侧详情 -->
-    <view >
-        <view >
-            <block wx:for="{{categoryProducts[select_id]}}">
-                <text data-id="{{item.id}}" bind:tap="onProductsItemTap">
-                    {{item.name}}
-                </text>
+<import src="../tpls/category/category-tpl.wxml"></import>
+<view class="container category-container">
+    <view class="category-box">
+        <!-- 左侧菜单 -->
+        <view class="left-box">
+            <block wx:key="id" wx:for="{{categoryTypes}}">
+                <view class="menu-item {{select_id == item.id && 'selected'}}" data-id="{{item.id}}" data-index="{{index}}" bind:tap="onCategoryTypeTap">{{item.name}}</view>
             </block>
+        </view>
+        <!-- 右侧详情 -->
+        <view class="right-box">
+            <view >
+                <template is="categorydetail" data="{{procucts: categoryProducts[select_id], categoryInfo: categoryTypes[select_index]}}"></template>
+            </view>
         </view>
     </view>
 </view>
