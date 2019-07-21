@@ -1,4 +1,9 @@
 // pages/cart/cart.js
+
+import {Cart} from './cart_model';
+
+var cart = new Cart();
+
 Page({
 
   /**

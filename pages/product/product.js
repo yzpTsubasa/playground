@@ -1,5 +1,6 @@
 // pages/product.js
 import {Product} from './product_model';
+// import {Cart} from '../cart/cart_model';
 
 var prodcut = new Product();
 
