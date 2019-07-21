@@ -9,10 +9,12 @@
             </block>
         </view>
         <!-- 右侧详情 -->
-        <view class="right-box">
-            <view >
-                <template is="categorydetail" data="{{procucts: categoryProducts[select_id], categoryInfo: categoryTypes[select_index]}}"></template>
-            </view>
+        <view class="right-box" style="transform:translate(0,{{-100 * select_index}}vh)">
+            <block wx:key="id" wx:for="{{categoryTypes}}">
+                <view class="foods-type-box">
+                    <template is="categorydetail" data="{{procucts: categoryProducts[item.id], categoryInfo: item}}"></template>
+                </view>
+            </block>
         </view>
     </view>
 </view>
