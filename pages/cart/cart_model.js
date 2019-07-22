@@ -1,18 +1,18 @@
 import {Base} from '../../utils/base.js';
 
 export class Cart extends Base {
-  storageKeyName = "cart";
+  storageKeyName = "cart1";
   
   /**
    * 添加到购物车
    * 
    * @param {object} item 
-   * @param {number} counts 
+   * @param {number} count 
    */
-  add(item, counts) {
+  add(item, count) {
     var cartData = this.getLocalCardData();
-    var itemData = this.getItemData(item.id, cartData);
-    itemData.counts += counts;
+    var itemData = this.getItemData(item, cartData);
+    itemData.count += count;
     wx.setStorageSync(this.storageKeyName, cartData);
   }
 
@@ -24,17 +24,22 @@ export class Cart extends Base {
     return res;
   }
 
-  getItemData(id, arr) {
+  getItemData(target, arr) {
     for (var i = 0, len = arr && arr.length; i < len; ++i) {
       var item = arr[i];
-      if (item && item.id == id) {
+      if (item && item.id == target.id) {
         return item;
       }
     }
-    var result;
-    result = {id: id, counts: 0, selectStatus: true}; // 默认选中
+    var result = target;
+    result.count = 0;
     arr.push(result);
     return result;
+  }
+
+  getProductCount() {
+    var datas = this.getLocalCardData();
+    return datas.reduce((a, b) => a + b.count, 0);
   }
 
 }

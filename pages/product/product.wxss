@@ -63,14 +63,14 @@
   align-items: center;
 }
 
-.product-counts,.add-cart-btn{
+.product-count,.add-cart-btn{
   height: 100%;
   display: flex;
   font-size: 24rpx;
   align-items: center;
   justify-content: center;
 }
-.product-counts{
+.product-count{
   width: 50%;
 }
 .add-cart-btn{
@@ -107,29 +107,29 @@
 
 
 /*数量选择器*/
-.product-counts picker{
+.product-count picker{
   margin: 0 auto;
   height: 100rpx;
   width: 100%;
   color: #fff;
 }
-.product-counts picker.disabled{
+.product-count picker.disabled{
   color: #D5D5DB;
 }
-.product-counts picker view{
+.product-count picker view{
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100rpx;
 }
-.counts-tips,.counts-data,.counts-icon{
+.count-tips,.count-data,.count-icon{
   margin: 0 20rpx;
 }
-.counts-data{
+.count-data{
   font-size: 28rpx;
 }
-.counts-icon{
+.count-icon{
   height: 48rpx;
   width: 48rpx;
 }

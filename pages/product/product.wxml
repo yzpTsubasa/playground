@@ -4,31 +4,37 @@
     <!-- 上半部分 -->
     <view class="detail-header-box">
         <view class="fixed-btns-box">
-            <view class="fiexd-cart">
+            <view class="fiexd-cart {{isShake?'animate':''}}">
                 <image src="../../imgs/icon/cart@top.png" />
+                <view wx:if="{{cart_product_count}}">
+                    {{cart_product_count}}
+                </view>
             </view>
         </view>
         <view class="detail-topic-img">
             <image src="{{product.main_img_url}}" mode="aspectFit"/>
         </view>
         <view class="cart-box">
-            <view class="product-counts">
+            <view class="product-count">
                 <picker class="{{product.stock?'':'disabled'}}" range="{{select_range}}" value="{{select_index}}" bind:change="onCountChange">
                     <view>
-                        <text class="counts-tips">数量</text>
-                        <text class="counts-data">{{select_count}}</text>
-                        <image class="counts-icon" src="../../imgs/icon/arrow@down.png" />
+                        <text class="count-tips">数量</text>
+                        <text class="count-data">{{select_count}}</text>
+                        <image class="count-icon" src="../../imgs/icon/arrow@down.png" />
                     </view>
                 </picker>
             </view>
             <view class="middle-border"></view>
-            <view class="add-cart-btn">
+            <view class="add-cart-btn {{product.stock ? '':'disabled'}}"
+                bind:tap="onAddCartBtnTap">
                 <text >加入购物车</text>
                 <image class="cart-icon" src="../../imgs/icon/cart.png" />
+                <image id="small-top-img" class="small-top-img {{isFly?'animate':''}}"
+                       src="{{product.main_img_url}}" mode="aspectFill" style="{{translateStyle}}"></image>
             </view>
         </view>
         <view class="basic-info-box">
-            <view class="{{product.stock > 0 ? 'stock' : 'stock no'}} ">{{product.stock > 0? '有货' : '缺货'}}</view>
+            <view class="{{product.stock > 0 ? 'stock' : 'stock no'}} ">{{product.stock > 0 ? '有货' : '缺货'}}</view>
             <view class="name">{{product.name}}</view>
             <view class="price">￥{{product.price}}</view>
         </view>

@@ -1,8 +1,9 @@
 // pages/product.js
 import {Product} from './product_model';
-// import {Cart} from '../cart/cart_model';
+import {Cart} from '../cart/cart_model';
 
 var prodcut = new Product();
+var cart = new Cart();
 
 Page({
 
@@ -15,6 +16,7 @@ Page({
     select_range: [],
     select_index: 0,
     select_count: 1,
+    cart_product_count: 0,
     detail_tabs: ['商品详情', '产品参数', '售后保障'],
     tab_index: 0,
   },
@@ -41,6 +43,10 @@ Page({
         product: ret
       });
     });
+
+    this.setData({
+      cart_product_count: cart.getProductCount(),
+    });
   },
 
   onCountChange(event) {
@@ -55,6 +61,52 @@ Page({
       tab_index: prodcut.getEventData(event, 'index'),
     });
   },
+
+  onAddCartBtnTap(event) {
+    var tempObj = {};
+    var product = this.data.product;
+    tempObj.id = product.id;
+    tempObj.name = product.name;
+    tempObj.price = product.price;
+    tempObj.main_img_url = product.main_img_url;
+    cart.add(tempObj, this.data.select_count);
+    
+    this.setData({
+      cart_product_count: cart.getProductCount(),
+    });
+
+    this._flyToCartEffect(event);
+  },
+
+  /*加入购物车动效*/
+  _flyToCartEffect:function(events){
+    //获得当前点击的位置，距离可视区域左上角
+    var touches=events.touches[0];
+    var diff={
+            x:'25px',
+            y:25-touches.clientY+'px'
+        },
+        style='display: block;-webkit-transform:translate('+diff.x+','+diff.y+') rotate(350deg) scale(0)';  //移动距离
+    this.setData({
+        isFly:true,
+        translateStyle:style
+    });
+    var that=this;
+    setTimeout(()=>{
+        that.setData({
+            isFly:false,
+            translateStyle:'-webkit-transform: none;',  //恢复到最初状态
+            isShake:true,
+        });
+        setTimeout(()=>{
+            var counts=that.data.cartTotalCounts+that.data.productCounts;
+            that.setData({
+                isShake:false,
+                cartTotalCounts:counts
+            });
+        },200);
+    },1000);
+},
 
   /**
    * 生命周期函数--监听页面初次渲染完成
