@@ -42,10 +42,13 @@ Page({
       this.setData({
         product: ret
       });
+      if (!this.data.product.stock) {
+        cart.showToast('暂时缺货');
+      }
     });
 
     this.setData({
-      cart_product_count: cart.getProductCount(),
+      cart_product_count: cart.getAllCount(),
     });
   },
 
@@ -58,7 +61,18 @@ Page({
 
   onTabTap(event) {
     this.setData({
-      tab_index: prodcut.getEventData(event, 'index'),
+      tab_index: prodcut.getDataFromEventDataset(event, 'index'),
+    });
+  },
+
+  onCartTap(event) {
+    wx.switchTab({
+      url: '/pages/cart/cart',
+      success: (result)=>{
+        
+      },
+      fail: ()=>{},
+      complete: ()=>{}
     });
   },
 
@@ -70,9 +84,10 @@ Page({
     tempObj.price = product.price;
     tempObj.main_img_url = product.main_img_url;
     cart.add(tempObj, this.data.select_count);
+    cart.showToast('成功加入购物车');
     
     this.setData({
-      cart_product_count: cart.getProductCount(),
+      cart_product_count: cart.getAllCount(),
     });
 
     this._flyToCartEffect(event);

@@ -45,8 +45,8 @@ Page({
   },
 
   onCategoryTypeTap(event) {
-    var id = category.getEventData(event, 'id');
-    var index = category.getEventData(event, 'index');
+    var id = category.getDataFromEventDataset(event, 'id');
+    var index = category.getDataFromEventDataset(event, 'index');
     this.setData({
       select_id: id,
       select_index: index,
@@ -55,7 +55,7 @@ Page({
   },
 
   onProductsItemTap(event) {
-    var id = category.getEventData(event, 'id');
+    var id = category.getDataFromEventDataset(event, 'id');
     wx.navigateTo({
       url: `/pages/product/product?id=${id}`,
       success: (result)=>{

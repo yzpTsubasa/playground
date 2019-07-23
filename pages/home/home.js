@@ -41,8 +41,8 @@ Page({
     },
 
     onThemesItemTap(event) {
-      var id = home.getEventData(event, 'id');
-      var name = home.getEventData(event, 'name');
+      var id = home.getDataFromEventDataset(event, 'id');
+      var name = home.getDataFromEventDataset(event, 'name');
       wx.navigateTo({
         url: `/pages/theme/theme?id=${id}&name=${name}`,
         success: (result)=>{
@@ -54,7 +54,7 @@ Page({
     },
 
     onProductsItemTap(event) {
-      var id = home.getEventData(event, 'id');
+      var id = home.getDataFromEventDataset(event, 'id');
       wx.navigateTo({
         url: `/pages/product/product?id=${id}`,
         success: (result)=>{
@@ -66,7 +66,7 @@ Page({
     },
 
     onBannerItemTap(event) {
-      var id = home.getEventData(event, 'id');
+      var id = home.getDataFromEventDataset(event, 'id');
       wx.navigateTo({
         url: `/pages/product/product?id=${id}`,
         success: (result)=>{

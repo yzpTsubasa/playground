@@ -32,7 +32,7 @@ Page({
 
   
   onProductsItemTap(event) {
-    var id = theme.getEventData(event, 'id');
+    var id = theme.getDataFromEventDataset(event, 'id');
     wx.navigateTo({
       url: `/pages/product/product?id=${id}`,
       success: (result)=>{
