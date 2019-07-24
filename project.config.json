@@ -45,7 +45,7 @@
 				{
 					"id": 0,
 					"name": "debug",
-					"pathName": "pages/product/product",
+					"pathName": "pages/cart/cart",
 					"query": "id=11",
 					"scene": null
 				}

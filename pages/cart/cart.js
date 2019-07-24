@@ -56,8 +56,13 @@ Page({
     cart.setSelect(values);
   },
 
+  onProductSelectTap: function(event) {
+    var id = cart.getDataFromEventDataset(event, 'id', true);
+    cart.toggleSelect(id);
+  },
+
   onSelectAllChange: function(event) {
-    var values = event.detail.value.map(v => parseInt(v));
+    // var values = event.detail.value.map(v => parseInt(v));
     if (this.data.allCount) {
       if (this.data.selectCount < this.data.allCount) { 
         cart.setAllSelect();
@@ -91,7 +96,7 @@ Page({
     });
   },
 
-  onPayTap: function(event) {
+  onSummitOrder: function(event) {
     
   },
 

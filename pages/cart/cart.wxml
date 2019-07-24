@@ -1,36 +1,64 @@
 <!--pages/cart/cart.wxml-->
-<view class="container">
-    <view wx:if="{{!allCount}}">
-        <text >您的购物车空空如也，快去添加吧</text>
-        <view bind:tap="onGoHomeTap">前往首页</view>
-    </view>
-    <view wx:if="{{allCount}}">
+<view class="container cart-container">
+    <block  wx:if="{{!allCount}}">
+        <view class="no-data">
+            <text >您的购物车空空如也，快去添加吧~~~</text>
+            <view bind:tap="onGoHomeTap">【前往主页】</view>
+        </view>
+    </block>
+    <block wx:if="{{allCount}}">
         <view>
-            <checkbox-group bind:change="onProductSelectChange">
-                <block wx:key="id" wx:for="{{cartDatas}}">
-                    <view >
-                        <checkbox value="{{item.id}}" checked="{{item.selected}}">
-                            <view >{{item.name}}</view>
-                        </checkbox>
-                        <text > {{item.price * item.count}} 元</text>
-                        <button data-id="{{item.id}}" bind:tap="onProductSub">-</button>
-                        <text >{{item.count}}</text>
-                        <button data-id="{{item.id}}" bind:tap="onProductAdd">+</button>
-                        <button data-id="{{item.id}}" bind:tap="onProductRemove">x</button>
+            <view class="cart-box">
+                <!-- <checkbox-group bind:change="onProductSelectChange"> -->
+                    <block wx:key="id" wx:for="{{cartDatas}}">
+                        <view class="cart-item">
+                            <view class="cart-item-main">
+                                <view class="cart-item-checkbox" data-id="{{item.id}}" bind:tap="onProductSelectTap">
+                                    <image src="{{item.selected ? '../../imgs/icon/circle@selected.png' : '../../imgs/icon/circle@noselected.png'}}" />
+                                    <!-- <checkbox value="{{item.id}}" checked="{{item.selected}}">
+                                    </checkbox> -->
+                                </view>
+                                <view class="cart-item-img">
+                                    <image class="good-image" src="{{item.main_img_url}}" />
+                                </view>
+                                <view class="cart-item-word">
+                                    <view class="title-box">
+                                        <text class="title">{{item.name}}</text>
+                                        <text >￥{{item.price}}</text>
+                                    </view>
+                                    <view class="bottom-box">
+                                        <view class="cart-item-counts">
+                                            <view class="btns" data-id="{{item.id}}" bind:tap="onProductSub">-</view>
+                                            <view class="counts" data-id="{{item.id}}" >{{item.count}}</view>
+                                            <view class="btns" data-id="{{item.id}}" bind:tap="onProductAdd">+</view>
+                                        </view>
+                                        <view class="delete" data-id="{{item.id}}" bind:tap="onProductRemove">
+                                            x
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </block>
+                <!-- </checkbox-group> -->
+            </view>
+            <view class="footer-account-box all-accounts-box">
+                <!-- <checkbox-group bind:change="onSelectAllChange"> -->
+                    <!-- <checkbox checked="{{selectCount && selectCount == allCount}}">
+                    </checkbox> -->
+                <!-- </checkbox-group> -->
+                <view class="all-select" bind:tap="onSelectAllChange">
+                    <image class="title-icon" src="{{selectCount && selectCount == allCount ? '../../imgs/icon/circle@selected.png' : '../../imgs/icon/circle@noselected.png'}}" />
+                    <text >全选({{selectCount}})</text>
+                </view>
+                <view class="all-price-submit {{selectCount || 'disabled'}}">
+                    <view class="accounts-btn" bind:tap="onSummitOrder">下单</view>
+                    <view class="price-text">￥{{selectPrice}}</view>
+                    <view class="arrow-icon">
+                        <image src="{{selectCount ? '../../imgs/icon/arrow.png' : '../../imgs/icon/arrow@grey.png'}}" />
                     </view>
-                </block>
-            </checkbox-group>
+                </view>
+            </view>
         </view>
-        <view>
-            <checkbox-group bind:change="onSelectAllChange">
-                <checkbox checked="{{selectCount && selectCount == allCount}}">
-                    全选<text >({{selectCount}})</text>
-                </checkbox>
-            </checkbox-group>
-        </view>
-        <view >
-            <text >总价: {{selectPrice}} 元</text>
-            <button bind:tap="onPayTap">支付</button>
-        </view>
-    </view>
+    </block>
 </view>

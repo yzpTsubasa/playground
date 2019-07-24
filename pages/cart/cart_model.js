@@ -61,7 +61,17 @@ export class Cart extends Base {
 
   getAllPrice(isSelected) {
     var datas = this.getLocalCardDatas();
-    return datas.reduce((a, b) => a + (!isSelected || b.selected ? b.count * b.price : 0), 0);
+    return datas.reduce((a, b) => this.addNumber(a, (!isSelected || b.selected ? b.count * b.price : 0)), 0);
+  }
+
+  toggleSelect(id) {
+    var datas = this.getLocalCardDatas();
+    datas.forEach(data => {
+      if (id == data.id) {
+        data.selected = !data.selected;
+      }
+    });
+    this.setLocalCartDatas(datas);
   }
 
   /**

@@ -1,4 +1,35 @@
-.no-data{
+/*checkbox 整体大小  */
+checkbox {
+    width: 240rpx;
+    height: 90rpx;
+}
+
+/*checkbox 选项框大小  */
+checkbox .wx-checkbox-input {
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 50rpx;
+}
+
+/*checkbox选中后样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+    background: #FF525C;
+}
+
+/*checkbox选中后图标样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+    width: 28rpx;
+    height: 28rpx;
+    line-height: 28rpx;
+    text-align: center;
+    font-size: 22rpx;
+    color: #fff;
+    background: transparent;
+    transform: translate(-50%, -50%) scale(1);
+    -webkit-transform: translate(-50%, -50%) scale(1);
+}
+
+.no-data {
     display: flex;
     height: 140rpx;
     font-size: 26rpx;
@@ -6,9 +37,10 @@
     align-items: center;
     justify-content: center;
 }
-.upper-word{
+
+.upper-word {
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
     height: 100%;
     width: 100%;
@@ -18,10 +50,10 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    background-color:rgba(0,0,0,.25);
+    background-color: rgba(0, 0, 0, .25);
 }
 
-.footer-account-box{
+.footer-account-box {
     position: fixed;
     bottom: 0;
     height: 92rpx;
@@ -31,40 +63,44 @@
     border-bottom: 1rpx solid #ccc;
 }
 
-.disabled{
+.disabled {
     pointer-events: none;
 }
 
 /*订单三种状态*/
-.order-status-txt{
+.order-status-txt {
     font-size: 24rpx;
 }
-.order-status-txt.unpay{
+
+.order-status-txt.unpay {
     color: #B42F2D;
 }
-.order-status-txt.payed{
+
+.order-status-txt.payed {
     color: #AB956D;
 }
-.order-status-txt.done{
+
+.order-status-txt.done {
     color: #57AB53;
 }
 
-.order-no-txt{
+.order-no-txt {
     letter-spacing: 2rpx;
     color: #999;
 }
 
-.add-new-address{
+.add-new-address {
     width: 100%;
     height: 90rpx;
-    font-size:28rpx;
-    color:#989898;
+    font-size: 28rpx;
+    color: #989898;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.add-new-address .icon{
+
+.add-new-address .icon {
     /*font-size: 40rpx;*/
-    color:#AB956D;
+    color: #AB956D;
     margin-right: 10rpx;
 }

@@ -1,7 +1,7 @@
 
 import { Tool } from './tool.js';
 import { Config } from './config.js';
-
+import { Decimal } from './decimal.min.js';
 
 export class Base {
   eventMap = {};
@@ -120,5 +120,13 @@ export class Base {
       fail: ()=>{},
       complete: ()=>{}
     });
+  }
+
+  addNumber(a, b) {
+    return Decimal.add(a, b).toNumber();
+  }
+
+  subNumber(a, b) {
+    return Decimal.sub(a, b).toNumber();
   }
 }
