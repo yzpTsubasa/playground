@@ -59,18 +59,20 @@ export class Cart extends Base {
       allCount: 0,
       selectPrice: 0,
       allPrice: 0,
-      cartDatas: null,
+      selectCartDatas: [],
+      cartDatas: [],
     };
     var datas = this.getLocalCardDatas();
     datas.forEach(data => {
       if (data.selected) {
         result.selectCount += data.count;
         result.selectPrice = this.Decimal.add(result.selectPrice, this.Decimal.mul(data.count, data.price)).toNumber();
+        result.selectCartDatas.push(data);
       }
       result.allPrice = this.Decimal.add(result.allPrice, this.Decimal.mul(data.count, data.price)).toNumber();
       result.allCount += data.count;
+      result.cartDatas.push(data);
     });
-    result.cartDatas = datas;
     return result;
   }
 

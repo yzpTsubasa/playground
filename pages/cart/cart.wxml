@@ -48,7 +48,7 @@
                     </checkbox> -->
                 <!-- </checkbox-group> -->
                 <view class="all-select" bind:tap="onSelectAllChange">
-                    <image class="title-icon" src="{{selectCount && selectCount == allCount ? '../../imgs/icon/circle@selected.png' : '../../imgs/icon/circle@noselected.png'}}" />
+                    <image class="title-icon" src="{{selectCartDatas.length && cartDatas.length == selectCartDatas.length ? '../../imgs/icon/circle@selected.png' : '../../imgs/icon/circle@noselected.png'}}" />
                     <text >全选({{selectCount}})</text>
                 </view>
                 <view class="all-price-submit {{selectCount || 'disabled'}}">

@@ -21,5 +21,6 @@ interface CartViewData {
   allCount: number;
   selectPrice: number;
   allPrice: number;
+  selectCartDatas: Array<ProductData>;
   cartDatas: Array<ProductData>;
 }

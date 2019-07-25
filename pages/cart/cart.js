@@ -15,6 +15,7 @@ Page({
     allCount: 0,
     allPrice: 0,
     cartDatas: [],
+    selectCartDatas: [],
   },
 
   /**
@@ -57,8 +58,8 @@ Page({
 
   onSelectAllChange: function(event) {
     // var values = event.detail.value.map(v => parseInt(v));
-    if (this.data.allCount) {
-      if (this.data.selectCount < this.data.allCount) { 
+    if (this.data.cartDatas.length) {
+      if (this.data.selectCartDatas.length < this.data.cartDatas.length) { 
         cart.setAllSelect();
       } else {
         cart.setAllUnselect();
