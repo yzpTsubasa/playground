@@ -40,13 +40,8 @@ Page({
   },
 
   updateData: function() {
-    this.setData({
-      selectCount: cart.getAllCount(true),
-      allCount: cart.getAllCount(false),
-      selectPrice: cart.getAllPrice(true),
-      allPrice: cart.getAllPrice(false),
-      cartDatas: cart.getLocalCardDatas(),
-    });
+    var cartViewData = cart.getCartViewData();
+    this.setData(cartViewData);
   },
 
   // 商品选择状态改变

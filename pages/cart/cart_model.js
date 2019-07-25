@@ -51,6 +51,30 @@ export class Cart extends Base {
   }
 
   /**
+   * @returns {CartViewData}
+   */
+  getCartViewData() {
+    var result = {
+      selectCount: 0,
+      allCount: 0,
+      selectPrice: 0,
+      allPrice: 0,
+      cartDatas: null,
+    };
+    var datas = this.getLocalCardDatas();
+    datas.forEach(data => {
+      if (data.selected) {
+        result.selectCount += data.count;
+        result.selectPrice = this.Decimal.add(result.selectPrice, this.Decimal.mul(data.count, data.price)).toNumber();
+      }
+      result.allPrice = this.Decimal.add(result.allPrice, this.Decimal.mul(data.count, data.price)).toNumber();
+      result.allCount += data.count;
+    });
+    result.cartDatas = datas;
+    return result;
+  }
+
+  /**
    * 
    * @param {*} isSelected 是否只选择选中的
    */
