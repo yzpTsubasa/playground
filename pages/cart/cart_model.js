@@ -56,12 +56,12 @@ export class Cart extends Base {
    */
   getAllCount(isSelected) {
     var datas = this.getLocalCardDatas();
-    return datas.reduce((a, b) => a + (!isSelected || b.selected ? b.count : 0), 0);
+    return datas.reduce((a, b) => this.Decimal.add(a, (!isSelected || b.selected ? b.count : 0)).toNumber(), 0);
   }
 
   getAllPrice(isSelected) {
     var datas = this.getLocalCardDatas();
-    return datas.reduce((a, b) => this.addNumber(a, (!isSelected || b.selected ? b.count * b.price : 0)), 0);
+    return datas.reduce((a, b) => this.Decimal.add(a, (!isSelected || b.selected ? b.count * b.price : 0)).toNumber(), 0);
   }
 
   toggleSelect(id) {

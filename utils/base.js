@@ -1,11 +1,12 @@
 
 import { Tool } from './tool.js';
 import { Config } from './config.js';
-import { Decimal } from './decimal.min.js';
+import Decimal from './decimal.js';
 
 export class Base {
   eventMap = {};
   baseURL = Config.BASE_URL;
+  Decimal = Decimal;
 
   on(eventType, handler, thisArg) {
     var handlerObjs = this.eventMap[eventType];
@@ -120,13 +121,5 @@ export class Base {
       fail: ()=>{},
       complete: ()=>{}
     });
-  }
-
-  addNumber(a, b) {
-    return Decimal.add(a, b).toNumber();
-  }
-
-  subNumber(a, b) {
-    return Decimal.sub(a, b).toNumber();
   }
 }
