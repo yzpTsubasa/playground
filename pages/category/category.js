@@ -1,8 +1,8 @@
 // pages/category/category.js
 
-import {Category} from './category_model';
+import {Singleton} from '../../utils/singleton';
 
-var category = new Category();
+var category = Singleton.Category;
 
 Page({
 

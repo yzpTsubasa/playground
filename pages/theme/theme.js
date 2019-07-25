@@ -1,6 +1,6 @@
-import {Theme} from './theme_model';
+import {Singleton} from '../../utils/singleton';
 
-var theme = new Theme();
+var theme = Singleton.Theme;
 
 Page({
 

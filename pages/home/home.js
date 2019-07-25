@@ -1,8 +1,6 @@
-import {Tool} from '../../utils/tool';
-// var Home = require('./home_model.js').Home;
-import {Home} from './home_model.js';
+import {Singleton} from '../../utils/singleton';
 
-var home = new Home();
+var home = Singleton.Home;
 
 Page({
 

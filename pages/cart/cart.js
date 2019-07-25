@@ -1,8 +1,7 @@
 // pages/cart/cart.js
+import {Singleton, CartEvent} from '../../utils/singleton';
 
-import {Cart, CartEvent} from './cart_model';
-
-var cart = new Cart();
+var cart = Singleton.Cart;
 
 Page({
 
@@ -110,6 +109,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+    cart.save();
     cart.off(CartEvent.CHANGE, this.updateData, this);
   },
 

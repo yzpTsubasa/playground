@@ -1,9 +1,8 @@
 // pages/product.js
-import {Product} from './product_model';
-import {Cart} from '../cart/cart_model';
+import {Singleton} from '../../utils/singleton';
 
-var prodcut = new Product();
-var cart = new Cart();
+var prodcut = Singleton.Product;
+var cart = Singleton.Cart;
 
 Page({
 

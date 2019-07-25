@@ -6,6 +6,7 @@ export class CartEvent {
 
 export class Cart extends Base {
   storageKeyName = "cart1";
+  _cartDatas = this.getLocalCardDatas();
   
   /**
    * 添加到购物车
@@ -14,15 +15,18 @@ export class Cart extends Base {
    * @param {number} count 
    */
   add(item, count) {
-    var cartDatas = this.getLocalCardDatas();
+    var cartDatas = this.getCartDatas();
     var itemData = this.getItemData(item, cartDatas);
     itemData.count += count;
-    this.setLocalCartDatas(cartDatas);
+    this.onCartDataChange();
   }
 
-  setLocalCartDatas(cartDatas) {
-    wx.setStorageSync(this.storageKeyName, cartDatas);
-    this.emit(CartEvent.CHANGE, cartDatas);
+  save() {
+    wx.setStorageSync(this.storageKeyName, this.getCartDatas());
+  }
+
+  onCartDataChange() {
+    this.emit(CartEvent.CHANGE, this.getCartDatas());
   }
 
   /**
@@ -34,6 +38,13 @@ export class Cart extends Base {
       res = [];
     }
     return res;
+  }
+
+  /**
+   * @returns {Array}
+   */
+  getCartDatas() {
+    return this._cartDatas;
   }
 
   getItemData(target, arr) {
@@ -62,7 +73,7 @@ export class Cart extends Base {
       selectCartDatas: [],
       cartDatas: [],
     };
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.forEach(data => {
       if (data.selected) {
         result.selectCount += data.count;
@@ -81,23 +92,23 @@ export class Cart extends Base {
    * @param {*} isSelected 是否只选择选中的
    */
   getAllCount(isSelected) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     return datas.reduce((a, b) => this.Decimal.add(a, (!isSelected || b.selected ? b.count : 0)).toNumber(), 0);
   }
 
   getAllPrice(isSelected) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     return datas.reduce((a, b) => this.Decimal.add(a, (!isSelected || b.selected ? b.count * b.price : 0)).toNumber(), 0);
   }
 
   toggleSelect(id) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.forEach(data => {
       if (id == data.id) {
         data.selected = !data.selected;
       }
     });
-    this.setLocalCartDatas(datas);
+    this.onCartDataChange();
   }
 
   /**
@@ -105,31 +116,31 @@ export class Cart extends Base {
    * @param {*} ids 
    */
   setSelect(ids) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.forEach(data => {
       data.selected = ids && ids.indexOf(data.id) != -1;
     });
-    this.setLocalCartDatas(datas);
+    this.onCartDataChange();
   }
 
   setAllSelect() {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.forEach(data => {
       data.selected = true;
     });
-    this.setLocalCartDatas(datas);
+    this.onCartDataChange();
   }
 
   setAllUnselect() {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.forEach(data => {
       data.selected = false;
     });
-    this.setLocalCartDatas(datas);
+    this.onCartDataChange();
   }
 
   addProductCount(id, delta) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.every((data, index) => {
       if (data.id == id) {
         data.count += delta;
@@ -140,11 +151,11 @@ export class Cart extends Base {
       }
       return true;
     });
-    this.setLocalCartDatas(datas);
+    this.onCartDataChange();
   }
 
   removeProductCount(id) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     datas.every((data, index) => {
       if (data.id == id) {
         datas.splice(index, 1);
@@ -152,11 +163,11 @@ export class Cart extends Base {
       }
       return true;
     });
-    this.setLocalCartDatas(datas);
+    this.onCartDataChange();
   }
 
   getProductCount(id) {
-    var datas = this.getLocalCardDatas();
+    var datas = this.getCartDatas();
     var result = 0;
     datas.every(data => {
       if (data.id == id) {
