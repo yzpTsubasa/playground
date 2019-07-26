@@ -6,7 +6,7 @@ export class CartEvent {
 
 export class Cart extends Base {
   storageKeyName = "cart1";
-  _cartDatas = this.getLocalCardDatas();
+  _cartDatas = this._getLocalCardDatas();
   
   /**
    * 添加到购物车
@@ -32,7 +32,7 @@ export class Cart extends Base {
   /**
    * @returns {Array}
    */
-  getLocalCardDatas() {
+  _getLocalCardDatas() {
     var res = wx.getStorageSync(this.storageKeyName);
     if (!res) {
       res = [];
@@ -43,8 +43,10 @@ export class Cart extends Base {
   /**
    * @returns {Array}
    */
-  getCartDatas() {
-    return this._cartDatas;
+  getCartDatas(isSelected) {
+    return this._cartDatas.filter((data) => {
+      return !isSelected || data.selected;
+    });
   }
 
   getItemData(target, arr) {

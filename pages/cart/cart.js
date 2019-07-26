@@ -89,9 +89,14 @@ Page({
       cart.removeProductCount(id)
     });
   },
-
+  /**
+   * 提交订单
+   * @param {*} event 
+   */
   onSummitOrder: function(event) {
-    
+    wx.navigateTo({
+      url: `/pages/order/order?price=${this.data.selectPrice}&from=cart`,
+    });
   },
 
   onGoHomeTap: function(event) {

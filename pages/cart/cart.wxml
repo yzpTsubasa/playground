@@ -51,8 +51,8 @@
                     <image class="title-icon" src="{{selectCartDatas.length && cartDatas.length == selectCartDatas.length ? '../../imgs/icon/circle@selected.png' : '../../imgs/icon/circle@noselected.png'}}" />
                     <text >全选({{selectCount}})</text>
                 </view>
-                <view class="all-price-submit {{selectCount || 'disabled'}}">
-                    <view class="accounts-btn" bind:tap="onSummitOrder">下单</view>
+                <view class="all-price-submit {{selectCount || 'disabled'}}" bind:tap="onSummitOrder">
+                    <view class="accounts-btn">下单</view>
                     <view class="price-text">￥{{selectPrice}}</view>
                     <view class="arrow-icon">
                         <image src="{{selectCount ? '../../imgs/icon/arrow.png' : '../../imgs/icon/arrow@grey.png'}}" />
