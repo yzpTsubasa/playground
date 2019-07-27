@@ -1,8 +1,5 @@
-import {Base} from '../../utils/base.js';
+import {Base, AppEvent} from '../../utils/base.js';
 
-export class CartEvent {
-  static CHANGE = 'change';
-}
 
 export class Cart extends Base {
   storageKeyName = "cart1";
@@ -26,7 +23,7 @@ export class Cart extends Base {
   }
 
   onCartDataChange() {
-    this.emit(CartEvent.CHANGE, this.getCartDatas());
+    this.emit(AppEvent.CHANGE, this.getCartDatas());
   }
 
   /**

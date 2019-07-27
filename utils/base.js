@@ -3,6 +3,10 @@ import { Tool } from './tool.js';
 import { Config } from './config.js';
 import Decimal from './decimal.js';
 
+export class AppEvent {
+  static CHANGE = 'change';
+}
+
 export class Base {
   eventMap = {};
   baseURL = Config.BASE_URL;

@@ -1,5 +1,5 @@
 // pages/cart/cart.js
-import {Singleton, CartEvent} from '../../utils/singleton';
+import {Singleton, AppEvent} from '../../utils/singleton';
 
 var cart = Singleton.Cart;
 
@@ -34,7 +34,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    cart.on(CartEvent.CHANGE, this.updateData, this);
+    cart.on(AppEvent.CHANGE, this.updateData, this);
     // 在onShow中处理，以便于每次显示时刷新
     this.updateData();
   },
@@ -115,7 +115,7 @@ Page({
    */
   onHide: function () {
     cart.save();
-    cart.off(CartEvent.CHANGE, this.updateData, this);
+    cart.off(AppEvent.CHANGE, this.updateData, this);
   },
 
   /**

@@ -1,7 +1,8 @@
 // pages/order/order.js
-import {Singleton, CartEvent} from '../../utils/singleton';
+import {Singleton, AppEvent} from '../../utils/singleton';
 
 var cart = Singleton.Cart;
+var address = Singleton.Address;
 
 Page({
 
@@ -11,6 +12,9 @@ Page({
   data: {
     price: 0,
     from: '',
+    orderStatus: 0,
+    addressInfo: null, // 地址信息
+    basicInfo: null, // 服务器下发的订单信息
   },
 
   /**
@@ -22,6 +26,30 @@ Page({
       from: options.from,
       products: cart.getCartDatas(true),
     });
+  },
+
+  onEditAddress(event) {
+    var that = this;
+    wx.chooseAddress({
+      success (res) {
+        var addressInfo = {
+          name: res.userName,
+          mobile: res.telNumber,
+          detailInfo: address.getFullAddress(res),
+        };
+        that.setData({
+          addressInfo: addressInfo,
+        });
+      }
+    });
+  },
+
+  onAddNewAddress(event) {
+    this.onEditAddress(event);
+  },
+
+  onPay(event) {
+
   },
 
   /**
