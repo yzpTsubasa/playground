@@ -6,7 +6,7 @@ export class Theme extends Base {
         this.request({
             url: `theme/${id}`,
             method: 'GET',
-            callback: ret => {
+            success: ret => {
                 callback && callback(ret);
             }
         })

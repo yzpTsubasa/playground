@@ -6,7 +6,7 @@ export class Home extends Base{
     this.request({
       url: 'banner/{0}', 
       urlFormatParams: [id], 
-      callback: function(data){
+      success: function(data){
         callback && callback(data.items);
       }
     });
@@ -18,7 +18,7 @@ export class Home extends Base{
       data: {
         ids: "1,2,3"
       }, 
-      callback: function(ret){
+      success: function(ret){
         callback && callback(ret);
       }
     });
@@ -30,7 +30,7 @@ export class Home extends Base{
       data: {
         count: count || 3
       },
-      callback: function(ret) {
+      success: function(ret) {
         callback && callback(ret);
       }
     });

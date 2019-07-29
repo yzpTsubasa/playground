@@ -40,6 +40,15 @@ Page({
         that.setData({
           addressInfo: addressInfo,
         });
+        address.summitAddress(res, flag => {
+          if (!flag) {
+            address.showModel('地址信息更新失败', ()=> {
+              wx.navigateTo({
+                url: '/pages/my/my'
+              });
+            });
+          }
+        });
       }
     });
   },

@@ -13,4 +13,26 @@ export class Address extends Base{
       }
       return fullAddress;
   }
+
+  summitAddress(data, callback) {
+    var dataParams = {
+      name: data.userName,
+      province: data.provinceName,
+      city: data.cityName,
+      country: data.countyName,
+      mobile: data.telNumber,
+      detail: data.detailInfo,
+    };
+    this.request({
+      url: 'address',
+      method: 'POST',
+      data: dataParams,
+      success: function(res) {
+        callback && callback(true, res);
+      },
+      fail: function(res) {
+        callback && callback(false, res);
+      }
+    })
+  }
 }

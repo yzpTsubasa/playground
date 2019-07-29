@@ -6,7 +6,7 @@ export class Product extends Base {
         this.request({
             url: `product/${id}`,
             method: 'GET',
-            callback: ret => {
+            success: ret => {
                 callback && callback(ret);
             }
         })

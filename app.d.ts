@@ -2,7 +2,8 @@ interface RequestParam {
   url: string;
   data: any;
   method: string;
-  callback: Function;
+  success: Function;
+  fail: Function,
   header: any;
   urlFormatParams: any;
 }

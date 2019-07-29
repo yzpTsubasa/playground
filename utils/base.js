@@ -57,10 +57,10 @@ export class Base {
    * @param {RequestParam} param
    */
   request(param) {
-     return this._request(param.url, param.data, param.header, param.header, param.callback, param.urlFormatParams);
+     return this._request(param.url, param.data, param.method, param.header, param.success, param.fail, param.urlFormatParams);
   }
 
-  _request(url, data, method, header, callback, urlFormatParams) {
+  _request(url, data, method, header, success, fail, urlFormatParams) {
     url = Tool.formatParams(this.baseURL + url, urlFormatParams);
     data;
     method = method || 'GET';
@@ -73,10 +73,11 @@ export class Base {
       method: method,
       header: header,
       success: function (ret) {
-        callback && callback(ret.data);
+        success && success(ret.data);
       },
       fail: function (ret) {
         console.log(ret);
+        fail && fail(ret);
       }
     })
   }

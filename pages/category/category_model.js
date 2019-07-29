@@ -4,7 +4,7 @@ export class Category extends Base{
   getCategoryType(callback) {
     this.request({
       url: 'category/all', 
-      callback: function(ret){
+      success: function(ret){
         callback && callback(ret);
       }
     });
@@ -14,7 +14,7 @@ export class Category extends Base{
     this.request({
       url: 'product/by_category?id={0}', 
       urlFormatParams: [id],
-      callback: function(ret){
+      success: function(ret){
         callback && callback(ret);
       }
     });
