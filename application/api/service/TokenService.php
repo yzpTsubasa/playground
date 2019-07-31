@@ -93,4 +93,12 @@ class TokenService
         }
         return true;
     }
+
+    public static function verifyToken($token) {
+        $values = Cache::get($token);
+        if (!$values) {
+            return false;
+        }
+        return true;
+    }
 }

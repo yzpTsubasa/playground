@@ -43,6 +43,7 @@ Route::group('api/:version/product', function() {
 Route::get('api/:version/category/all', 'api/:version.CategoryController/getAllCategories');
 
 Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
+Route::post('api/:version/token/verify', 'api/:version.TokenController/verifyToken');
 
 Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');
 
