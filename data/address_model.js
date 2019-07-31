@@ -1,4 +1,4 @@
-import {Base} from '../../utils/base.js';
+import {Base} from '../utils/base.js';
 
 export class Address extends Base{
   getFullAddress(res) {

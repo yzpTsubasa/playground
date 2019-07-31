@@ -2,6 +2,7 @@
 import { Tool } from './tool.js';
 import { Config } from './config.js';
 import Decimal from './decimal.js';
+import {Singleton} from './singleton';
 
 export class AppEvent {
   static CHANGE = 'change';
@@ -57,23 +58,48 @@ export class Base {
    * @param {RequestParam} param
    */
   request(param) {
-     return this._request(param.url, param.data, param.method, param.header, param.success, param.fail, param.urlFormatParams);
+     return this._request(param, true);
   }
 
-  _request(url, data, method, header, success, fail, urlFormatParams) {
-    url = Tool.formatParams(this.baseURL + url, urlFormatParams);
-    data;
-    method = method || 'GET';
-    header = header || {};
+  /**
+   * 
+   * @param {RequestParam} param
+   * @param {*} autoResend 
+   */
+  _request(param, autoResend) {
+    var url = Tool.formatParams(this.baseURL + param.url, param.urlFormatParams);
+    var data = param.data;
+    var method = param.method || 'GET';
+    var header = param.header || {};
     header['content-type'] = 'application/json';
     header['token'] = this.getToken();
+    var success = param.success;
+    var fail = param.fail;
     wx.request({
       url: url,
       data: data,
       method: method,
       header: header,
-      success: function (ret) {
-        success && success(ret.data);
+      success: ret => {
+        if (ret.statusCode - ret.statusCode % 100 == 200) {
+          success && success(ret.data);
+        } else {
+          switch (ret.statusCode) {
+            case 401: // 未授权
+              console.log('Token失效');
+              // Singleton.Token.getTokenFromServer();
+              if (autoResend) {
+                  Singleton.Token.getTokenFromServer(token => {
+                    this._request(param, false);
+                  });
+              }
+              
+              break;
+            default:
+              fail && fail(ret);
+              break;
+          }
+        }
       },
       fail: function (ret) {
         console.log(ret);
