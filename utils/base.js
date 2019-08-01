@@ -92,8 +92,9 @@ export class Base {
                   Singleton.Token.getTokenFromServer(token => {
                     this._request(param, --retryTimes);
                   });
+              } else {
+                fail && fail(ret);
               }
-              
               break;
             default:
               fail && fail(ret);

@@ -26,6 +26,12 @@ Page({
       from: options.from,
       products: cart.getCartDatas(true),
     });
+    address.getAddress(data => {
+      data.fullAddress = address.getAddressFullFormated(data);
+      this.setData({
+        addressInfo: data
+      });
+    });
   },
 
   onEditAddress(event) {
@@ -35,7 +41,7 @@ Page({
         var addressInfo = {
           name: res.userName,
           mobile: res.telNumber,
-          detailInfo: address.getFullAddress(res),
+          fullAddress: address.getAddressFullFormated(res),
         };
         that.setData({
           addressInfo: addressInfo,

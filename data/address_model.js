@@ -1,10 +1,10 @@
 import {Base} from '../utils/base.js';
 
 export class Address extends Base{
-  getFullAddress(res) {
+  getAddressFullFormated(res) {
       let province = res.province || res.provinceName;
       let city = res.city || res.cityName;
-      let county = res.county || res.countyName;
+      let county = res.county || res.countyName || res.country;
       let detail = res.detail || res.detailInfo;
       
       let fullAddress = city + county + detail;
@@ -32,6 +32,19 @@ export class Address extends Base{
       },
       fail: function(res) {
         callback && callback(false, res);
+      }
+    })
+  }
+
+  getAddress(callback) {
+    this.request({
+      url: 'address',
+      method: 'GET',
+      success: function(res) {
+        callback && callback(res);
+      },
+      fail: function(res) {
+        
       }
     })
   }

@@ -34,7 +34,7 @@
                 <text  class="val">{{addressInfo.mobile}}</text>
               </view>
           </view>
-          <view class="detail">{{addressInfo.totalDetail}}</view>
+          <view class="detail">{{addressInfo.fullAddress}}</view>
         </view>
         <view class="contact-icon" wx:if="{{orderStatus==0}}">
             <image src="../../imgs/icon/arrow@right.png"></image>
