@@ -14,7 +14,7 @@ use app\api\controller\v1\core\BaseController;
 class AddressController extends BaseController {
 
     protected $beforeActionList = [
-        'checkUserAboveScope' => ['only' => 'createOrUpdateAddress'],
+        'checkUserAboveScope' => ['only' => 'createOrUpdateAddress,getUserAddress'],
     ];
 
     public function createOrUpdateAddress() {
@@ -47,6 +47,16 @@ class AddressController extends BaseController {
         }
         // return $user;
         return json(new SuccessfulMessage(), 201);
+    }
+
+    public function getUserAddress() {
+        $uid = TokenService::getCurrentUID();
+        $userAddress = UserAddress::where('user_id', $uid)
+            ->find();
+        if (!$userAddress) {
+            throw new UserException('用户地址不存在', 60001);
+        }
+        return $userAddress;
     }
 
 }
