@@ -58,15 +58,15 @@ export class Base {
    * @param {RequestParam} param
    */
   request(param) {
-     return this._request(param, true);
+     return this._request(param, 1);
   }
 
   /**
    * 
    * @param {RequestParam} param
-   * @param {*} autoResend 
+   * @param {*} retryTimes 重试次数
    */
-  _request(param, autoResend) {
+  _request(param, retryTimes) {
     var url = Tool.formatParams(this.baseURL + param.url, param.urlFormatParams);
     var data = param.data;
     var method = param.method || 'GET';
@@ -88,9 +88,9 @@ export class Base {
             case 401: // 未授权
               console.log('Token失效');
               // Singleton.Token.getTokenFromServer();
-              if (autoResend) {
+              if (retryTimes > 0) {
                   Singleton.Token.getTokenFromServer(token => {
-                    this._request(param, false);
+                    this._request(param, --retryTimes);
                   });
               }
               

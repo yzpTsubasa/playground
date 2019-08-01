@@ -12,7 +12,7 @@ export class Cart extends Base {
    * @param {number} count 
    */
   add(item, count) {
-    var cartDatas = this.getCartDatas();
+    var cartDatas = this._cartDatas;
     var itemData = this.getItemData(item, cartDatas);
     itemData.count += count;
     this.onCartDataChange();
@@ -23,6 +23,7 @@ export class Cart extends Base {
   }
 
   onCartDataChange() {
+    this.save();
     this.emit(AppEvent.CHANGE, this.getCartDatas());
   }
 
