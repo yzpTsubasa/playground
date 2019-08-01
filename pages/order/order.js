@@ -15,6 +15,7 @@ Page({
     orderStatus: 0,
     addressInfo: null, // 地址信息
     basicInfo: null, // 服务器下发的订单信息
+    products: [],
   },
 
   /**
@@ -64,7 +65,67 @@ Page({
   },
 
   onPay(event) {
+    if (!this.data.addressInfo) {
+      cart.showModel('请填写您的收货地址');
+      return;
+    }
+    if (this.data.orderStatus == 0) {
+      this._firstTimePay(); // 还未在服务器创建订单
+    } else {
+      this._oneMoresTimePay();  // 已经在服务器创建订单
+    }
+  },
 
+  _firstTimePay() {
+    var products = this.data.products;
+    var orderProducts = products.map(product => {
+      return {
+        product_id: product.id,
+        count: product.count,
+      };
+    });
+    Singleton.Order.createOrder(orderProducts, data => {
+      if (data.pass) { // 订单创建完成
+        var id = data.order_id;
+        this.data.id = id;
+        this.data.fromCartFlag = false;
+        this._execPay(id);
+      } else {
+        this._orderFail(data);
+      }
+    });
+  },
+
+  _oneMoresTimePay() {
+
+  },
+
+  // 订单创建失败
+  _orderFail(data) {
+
+  },
+
+  // 开始付款
+  _execPay(id) {
+    Singleton.Order.createPrepay(id, data => {
+      var timeStamp = data.timeStamp;
+      if (!timeStamp) { // 创建预支付失败
+        // 
+      } else {
+        this.deleteProdcutsFromCart(); // 从购物车中删除已创建的预支付订单中的商品
+        Singleton.Order.pay(data, data => {
+          if (!data) { // 微信支付失败
+            wx.navigateTo({
+              url: `/pay_result/pay_result?id=${id}&flag=${data}$from=order`
+            });
+          }
+        });
+      }
+    });
+  },
+
+  deleteProdcutsFromCart() {
+    cart.deleteProducts(this.data.products);
   },
 
   /**

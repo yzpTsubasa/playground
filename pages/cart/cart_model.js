@@ -18,6 +18,20 @@ export class Cart extends Base {
     this.onCartDataChange();
   }
 
+  deleteProducts(products) {
+    var datas = this._cartDatas;
+    products && products.forEach(product => {
+      datas.every((data, index) => {
+        if (data.id == product.id) {
+          datas.splice(index, 1);
+          return false;
+        }
+        return true;
+      });
+    });
+    this.onCartDataChange();
+  }
+
   save() {
     wx.setStorageSync(this.storageKeyName, this.getCartDatas());
   }

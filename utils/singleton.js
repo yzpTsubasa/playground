@@ -6,6 +6,7 @@ import {Theme} from '../pages/theme/theme_model';
 import {Category} from '../pages/category/category_model';
 import {Address} from '../data/address_model';
 import {Token} from '../data/token_model';
+import {Order} from '../pages/order/order_model';
 
 export class Singleton {
   static Cart = new Cart();
@@ -15,6 +16,7 @@ export class Singleton {
   static Category = new Category();
   static Address = new Address();
   static Token = new Token();
+  static Order = new Order();
 }
 
 export {
@@ -26,4 +28,5 @@ export {
   Category,
   Address,
   Token,
+  Order,
 };
