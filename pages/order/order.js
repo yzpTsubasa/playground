@@ -49,7 +49,7 @@ Page({
         });
         address.summitAddress(res, flag => {
           if (!flag) {
-            address.showModel('地址信息更新失败', ()=> {
+            address.showModel('操作提示', '地址信息更新失败', ()=> {
               wx.navigateTo({
                 url: '/pages/my/my'
               });
@@ -66,7 +66,7 @@ Page({
 
   onPay(event) {
     if (!this.data.addressInfo) {
-      cart.showModel('请填写您的收货地址');
+      cart.showModel('操作提示', '请填写您的收货地址');
       return;
     }
     if (this.data.orderStatus == 0) {
@@ -102,7 +102,23 @@ Page({
 
   // 订单创建失败
   _orderFail(data) {
-
+    /** @type {Array} */
+    var names = data.pStatusArray.map(status => {
+      if (status && status.name) {
+        if (status.name.length > 15) {
+          return status.name.substr(0, 12) + '...';
+        } else {
+          return status.name;
+        }
+      }
+      return '';
+    });
+    var tips = names.slice(0, 2).join('、');
+    if (names.length > 2) {
+      tips += ' 等';
+    }
+    tips += ' 缺货';
+    cart.showModel('下单失败', tips);
   },
 
   // 开始付款

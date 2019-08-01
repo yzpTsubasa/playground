@@ -70,7 +70,7 @@ Page({
     var id = cart.getDataFromEventDataset(event, 'id', true);
     var count = cart.getProductCount(id);
     if (count <= 1) {
-      cart.showModel('是否删除商品?', () => {
+      cart.showModel('操作提示','是否删除商品?', () => {
         cart.addProductCount(id, -1);
       });
     } else {
@@ -85,7 +85,7 @@ Page({
 
   onProductRemove: function(event) {
     var id = cart.getDataFromEventDataset(event, 'id', true);
-    cart.showModel('是否删除商品?', () => {
+    cart.showModel('操作提示', '是否删除商品?', () => {
       cart.removeProductCount(id)
     });
   },

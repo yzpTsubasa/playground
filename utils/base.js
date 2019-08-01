@@ -136,18 +136,18 @@ export class Base {
     });
   }
 
-  showModel(title, okHandler) {
+  showModel(title, msg, okHandler) {
     wx.showModal({
-      title: title,
-      content: '',
-      showCancel: true,
+      title: title || '操作提示',
+      content: msg,
+      showCancel: !!okHandler,
       cancelText: '取消',
       cancelColor: '#000000',
       confirmText: '确定',
       confirmColor: '#3CC51F',
       success: (result) => {
         if(result.confirm){
-          okHandler();
+          okHandler && okHandler();
         }
       },
       fail: ()=>{},

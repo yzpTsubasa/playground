@@ -44,11 +44,11 @@ export class Token extends Base {
                     wx.setStorageSync('token', data.token);
                     callback && callback(data.token);
                 } else {
-                    this.showModel('登录信息失效，请尝试重进页面');
+                    this.showModel('操作提示', '登录信息失效，请尝试重进页面');
                 }
             },
             fail: res => {
-                this.showModel('登录信息失效，请尝试重进页面');
+                this.showModel('操作提示', '登录信息失效，请尝试重进页面');
             }
         })
     }
