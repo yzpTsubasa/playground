@@ -1,0 +1,7 @@
+<view class="container pay-result-container">
+    <view class="pay-result">
+        <image src="{{paySuccess ? '../../imgs/icon/pay@success.png' : '../../imgs/icon/pay@error.png'}}" />
+        <view >{{paySuccess ? '支付成功' : '支付失败'}}</view>
+        <button type="{{paySuccess ? 'primary' : 'default'}}" bind:tap="onViewOrder">查看订单</button>
+    </view>
+</view>

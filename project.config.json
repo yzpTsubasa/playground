@@ -40,13 +40,27 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 2,
 			"list": [
 				{
 					"id": 0,
-					"name": "debug",
+					"name": "cart",
 					"pathName": "pages/cart/cart",
 					"query": "id=11",
+					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "pay_result",
+					"pathName": "pages/pay_result/pay_result",
+					"query": "id=11&paySuccess=0&from=cart",
+					"scene": null
+				},
+				{
+					"id": 2,
+					"name": "order",
+					"pathName": "pages/order/order",
+					"query": "id=10",
 					"scene": null
 				}
 			]

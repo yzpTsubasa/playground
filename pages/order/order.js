@@ -1,5 +1,5 @@
 // pages/order/order.js
-import {Singleton, AppEvent} from '../../utils/singleton';
+import {Singleton, AppEvent, Order} from '../../utils/singleton';
 
 var cart = Singleton.Cart;
 var address = Singleton.Address;
@@ -12,6 +12,7 @@ Page({
   data: {
     price: 0,
     from: '',
+    id: 0, // 订单id
     orderStatus: 0,
     addressInfo: null, // 地址信息
     basicInfo: null, // 服务器下发的订单信息
@@ -23,8 +24,9 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      price: parseFloat(options.price),
-      from: options.from,
+      price: options.price && parseFloat(options.price) || 0,
+      from: options.from || '',
+      id: options.id || 0,
       products: cart.getCartDatas(true),
     });
     address.getAddress(data => {
@@ -97,7 +99,7 @@ Page({
   },
 
   _oneMoresTimePay() {
-
+    this._execPay(this.data.id);
   },
 
   // 订单创建失败
@@ -132,7 +134,7 @@ Page({
         Singleton.Order.pay(data, data => {
           if (!data) { // 微信支付失败
             wx.navigateTo({
-              url: `/pay_result/pay_result?id=${id}&flag=${data}$from=order`
+              url: `/pages/pay_result/pay_result?id=${id}&paySuccess=${data ? 1 : 0}$from=order`
             });
           }
         });
@@ -155,7 +157,24 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    var id = this.data.id;
+    if (id) {
+      Singleton.Order.getOrderById(id, data => {
+        var addressInfo = data.snap_address;
+        addressInfo.totalDetail = address.getAddressFullFormated(addressInfo);
+        
+        this.setData({
+          orderStatus: data.status,
+          products: data.snap_items,
+          price: data.total_price,
+          basicInfo: {
+            orderTime: data.create_time,
+            orderNo: data.order_no
+          },
+          addressInfo: addressInfo
+        });
+      });
+    }
   },
 
   /**

@@ -7,7 +7,8 @@
     "pages/category/category",
     "pages/cart/cart",
     "pages/my/my",
-    "pages/order/order"
+    "pages/order/order",
+    "pages/pay_result/pay_result"
   ],
   "window": {
     "navigationBarBackgroundColor": "#AB956D",

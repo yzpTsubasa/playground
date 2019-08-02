@@ -57,4 +57,14 @@ export class Order extends Base{
   isNewOrder() {
     return wx.getStorageSync(this.storageKeyName);
   }
+
+  getOrderById(id, callback) {
+    this.request({
+      url: `order/${id}`,
+      method: 'GET',
+      success: data => {
+        callback && callback(data);
+      }
+    })
+  }
 }
