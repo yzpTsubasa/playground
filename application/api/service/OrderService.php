@@ -169,7 +169,9 @@ class OrderService {
             'haveStock' => false,
             'count' => 0,
             'name' => '',
+            'price' => 0,
             'totalPrice' => 0,
+            'main_img_url' => '',
         ];
         $productIndex = array_search($order_product_id, array_column($products, 'id'));
         if ($productIndex !== false) {
@@ -177,6 +179,8 @@ class OrderService {
             $pStatus['haveStock'] = $product['stock'] >= $order_count;
             $pStatus['count'] = $order_count;
             $pStatus['name'] = $product['name'];
+            $pStatus['price'] = $product['price'];
+            $pStatus['main_img_url'] = $product['main_img_url'];
             $pStatus['totalPrice'] = $product['price'] * $order_count;
         } else {
             throw new OrderException(sprintf('订单中id为 %d 的商品不存在', $order_product_id));
