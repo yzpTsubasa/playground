@@ -33,7 +33,7 @@
     <view class="my-order">
         <view class="item-title">我的订单</view>
         <view class="item-main">
-            <block wx:key="id" wx:for="{{orderInfo.data}}">
+            <block wx:key="id" wx:for="{{orders}}">
                 <view class="order-item">
                     <view class="order-header" bind:tap="showOrderDetailInfo" data-id="{{item.id}}">
                         <text>订单编号:</text>

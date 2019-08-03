@@ -68,12 +68,12 @@ export class Order extends Base{
     })
   }
 
-  getOrderSummary(callback) {
+  getOrderSummary(page, size, callback) {
     this.request({
       url: 'order/summary',
       data: {
-        page: 1,
-        size: 10
+        page: page || 1,
+        size: size || 5,
       },
       success: data => {
         callback && callback(data);

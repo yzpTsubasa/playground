@@ -8,6 +8,10 @@ Page({
    */
   data: {
     loadingHidden: false,
+    orders: [],
+    page: 0,
+    size: 5,
+    hasMore: true,
   },
 
   /**
@@ -31,11 +35,26 @@ Page({
       });
     });
 
-    Singleton.Order.getOrderSummary(data => {
-      this.setData({
-        orderInfo: data
+    this._loadOrders();
+  },
+
+  _loadOrders() {
+    if (this.data.hasMore) {
+      ++this.data.page;
+      Singleton.Order.getOrderSummary(this.data.page, this.data.size, data => {
+        if (data.data.length == 0) {
+          this.data.hasMore = false;
+          Singleton.Base.showToast('没有更多订单了');
+          return;
+        }
+        var datas = this.data.orders.concat(data.data);
+        this.setData({
+          orders: datas
+        });
       });
-    });
+    } else {
+      Singleton.Base.showToast('没有更多订单了');
+    }
   },
 
   onAddressEditTap: function() {
@@ -103,14 +122,14 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    this._loadOrders();
   },
 
   /**
