@@ -53,9 +53,9 @@ Page({
           Singleton.Base.showToast('没有更多订单了');
           return;
         }
-        var datas = this.data.orders.concat(data.data);
+        Array.prototype.push.apply(this.data.orders, data.data);
         this.setData({
-          orders: datas
+          orders: this.data.orders
         });
       });
     } else {
