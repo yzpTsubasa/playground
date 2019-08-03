@@ -7,6 +7,7 @@ import {Category} from '../pages/category/category_model';
 import {Address} from '../data/address_model';
 import {Token} from '../data/token_model';
 import {Order} from '../pages/order/order_model';
+import {My} from '../pages/my/my_model';
 
 export class Singleton {
   static Cart = new Cart();
@@ -17,6 +18,7 @@ export class Singleton {
   static Address = new Address();
   static Token = new Token();
   static Order = new Order();
+  static My = new My();
 }
 
 export {
@@ -29,4 +31,5 @@ export {
   Address,
   Token,
   Order,
+  My,
 };

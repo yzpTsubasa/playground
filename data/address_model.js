@@ -14,6 +14,28 @@ export class Address extends Base{
       return fullAddress;
   }
 
+  chooseAndSummit(callback) {
+    wx.chooseAddress({
+      success: res => {
+        var addressInfo = {
+          name: res.userName,
+          mobile: res.telNumber,
+          fullAddress: this.getAddressFullFormated(res),
+        };
+        callback && callback(addressInfo);
+        this.summitAddress(res, flag => {
+          if (!flag) {
+            this.showModel('操作提示', '地址信息更新失败', ()=> {
+              wx.navigateTo({
+                url: '/pages/my/my'
+              });
+            });
+          }
+        });
+      }
+    });
+  }
+
   summitAddress(data, callback) {
     var dataParams = {
       name: data.userName,

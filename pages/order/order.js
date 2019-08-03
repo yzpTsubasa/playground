@@ -37,27 +37,10 @@ Page({
   },
 
   onEditAddress(event) {
-    var that = this;
-    wx.chooseAddress({
-      success (res) {
-        var addressInfo = {
-          name: res.userName,
-          mobile: res.telNumber,
-          fullAddress: address.getAddressFullFormated(res),
-        };
-        that.setData({
-          addressInfo: addressInfo,
-        });
-        address.summitAddress(res, flag => {
-          if (!flag) {
-            address.showModel('操作提示', '地址信息更新失败', ()=> {
-              wx.navigateTo({
-                url: '/pages/my/my'
-              });
-            });
-          }
-        });
-      }
+    address.chooseAndSummit(data => {
+      this.setData({
+        addressInfo: data
+      })
     });
   },
 
