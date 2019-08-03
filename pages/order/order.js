@@ -26,7 +26,6 @@ Page({
       price: options.price && parseFloat(options.price) || 0,
       from: options.from || '',
       id: options.id || 0,
-      products: cart.getCartDatas(true),
     });
     address.getAddress(data => {
       data.fullAddress = address.getAddressFullFormated(data);
@@ -34,6 +33,22 @@ Page({
         addressInfo: data
       });
     });
+
+    if (this.data.from == 'cart') {
+      this._fromCart();
+    } else {
+      this._fromOrder();
+    }
+  },
+
+  _fromCart() {
+    this.setData({
+      products: cart.getCartDatas(true),
+    });
+  },
+
+  _fromOrder() {
+
   },
 
   onEditAddress(event) {

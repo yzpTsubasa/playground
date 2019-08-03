@@ -33,7 +33,6 @@ Page({
         addressInfo: data,
       });
     });
-
     this._loadOrders();
   },
 
@@ -87,9 +86,22 @@ Page({
         // 
       } else {
         Singleton.Order.pay(data, data => {
+          data = true; // 测试成功
           if (!data) { // 微信支付失败
             wx.navigateTo({
-              url: `/pages/pay_result/pay_result?id=${id}&paySuccess=${data ? 1 : 0}$from=order`
+              url: `/pages/pay_result/pay_result?id=${id}&paySuccess=${data ? 1 : 0}$from=my`
+            });
+          } else {
+            // 支付成功，更新状态
+            this.data.orders.every(order => {
+              if (order.id == id) {
+                order.status = 2;
+                false;
+              }
+              return true;
+            });
+            this.setData({
+              orders: this.data.orders
             });
           }
         });
@@ -108,7 +120,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    if (Singleton.Order.hasNewOrder(true)) {
+      this.setData({
+        orders: [],
+        hasMore: true,
+        page: 0,
+      });
+      this._loadOrders();
+    }
   },
 
   /**

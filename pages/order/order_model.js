@@ -54,8 +54,12 @@ export class Order extends Base{
     }
   }
 
-  isNewOrder() {
-    return wx.getStorageSync(this.storageKeyName);
+  hasNewOrder(autoReset) {
+    var result = wx.getStorageSync(this.storageKeyName);
+    if (autoReset) {
+      wx.setStorageSync(this.storageKeyName, false);
+    }
+    return result;
   }
 
   getOrderById(id, callback) {

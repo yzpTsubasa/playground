@@ -13,6 +13,26 @@ export class Base {
   baseURL = Config.BASE_URL;
   Decimal = Decimal;
 
+  _loadingCount = 0;
+
+  _chgLoadingCount(value) {
+    var isLoading = this._loadingCount > 0;
+    this._loadingCount += value;
+    if (this._loadingCount <= 0) {
+      if (isLoading) {
+        wx.hideLoading({
+          
+        });
+      }
+    } else {
+      if (!isLoading) {
+        wx.showLoading({
+          title: '加载中...'
+        });
+      } 
+    }
+  }
+
   on(eventType, handler, thisArg) {
     var handlerObjs = this.eventMap[eventType];
     if (!handlerObjs) {
@@ -57,8 +77,8 @@ export class Base {
   /**
    * @param {RequestParam} param
    */
-  request(param) {
-     return this._request(param, 1);
+  request(param, retryTimes, noLoading) {
+     return this._request(param, retryTimes || 1, noLoading);
   }
 
   /**
@@ -66,7 +86,7 @@ export class Base {
    * @param {RequestParam} param
    * @param {*} retryTimes 重试次数
    */
-  _request(param, retryTimes) {
+  _request(param, retryTimes, noLoading) {
     var url = Tool.formatParams(this.baseURL + param.url, param.urlFormatParams);
     var data = param.data;
     var method = param.method || 'GET';
@@ -75,12 +95,18 @@ export class Base {
     header['token'] = this.getToken();
     var success = param.success;
     var fail = param.fail;
+    if (!noLoading) {
+      this._chgLoadingCount(1);
+    }
     wx.request({
       url: url,
       data: data,
       method: method,
       header: header,
       success: ret => {
+        if (!noLoading) {
+          this._chgLoadingCount(-1);
+        }
         if (ret.statusCode - ret.statusCode % 100 == 200) {
           success && success(ret.data);
         } else {
@@ -90,7 +116,7 @@ export class Base {
               // Singleton.Token.getTokenFromServer();
               if (retryTimes > 0) {
                   Singleton.Token.getTokenFromServer(token => {
-                    this._request(param, --retryTimes);
+                    this._request(param, --retryTimes, noLoading);
                   });
               } else {
                 fail && fail(ret);
@@ -103,6 +129,9 @@ export class Base {
         }
       },
       fail: function (ret) {
+        if (!noLoading) {
+          this._chgLoadingCount(-1);
+        }
         console.log(ret);
         fail && fail(ret);
       }
