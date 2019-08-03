@@ -16,7 +16,8 @@
     "navigationBarTitleText": "",
     "backgroundColor": "#eeeeee",
     "backgroundTextStyle": "light",
-    "enablePullDownRefresh": false
+    "enablePullDownRefresh": true,
+    "onReachBottomDistance": 10
   },
   "tabBar": {
     "borderStyle": "white",

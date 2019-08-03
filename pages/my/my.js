@@ -7,7 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    loadingHidden: false,
+    loadingHidden: true,
     orders: [],
     page: 0,
     size: 5,
@@ -31,7 +31,6 @@ Page({
     Singleton.Address.getAddress(data => {
       this.setData({
         addressInfo: data,
-        loadingHidden: true,
       });
     });
 
@@ -41,7 +40,14 @@ Page({
   _loadOrders() {
     if (this.data.hasMore) {
       ++this.data.page;
+      this.setData({
+        loadingHidden: false,
+      });
       Singleton.Order.getOrderSummary(this.data.page, this.data.size, data => {
+        wx.stopPullDownRefresh();
+        this.setData({
+          loadingHidden: true,
+        });
         if (data.data.length == 0) {
           this.data.hasMore = false;
           Singleton.Base.showToast('没有更多订单了');
@@ -53,6 +59,7 @@ Page({
         });
       });
     } else {
+      wx.stopPullDownRefresh();
       Singleton.Base.showToast('没有更多订单了');
     }
   },
@@ -122,6 +129,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+    this._loadOrders();
     
   },
 

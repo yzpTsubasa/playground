@@ -63,5 +63,5 @@
     </view>
 </view>
 <loading hidden="{{loadingHidden}}">
-  加载中...
+  加载订单...
 </loading>

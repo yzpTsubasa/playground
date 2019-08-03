@@ -30,6 +30,8 @@ export class Address extends Base{
                 url: '/pages/my/my'
               });
             });
+          } else {
+            this.showToast('收货地址更新成功');
           }
         });
       }
