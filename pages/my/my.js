@@ -30,6 +30,12 @@ Page({
         loadingHidden: true,
       });
     });
+
+    Singleton.Order.getOrderSummary(data => {
+      this.setData({
+        orderInfo: data
+      });
+    });
   },
 
   onAddressEditTap: function() {
@@ -41,11 +47,28 @@ Page({
   },
 
   showOrderDetailInfo: function(event) {
-
+    var id = Singleton.Base.getDataFromEventDataset(event, 'id', true);
+    wx.navigateTo({
+      url: `/pages/order/order?id=${id}&from=my`
+    });
   },
 
   onPay: function(event) {
-
+    var id = Singleton.Base.getDataFromEventDataset(event, 'id', true);
+    Singleton.Order.createPrepay(id, data => {
+      var timeStamp = data.timeStamp;
+      if (!timeStamp) { // 创建预支付失败
+        // 
+      } else {
+        Singleton.Order.pay(data, data => {
+          if (!data) { // 微信支付失败
+            wx.navigateTo({
+              url: `/pages/pay_result/pay_result?id=${id}&paySuccess=${data ? 1 : 0}$from=order`
+            });
+          }
+        });
+      }
+    });
   },
 
   /**

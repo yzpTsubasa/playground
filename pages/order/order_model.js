@@ -67,4 +67,17 @@ export class Order extends Base{
       }
     })
   }
+
+  getOrderSummary(callback) {
+    this.request({
+      url: 'order/summary',
+      data: {
+        page: 1,
+        size: 10
+      },
+      success: data => {
+        callback && callback(data);
+      }
+    });
+  }
 }

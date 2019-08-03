@@ -10,6 +10,7 @@ import {Order} from '../pages/order/order_model';
 import {My} from '../pages/my/my_model';
 
 export class Singleton {
+  static Base = new Base();
   static Cart = new Cart();
   static Home = new Home();
   static Product = new Product();

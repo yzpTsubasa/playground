@@ -33,29 +33,29 @@
     <view class="my-order">
         <view class="item-title">我的订单</view>
         <view class="item-main">
-            <block wx:key="id" wx:for="{{orders}}">
+            <block wx:key="id" wx:for="{{orderInfo.data}}">
                 <view class="order-item">
                     <view class="order-header" bind:tap="showOrderDetailInfo" data-id="{{item.id}}">
-                        <text >订单编号：</text>
+                        <text>订单编号:</text>
                         <text class="order-no-txt">{{item.order_no}}</text>
                     </view>
                     <view class="order-main" bind:tap="showOrderDetailInfo" data-id="{{item.id}}">
                         <view class="item-left">
-                            <image src="{{item.snap_img}}" />
+                        <image src="{{item.snap_img}}"></image>
                         </view>
                         <view class="item-middle">
-                            <view >{{item.snap_name}}</view>
-                            <view >{{item.total_count}}件商品</view>
+                        <view>{{item.snap_name}}</view>
+                        <view>{{item.total_count}}件商品</view>
                         </view>
                         <view class="item-right">
-                            <text class="order-status-txt unpay" wx:if="{{item.status==1}}">待付款</text>
-                            <text class="order-status-txt payed" wx:if="{{item.status==2}}">已付款</text>
-                            <text class="order-status-txt done" wx:if="{{item.status==3}}">已发货</text>
+                        <text class="order-status-txt unpay" wx:if="{{item.status==1}}">待付款</text>
+                        <text class="order-status-txt payed" wx:if="{{item.status==2}}">已付款</text>
+                        <text class="order-status-txt done" wx:if="{{item.status==3}}">已发货</text>
                         </view>
-                        <view class="order-bottom" wx:if="{{item.status==1}}">
-                            <text>实付:￥{{item.total_price}}</text>
-                            <view class="pay" bind:tap="onPay" data-id="{{item.id}}" data-index="{{index}}">付款</view>
-                        </view>
+                    </view>
+                    <view class="order-bottom" wx:if="{{item.status==1}}">
+                        <text>实付:￥{{item.total_price}}</text>
+                        <view class="pay" bind:tap="onPay" data-id="{{item.id}}" data-index="{{index}}">付款</view>
                     </view>
                 </view>
             </block>
