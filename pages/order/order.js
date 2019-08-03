@@ -1,4 +1,3 @@
-// pages/order/order.js
 import {Singleton, AppEvent, Order} from '../../utils/singleton';
 
 var cart = Singleton.Cart;
