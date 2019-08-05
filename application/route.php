@@ -28,31 +28,40 @@ use think\Route;
 //Route::get('banner/:id', 'api/v1.Banner/getBanner');
 
 // api开头;携带版本号
-Route::get('api/:version/banner/:id', 'api/:version.BannerController/getBanner');
-
-Route::get('api/:version/theme', 'api/:version.ThemeController/getSimpleList');
-Route::get('api/:version/theme/:id', 'api/:version.ThemeController/getThemeDetail');
-
-// 路由分组
-Route::group('api/:version/product', function() {
-    Route::get('/by_category', 'api/:version.ProductController/getByCategoryID');
-    Route::get('/:id', 'api/:version.ProductController/getDetail', [], ['id' => '\d+']);
-    Route::get('/recent', 'api/:version.ProductController/getRecent');
+Route::group('api/:version', function() {
+    Route::group('/banner', function() {
+        Route::get('/:id', 'api/:version.BannerController/getBanner');
+    });
+    Route::group('/theme', function() {
+        Route::get('', 'api/:version.ThemeController/getSimpleList');
+        Route::get('/:id', 'api/:version.ThemeController/getThemeDetail');
+    });
+    Route::group('/product', function() {
+        Route::get('/by_category', 'api/:version.ProductController/getByCategoryID');
+        Route::get('/:id', 'api/:version.ProductController/getDetail', [], ['id' => '\d+']);
+        Route::get('/recent', 'api/:version.ProductController/getRecent');
+    });
+    Route::group('/category', function() {
+        Route::get('/all', 'api/:version.CategoryController/getAllCategories');
+    });
+    Route::group('/token', function() {
+        Route::post('/user', 'api/:version.TokenController/getToken');
+        Route::post('/verify', 'api/:version.TokenController/verifyToken');
+        Route::post('/app', 'api/:version.TokenController/getAppToken');
+    });
+    Route::group('/address', function() {
+        Route::post('', 'api/:version.AddressController/createOrUpdateAddress');
+        Route::get('', 'api/:version.AddressController/getUserAddress');
+    });
+    Route::group('/order', function() {
+        Route::post('', 'api/:version.OrderController/submitOrder');
+        Route::get('/summary', 'api/:version.OrderController/getSummary');
+        Route::get('/:id', 'api/:version.OrderController/getDetail', [], ['id' => '\d+']);
+    });
+    Route::group('/pay', function() {
+        Route::post('/preorder', 'api/:version.PayController/getPreorder');
+        Route::post('/notify', 'api/:version.PayController/recvNotifyFromWxPay');
+    });
 });
-
-Route::get('api/:version/category/all', 'api/:version.CategoryController/getAllCategories');
-
-Route::post('api/:version/token/user', 'api/:version.TokenController/getToken');
-Route::post('api/:version/token/verify', 'api/:version.TokenController/verifyToken');
-
-Route::post('api/:version/address', 'api/:version.AddressController/createOrUpdateAddress');
-Route::get('api/:version/address', 'api/:version.AddressController/getUserAddress');
-
-Route::post('api/:version/order', 'api/:version.OrderController/submitOrder');
-Route::get('api/:version/order/summary', 'api/:version.OrderController/getSummary');
-Route::get('api/:version/order/:id', 'api/:version.OrderController/getDetail', [], ['id' => '\d+']);
-
-Route::post('api/:version/pay/preorder', 'api/:version.PayController/getPreorder');
-Route::post('api/:version/pay/notify', 'api/:version.PayController/recvNotifyFromWxPay');
 
 // Route::rule('test', 'api/v1.AddressController/second');

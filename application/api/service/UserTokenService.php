@@ -10,6 +10,9 @@ use think\Exception;
 use app\api\model\User as UserModel;
 use app\lib\enum\ScopeEnum;
 
+/**
+ * 微信小程序用户令牌服务
+ */
 class UserTokenService extends TokenService {
     protected $code;
     protected $wxAppID;
