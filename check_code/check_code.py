@@ -39,7 +39,7 @@ class Main:
                 regexp = '\\sgroupName="(\\S+)"'
                 if ext == '.exml': # 后缀名为 .exml 的文件
                     print(fullpath)
-                    with open(fullpath, 'r', encoding='utf-8') as file:
+                    with open(fullpath, 'r', encoding='utf-8', errors='ignore') as file:
                         filecontent = file.read()
                         matches = re.findall(regexp, filecontent)
                         for m in range(0, len(matches)):
