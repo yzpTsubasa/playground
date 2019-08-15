@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+  Test of Window Events - displays all the events sent to document.window, except for 'scroll'
+-->
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1, shrink-to-fit=no, user-scalable=no">
+
+  <!-- apple web app meta tags -->
+  <meta name="apple-mobile-web-app-title" content="WinEvents">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="./testing-180x180.png">
+
+  <title>Test of Window Events</title>
+
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+  <div id="wrapper" class="container">
+
+    <h1>Test of Window Events</h1>
+
+    <p><button id="btnClear" class="btn btn-sm btn-outline-danger">Clear History</button></p>
+
+    <h4>Events Caught:</h4>
+    <div id="divEvents" style="border: 1px solid gray; min-height: 200px; padding: 2rem">
+      <ol id="olEvents"></ol>
+    </div>
+
+    <div id="divBottom" style="height: 40px"></div>
+
+  </div>
+  <!-- /wrapper -->
+  <!-- jquery-->
+  <script src="./js/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="./js/index.js"></script>
+  <script>
+  </script>
+</body>
+
+</html>
