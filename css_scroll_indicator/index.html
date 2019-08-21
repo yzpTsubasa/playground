@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1, shrink-to-fit=no, user-scalable=no">
+    <link rel="stylesheet" href="../common/css/normalize.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <div class="indicator"></div>
+
+    
+    <div id="app">
+        <div v-for="data in datas" v-bind:style="{backgroundColor: data.color}" class="h20">
+            {{data.content}}
+        </div>
+    </div>
+    <script src="../common/js/vue.js"></script>
+    <script src="./js/index.js"></script>
+    <script>
+    </script>
+</body>
+
+</html>
