@@ -11,6 +11,8 @@ class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
+        # mac os 下要先调用这个方法
+        self.show()
         self.setWindowTitle("My Browser")
         self.setWindowIcon(QIcon("./assets/img/acorn.png"))
 
