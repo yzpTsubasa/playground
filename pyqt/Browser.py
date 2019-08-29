@@ -95,9 +95,9 @@ class MainWindow(QMainWindow):
 
         # 协议标识
         if url.scheme() == 'https':
-            self.httpsicon.setPixmap(QPixmap())
+            self.httpsicon.setPixmap(QPixmap("assets/img/lock-ssl.png"))
         else:
-            self.httpsicon.setPixmap(QPixmap())
+            self.httpsicon.setPixmap(QPixmap("assets/img/lock.png"))
             
 
     def onNavigationStop(self):
