@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 # PyQtWebEngine
 from PyQt5.QtWebEngineWidgets import * 
+from PyQt5.QtPrintSupport import *
 
 import os
 import sys
@@ -33,9 +34,9 @@ class MainWindow(QMainWindow):
         actions = [
             {'name': '返回', 'icon': 'assets/img/arrow-180.png', 'handler': self.onNavigationBack, 'tip': 'Previous page'},
             {'name': '前进', 'icon': 'assets/img/arrow.png', 'handler': self.onNavigationForward, 'tip': 'Forward page'},
-            {'name': '主页', 'icon': 'assets/img/home.png', 'handler': self.onNavigationHome, 'tip': 'Home page'},
             {'name': '刷新', 'icon': 'assets/img/arrow-circle-315.png', 'handler': self.onNavigationReload, 'tip': 'Reload page'},
-            {'name': '停止', 'icon': 'assets/img/control-stop-square.png', 'handler': self.onNavigationStop, 'tip': 'Stop load page'}
+            {'name': '主页', 'icon': 'assets/img/home.png', 'handler': self.onNavigationHome, 'tip': 'Home page'},
+            # {'name': '停止', 'icon': 'assets/img/control-stop-square.png', 'handler': self.onNavigationStop, 'tip': 'Stop load page'}
         ]
 
         for index, value in enumerate(actions, 0):
@@ -55,6 +56,17 @@ class MainWindow(QMainWindow):
         urlbar = self.urlbar = QLineEdit()
         urlbar.returnPressed.connect(self.onUrlBarReturnPressed)
         navtb.addWidget(urlbar)
+
+        # 打印
+        self.printer = QPrinter()
+
+        self.menuBar().setNativeMenuBar(False)
+        file_menu = self.menuBar().addMenu("&文件")
+
+        print_action = QAction(QIcon(), "打印...", self)
+        print_action.setStatusTip("打印当前页面")
+        print_action.triggered.connect(self.onPrint)
+        file_menu.addAction(print_action)
 
 
         
@@ -81,6 +93,16 @@ class MainWindow(QMainWindow):
         if url.scheme() == '':
             url.setScheme('http')
         self.browser.setUrl(url)
+
+    def onPrint(self):
+        print("Print")
+        dlg = QPrintDialog(self.printer)
+        if dlg.exec_():
+            self.browser.page().print(self.printer, self.onPrintComplete)
+
+    def onPrintComplete(self, success):
+        print("onPrintComplete ", success)
+        pass   # Do something in here, maybe update the status bar?
 
     # URL框回车确认
     def onUrlBarReturnPressed(self):
