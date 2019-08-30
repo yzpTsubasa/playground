@@ -7,6 +7,7 @@ from PyQt5.QtPrintSupport import QPrinter
 
 import os
 import sys
+import random
 
 class MainWindow(QMainWindow):
 
@@ -26,6 +27,11 @@ class MainWindow(QMainWindow):
         # 标签页
         self.tabs = QTabWidget()
         self.tabs.currentChanged.connect(self.onBrowserTabCurrentChanged)
+
+        self.tab_datas = []
+        self.tab_valid_ids = []
+        for n in range(100):
+            self.tab_valid_ids.append(n + 1)
 
         # 浏览器控件
         widget = QWidget()
@@ -142,7 +148,23 @@ class MainWindow(QMainWindow):
 
         self.resize(1080, 600)
 
+    def getValidId(self):
+        num = len(self.tab_valid_ids)
+        if num > 0:
+            index = random.randint(0, num - 1)
+            value = self.tab_valid_ids[index]
+            self.tab_valid_ids.remove(value)
+            return value
+        return 0 
+
+    def delValidId(self, id):
+        self.tab_valid_ids.append(id)
+    
+
     def addNewTab(self, qurl, label):
+        id = self.getValidId()
+        if not id:
+            return
         browser = QWebEngineView(self)
         browser.setUrl(QUrl(qurl))
 
@@ -156,6 +178,14 @@ class MainWindow(QMainWindow):
         browser.iconChanged.connect(self.onIconChanged)
 
         self.tabs.addTab(browser, label)
+
+        self.tab_datas.append({
+            "qurl": qurl,
+            "label": label,
+            "icon": "",
+            "title": "",
+            "id": id
+        })
     
     def getNavtbAction(self, id):
         cfg = self.getNavtbActionCfg(id)
