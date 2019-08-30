@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QSize, QUrl, Qt, QPropertyAnimation, QEasingCurve, QByteArray, QTimer
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar, QFileDialog
+from PyQt5.QtWidgets import QTabWidget, QDialog, QDialogButtonBox, QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar, QFileDialog
 # PyQtWebEngine
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtPrintSupport import QPrinter
@@ -23,21 +23,16 @@ class MainWindow(QMainWindow):
         self.timerForHide.setSingleShot(True)
         self.timerForHide.timeout.connect(self.onTimerForHide)
 
+        # 标签页
+        self.tabs = QTabWidget()
+        self.tabs.currentChanged.connect(self.onBrowserTabCurrentChanged)
+
         # 浏览器控件
         widget = QWidget()
         layout = QVBoxLayout()
         widget.setLayout(layout)
-        browser = self.browser = QWebEngineView(self)
-        layout.addWidget(browser)
+        layout.addWidget(self.tabs)
         self.setCentralWidget(widget)
-        # 监听url改变
-        browser.urlChanged.connect(self.onUrlChanged)
-        # 监听页面加载相关
-        browser.loadStarted.connect(self.onLoadStarted)
-        browser.loadFinished.connect(self.onLoadFinished)
-        browser.loadProgress.connect(self.onLoadProgress)
-        browser.titleChanged.connect(self.onTitleChanged)
-        browser.iconChanged.connect(self.onIconChanged)
 
         # 工具栏
         navtb = self.navtb = QToolBar("Navigation")
@@ -146,6 +141,21 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("assets/img/acorn.png"))
 
         self.resize(1080, 600)
+
+    def addNewTab(self, qurl, label):
+        browser = QWebEngineView(self)
+        browser.setUrl(QUrl(qurl))
+
+        # 监听url改变
+        browser.urlChanged.connect(self.onUrlChanged)
+        # 监听页面加载相关
+        browser.loadStarted.connect(self.onLoadStarted)
+        browser.loadFinished.connect(self.onLoadFinished)
+        browser.loadProgress.connect(self.onLoadProgress)
+        browser.titleChanged.connect(self.onTitleChanged)
+        browser.iconChanged.connect(self.onIconChanged)
+
+        self.tabs.addTab(browser, label)
     
     def getNavtbAction(self, id):
         cfg = self.getNavtbActionCfg(id)
@@ -164,6 +174,8 @@ class MainWindow(QMainWindow):
 
     # 重定向至~
     def navigateTo(self, url):
+        self.addNewTab(url, url)
+
         self.focusInBrowser()
         if url == self.browser.url().toString():
             return
@@ -257,6 +269,10 @@ class MainWindow(QMainWindow):
         self.reloadAction.setText(actionCfg.get('name'))
         self.loadProBar.setFormat("载入中...(%p%)" if isLoading else "已完成(100%)")
     
+    # 标签页选择
+    def onBrowserTabCurrentChanged(self, index):
+        self.browser = self.tabs.currentWidget()
+
     def onTimerForHide(self):
         self.loadProBar.setVisible(False)
 
@@ -350,7 +366,7 @@ class AboutDialog(QDialog):
         for n in range(layout.count()):
             layoutitem = layout.itemAt(n)
             layoutitem.setAlignment(Qt.AlignCenter)
-            
+
         self.setLayout(layout)
 
 app = QApplication(sys.argv)
