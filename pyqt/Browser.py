@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QSize, QUrl, Qt, QPropertyAnimation, QEasingCurve, QByteArray, QTimer
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar
+from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar, QFileDialog
 # PyQtWebEngine
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtPrintSupport import QPrinter
@@ -78,10 +78,21 @@ class MainWindow(QMainWindow):
         # 打印
         self.printer = QPrinter()
 
+        # 菜单栏
         self.menuBar().setNativeMenuBar(False)
         file_menu = self.menuBar().addMenu("&文件")
 
-        print_action = QAction(QIcon(), "打印...", self)
+        open_file_action = QAction(QIcon("assets/img/blue-folder-open-document.png"), "打开...", self)
+        open_file_action.setStatusTip("从文件打开")
+        open_file_action.triggered.connect(self.onOpenFile)
+        file_menu.addAction(open_file_action)
+
+        save_file_action = QAction(QIcon("assets/img/blue-folder-import.png"), "保存...", self)
+        save_file_action.setStatusTip("保存")
+        save_file_action.triggered.connect(self.onSaveFile)
+        file_menu.addAction(save_file_action)
+        
+        print_action = QAction(QIcon("assets/img/printer.png"), "打印...", self)
         print_action.setStatusTip("打印当前页面")
         print_action.triggered.connect(self.onPrint)
         file_menu.addAction(print_action)
@@ -153,6 +164,31 @@ class MainWindow(QMainWindow):
         dlg = QPrintDialog(self.printer)
         if dlg.exec_():
             self.browser.page().print(self.printer, self.onPrintComplete)
+    
+    def onOpenFile(self):
+        filename, filtername = QFileDialog.getOpenFileName(self, "打开一个网页", "", 
+                    "Hypertext Markup Languarge (*.htm *.html);;All files (*.*)"
+                    )
+        if filename:
+            with open(filename, 'r', encoding="utf-8", errors="ignore") as f:
+                html = f.read()
+            self.browser.setHtml(html)
+            self.urlbar.setText(filename)
+
+    def onSaveFile(self):
+        filename, filtername = QFileDialog.getSaveFileName(self, "保存网页", "", 
+                    "Hypertext Markup Languarge (*.htm *.html);;All files (*.*)"
+                    )
+        if filename:
+            self.browser.page().toHtml(lambda html, filename=filename: self.onBrowserHtmlDone(html, filename))
+
+    def onBrowserHtmlDone(self, html, filename):
+        with open(filename, 'w', encoding="utf-8", errors="ignore") as f:
+            f.write(html)
+        
+        dlg = TsubasaDialog("保存成功")
+
+        dlg.exec_()
 
     def onPrintComplete(self, success):
         print("onPrintComplete ", success)
@@ -164,11 +200,11 @@ class MainWindow(QMainWindow):
 
     # URL改变了
     def onUrlChanged(self, url):
-        self.urlbar.setText(url.toString())
+        if url.scheme() != 'data':
+            self.urlbar.setText(url.toString())
         # url显示最前端
         self.urlbar.setCursorPosition(0)
         self.focusInBrowser()
-
         # 协议标识
         if url.scheme() == 'https':
             self.httpsicon.setPixmap(QPixmap("assets/img/lock-ssl.png"))
@@ -232,6 +268,26 @@ class MainWindow(QMainWindow):
     def onNavigationBack(self):
         browser = self.browser
         browser.back()
+
+class TsubasaDialog(QDialog):
+    
+    def __init__(self, content, twoBtn = False, *args, **kwargs):
+        super(TsubasaDialog, self).__init__(*args, **kwargs)
+        
+        self.setWindowTitle("Tsubasa Dialog")
+        # self.resize(300, 300)
+        # 设置响应按钮
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel if twoBtn else QDialogButtonBox.Ok)
+        # accept 和 reject 是内置方法
+        buttonBox.accepted.connect(self.accept)
+        buttonBox.rejected.connect(self.reject)
+
+
+        # 设置按钮布局
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel(content))
+        layout.addWidget(buttonBox)
+        self.setLayout(layout)
 
 app = QApplication(sys.argv)
 
