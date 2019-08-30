@@ -1,7 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-
+from PyQt5.QtCore import QSize, QUrl, pyqtSignal, Qt
+from PyQt5.QtGui import QIcon, QPixmap, QKeySequence
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QCheckBox, QSlider, QComboBox, QListWidget, QDateEdit, QDateTimeEdit, QDial, QDoubleSpinBox, QFontComboBox, QLCDNumber, QLabel, QProgressBar, QPushButton, QRadioButton, QSpinBox, QTimeEdit
 import sys
 
 

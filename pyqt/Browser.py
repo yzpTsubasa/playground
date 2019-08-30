@@ -1,20 +1,27 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QSize, QUrl, Qt, QPropertyAnimation, QEasingCurve, QByteArray, QTimer
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar
 # PyQtWebEngine
-from PyQt5.QtWebEngineWidgets import * 
-from PyQt5.QtPrintSupport import *
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
+from PyQt5.QtPrintSupport import QPrinter
 
 import os
 import sys
 
-
 class MainWindow(QMainWindow):
 
-    homePage = "http://www.baidu.com"
+    homePage = "https://www.bilibili.com/"
     
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        # 是否正在加载中
+        self.isLoading = False
+
+        # 定时器
+        self.timerForHide = QTimer()
+        self.timerForHide.setInterval(500)
+        self.timerForHide.setSingleShot(True)
+        self.timerForHide.timeout.connect(self.onTimerForHide)
 
         # 浏览器控件
         widget = QWidget()
@@ -25,25 +32,36 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
         # 监听url改变
         browser.urlChanged.connect(self.onUrlChanged)
+        # 监听页面加载相关
+        browser.loadStarted.connect(self.onLoadStarted)
+        browser.loadFinished.connect(self.onLoadFinished)
+        browser.loadProgress.connect(self.onLoadProgress)
+        browser.titleChanged.connect(self.onTitleChanged)
+        browser.iconChanged.connect(self.onIconChanged)
 
         # 工具栏
-        navtb = QToolBar("Navigation")
+        navtb = self.navtb = QToolBar("Navigation")
         navtb.setIconSize(QSize(16, 16))
         self.addToolBar(navtb)
 
-        actions = [
-            {'name': '返回', 'icon': 'assets/img/arrow-180.png', 'handler': self.onNavigationBack, 'tip': 'Previous page'},
-            {'name': '前进', 'icon': 'assets/img/arrow.png', 'handler': self.onNavigationForward, 'tip': 'Forward page'},
-            {'name': '刷新', 'icon': 'assets/img/arrow-circle-315.png', 'handler': self.onNavigationReload, 'tip': 'Reload page'},
-            {'name': '主页', 'icon': 'assets/img/home.png', 'handler': self.onNavigationHome, 'tip': 'Home page'},
-            # {'name': '停止', 'icon': 'assets/img/control-stop-square.png', 'handler': self.onNavigationStop, 'tip': 'Stop load page'}
+        actionsCfg = self.actionsCfg = [
+            {'visible': True, 'id': 'back', 'name': '返回', 'icon': 'assets/img/arrow-180.png', 'handler': self.onNavigationBack, 'tip': '返回上一页'},
+            {'visible': True, 'id': 'forward', 'name': '前进', 'icon': 'assets/img/arrow.png', 'handler': self.onNavigationForward, 'tip': '前进'},
+            {'visible': True, 'id': 'reload', 'name': '刷新', 'icon': 'assets/img/arrow-circle-315.png', 'handler': self.onNavigationReloadOrStop, 'tip': '刷新当前页'},
+            {'id': 'stop', 'name': '停止', 'icon': 'assets/img/control-stop-square.png', 'handler': self.onNavigationStop, 'tip': '停止载入'},
+            {'visible': True, 'id': 'home', 'name': '主页', 'icon': 'assets/img/home.png', 'handler': self.onNavigationHome, 'tip': 'Home page'},
         ]
 
-        for index, value in enumerate(actions, 0):
-            action = QAction(QIcon(value['icon']), value['name'], self)
-            action.setStatusTip(value['tip'])
-            action.triggered.connect(value['handler'])
+        for index, actionCfg in enumerate(actionsCfg, 0):
+            if not actionCfg.get('visible'):
+                continue
+            action = QAction(QIcon(actionCfg.get('icon')), actionCfg.get('name'), self)
+            action.setStatusTip(actionCfg.get('tip'))
+            action.triggered.connect(actionCfg.get('handler'))
+            actionCfg.setdefault('action', action)
             navtb.addAction(action)
+        self.reloadAction = self.getNavtbAction("reload")
+        # self.stopAction = self.getNavtbAction("stop")
 
         navtb.addSeparator()
 
@@ -68,8 +86,33 @@ class MainWindow(QMainWindow):
         print_action.triggered.connect(self.onPrint)
         file_menu.addAction(print_action)
 
+        # 状态栏
+        statusBar = self.statusBar = QStatusBar(self)
+        self.setStatusBar(statusBar)
+        # 加载进度条
+        self.loadProBar = QProgressBar(self)
+        self.loadProBar.setRange(0, 100)
+        self.loadProBar.setTextVisible(True)
+        statusBar.addWidget(self.loadProBar)
 
-        
+        # loadProAniFadeIn = self.loadProAniFadeIn = QPropertyAnimation(self.loadProBar)
+        # loadProAniFadeIn.setPropertyName(QByteArray.fromRawData("opacity", 7))
+        # loadProAniFadeIn.setDuration(100)
+        # loadProAniFadeIn.setStartValue(0)
+        # loadProAniFadeIn.setEndValue(1)
+        # loadProAniFadeIn.setEasingCurve(QEasingCurve.InBack)
+
+        # loadProAniFadeOut = self.loadProAniFadeOut = QPropertyAnimation(self.loadProBar)
+        # loadProAniFadeOut.setPropertyName("opacity")
+        # loadProAniFadeOut.setDuration(350)
+        # loadProAniFadeOut.setStartValue(1)
+        # loadProAniFadeIn.setEndValue(0)
+        # loadProAniFadeOut.setEasingCurve(QEasingCurve.OutBack)
+
+
+
+
+        # 转到主页
         self.onNavigationHome()
 
         
@@ -79,6 +122,17 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("assets/img/acorn.png"))
 
         self.resize(1080, 600)
+    
+    def getNavtbAction(self, id):
+        cfg = self.getNavtbActionCfg(id)
+        return cfg.get('action') if cfg else None
+    
+    def getNavtbActionCfg(self, id):
+        actionsCfg = self.actionsCfg
+        for index, value in enumerate(actionsCfg, 0):
+            if value['id'] == id:
+                return value
+        return None
 
     # 焦点移到网页
     def focusInBrowser(self):
@@ -120,7 +174,45 @@ class MainWindow(QMainWindow):
             self.httpsicon.setPixmap(QPixmap("assets/img/lock-ssl.png"))
         else:
             self.httpsicon.setPixmap(QPixmap("assets/img/lock.png"))
-            
+    
+    def onLoadStarted(self):
+        self.setIsLoading(True)
+    def onLoadFinished(self, ok):
+        self.setIsLoading(False)
+    def onLoadProgress(self, progress):
+        self.loadProBar.setValue(progress)
+    def onTitleChanged(self, title):
+        self.setWindowTitle(title)
+    def onIconChanged(self, icon):
+        self.setWindowIcon(icon)
+    
+    def setIsLoading(self, isLoading):
+        if self.isLoading == isLoading:
+            return
+        self.isLoading = isLoading
+        if isLoading:
+            self.loadProBar.setValue(0)
+            self.loadProBar.setVisible(True)
+            self.timerForHide.stop()
+            # self.loadProAniFadeIn.start(QPropertyAnimation.DeleteWhenStopped)
+        else:
+            self.loadProBar.setValue(100)
+            self.timerForHide.start()
+            # self.loadProAniFadeOut.start(QPropertyAnimation.DeleteWhenStopped)
+        actionCfg = self.getNavtbActionCfg('stop' if isLoading else 'reload')
+        self.reloadAction.setIcon(QIcon(actionCfg.get('icon')))
+        self.reloadAction.setStatusTip(actionCfg.get('tip'))
+        self.reloadAction.setText(actionCfg.get('name'))
+        self.loadProBar.setFormat("载入中...(%p%)" if isLoading else "已完成(100%)")
+    
+    def onTimerForHide(self):
+        self.loadProBar.setVisible(False)
+
+    def onNavigationReloadOrStop(self):
+        if self.isLoading:
+            self.onNavigationStop()
+        else:
+            self.onNavigationReload()
 
     def onNavigationStop(self):
         browser = self.browser
