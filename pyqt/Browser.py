@@ -97,6 +97,19 @@ class MainWindow(QMainWindow):
         print_action.triggered.connect(self.onPrint)
         file_menu.addAction(print_action)
 
+        
+        help_menu = self.menuBar().addMenu("&帮助")
+        
+        about_action = QAction(QIcon("assets/img/question.png"), "关于", self)
+        about_action.setStatusTip("关于")
+        about_action.triggered.connect(self.onHelp)
+        help_menu.addAction(about_action)
+        
+        navigate_home_action = QAction(QIcon("assets/img/animal-dog.png"), "主页", self)
+        navigate_home_action.setStatusTip("前往主页")
+        navigate_home_action.triggered.connect(self.onNavigationHome)
+        help_menu.addAction(navigate_home_action)
+
         # 状态栏
         statusBar = self.statusBar = QStatusBar(self)
         self.setStatusBar(statusBar)
@@ -160,10 +173,13 @@ class MainWindow(QMainWindow):
         self.browser.setUrl(url)
 
     def onPrint(self):
-        print("Print")
         dlg = QPrintDialog(self.printer)
         if dlg.exec_():
             self.browser.page().print(self.printer, self.onPrintComplete)
+    
+    def onHelp(self):
+        dlg = AboutDialog()
+        dlg.exec_()
     
     def onOpenFile(self):
         filename, filtername = QFileDialog.getOpenFileName(self, "打开一个网页", "", 
@@ -287,6 +303,54 @@ class TsubasaDialog(QDialog):
         layout = QVBoxLayout()
         layout.addWidget(QLabel(content))
         layout.addWidget(buttonBox)
+        self.setLayout(layout)
+
+class AboutDialog(QDialog):
+    
+    def __init__(self, twoBtn = False, *args, **kwargs):
+        super(AboutDialog, self).__init__(*args, **kwargs)
+        
+        self.setWindowTitle("Tsubasa Dialog")
+        # self.resize(300, 300)
+        # 设置响应按钮
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel if twoBtn else QDialogButtonBox.Ok)
+        # accept 和 reject 是内置方法
+        buttonBox.accepted.connect(self.accept)
+        buttonBox.rejected.connect(self.reject)
+
+        # 设置按钮布局
+        layout = QVBoxLayout()
+
+        # 标题
+        title = QLabel("Tsubasa Yeung")
+        font = title.font()
+        font.setFamily("Microsoft Yahei")
+        font.setPointSize(20)
+        title.setFont(font)
+        # title.setAlignment(Qt.AlignHCenter)
+        layout.addWidget(title)
+
+        # Logo
+        logo = QLabel()
+        logo.setPixmap(QPixmap("assets/img/bitbug_favicon.ico"))
+        # logo.setAlignment(Qt.AlignHCenter)
+        layout.addWidget(logo)
+
+        versionLabel = QLabel("Version 1.1.100.11223")
+        # versionLabel.setAlignment(Qt.AlignHCenter)
+        layout.addWidget(versionLabel)
+
+        copyrightLabel = QLabel("Copyright 2019 Tsubasa Inc.")
+        # copyrightLabel.setAlignment(Qt.AlignHCenter)
+        layout.addWidget(copyrightLabel)
+
+
+        layout.addWidget(buttonBox)
+        
+        for n in range(layout.count()):
+            layoutitem = layout.itemAt(n)
+            layoutitem.setAlignment(Qt.AlignCenter)
+            
         self.setLayout(layout)
 
 app = QApplication(sys.argv)
