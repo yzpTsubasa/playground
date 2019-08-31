@@ -1,9 +1,9 @@
 from PyQt5.QtCore import QSize, QUrl, Qt, QPropertyAnimation, QEasingCurve, QByteArray, QTimer
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QKeySequence
 from PyQt5.QtWidgets import QTabWidget, QDialog, QDialogButtonBox, QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar, QFileDialog
 # PyQtWebEngine
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
-from PyQt5.QtPrintSupport import QPrinter
+from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 
 import os
 import sys
@@ -83,19 +83,34 @@ class MainWindow(QMainWindow):
         self.menuBar().setNativeMenuBar(False)
         file_menu = self.menuBar().addMenu("&文件")
 
+        new_tab_action = QAction(QIcon("assets/img/application-blue.png"), "新的标签页", self)
+        new_tab_action.setStatusTip("创建新的标签页")
+        new_tab_action.triggered.connect(self.onNewTab)
+        new_tab_action.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_T))
+        file_menu.addAction(new_tab_action)
+
+        close_tab_action = QAction(QIcon("assets/img/prohibition-button.png"), "关闭当前标签页", self)
+        close_tab_action.setStatusTip("关闭当前标签页")
+        close_tab_action.triggered.connect(self.onCloseCurrentTab)
+        close_tab_action.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_W))
+        file_menu.addAction(close_tab_action)
+
         open_file_action = QAction(QIcon("assets/img/blue-folder-open-document.png"), "打开...", self)
         open_file_action.setStatusTip("从文件打开")
         open_file_action.triggered.connect(self.onOpenFile)
+        open_file_action.setShortcut(QKeySequence(QKeySequence.Open))
         file_menu.addAction(open_file_action)
 
         save_file_action = QAction(QIcon("assets/img/blue-folder-import.png"), "保存...", self)
         save_file_action.setStatusTip("保存")
         save_file_action.triggered.connect(self.onSaveFile)
+        save_file_action.setShortcut(QKeySequence(QKeySequence.Save))
         file_menu.addAction(save_file_action)
         
         print_action = QAction(QIcon("assets/img/printer.png"), "打印...", self)
         print_action.setStatusTip("打印当前页面")
         print_action.triggered.connect(self.onPrint)
+        print_action.setShortcut(QKeySequence(QKeySequence.Print))
         file_menu.addAction(print_action)
 
         
@@ -160,32 +175,61 @@ class MainWindow(QMainWindow):
     def delValidId(self, id):
         self.tab_valid_ids.append(id)
     
+    def closeTab(self, index):
+        browser = self.tabs.widget(index)
+        data = self.getDataByBrowser(browser)
+        if not data:
+            return
+        self.delValidId(data['id'])
+        self.tabs.removeTab(index)
+        self.tab_datas.remove(data)
+    
+    def onCloseCurrentTab(self):
+        self.closeTab(self.tabs.currentIndex())
 
     def addNewTab(self, qurl, label):
         id = self.getValidId()
         if not id:
             return
         browser = QWebEngineView(self)
-        browser.setUrl(QUrl(qurl))
-
-        # 监听url改变
-        browser.urlChanged.connect(self.onUrlChanged)
-        # 监听页面加载相关
-        browser.loadStarted.connect(self.onLoadStarted)
-        browser.loadFinished.connect(self.onLoadFinished)
-        browser.loadProgress.connect(self.onLoadProgress)
-        browser.titleChanged.connect(self.onTitleChanged)
-        browser.iconChanged.connect(self.onIconChanged)
-
-        self.tabs.addTab(browser, label)
-
+        
+        # 要先添加到数据中，否则 addTab 会先触发 currentChanged
         self.tab_datas.append({
             "qurl": qurl,
             "label": label,
-            "icon": "",
+            "browser": browser,
+            "icon": None,
             "title": "",
-            "id": id
+            "id": id,
+            "isLoading": False,
+            "progress": 0,
         })
+
+        self.tabs.addTab(browser, label)
+
+        
+        # 监听url改变
+        browser.urlChanged.connect(lambda qurl, browser=browser: self.onUrlChanged(qurl, browser))
+        # 监听页面加载相关
+        browser.loadStarted.connect(lambda browser=browser: self.onLoadStarted(browser))
+        browser.loadFinished.connect(lambda ok, browser=browser: self.onLoadFinished(ok, browser))
+        browser.loadProgress.connect(lambda progress, browser=browser: self.onLoadProgress(progress, browser))
+        browser.titleChanged.connect(lambda title, browser=browser: self.onTitleChanged(title, browser))
+        browser.iconChanged.connect(lambda icon, browser=browser: self.onIconChanged(icon, browser))
+        
+        browser.setUrl(qurl)
+    
+    def getDataByBrowser(self, browser):
+        for index, data in enumerate(self.tab_datas):
+            if data.get('browser') == browser:
+                return data
+        return None
+    
+    def getDataById(self, id):
+        for index, data in enumerate(self.tab_datas):
+            if data.get('id') == id:
+                return data
+        return None
     
     def getNavtbAction(self, id):
         cfg = self.getNavtbActionCfg(id)
@@ -204,8 +248,6 @@ class MainWindow(QMainWindow):
 
     # 重定向至~
     def navigateTo(self, url):
-        self.addNewTab(url, url)
-
         self.focusInBrowser()
         if url == self.browser.url().toString():
             return
@@ -222,6 +264,9 @@ class MainWindow(QMainWindow):
     def onHelp(self):
         dlg = AboutDialog()
         dlg.exec_()
+
+    def onNewTab(self):
+        self.addNewTab(QUrl(self.homePage), self.homePage)
     
     def onOpenFile(self):
         filename, filtername = QFileDialog.getOpenFileName(self, "打开一个网页", "", 
@@ -257,28 +302,70 @@ class MainWindow(QMainWindow):
         self.navigateTo(self.urlbar.text())
 
     # URL改变了
-    def onUrlChanged(self, url):
-        if url.scheme() != 'data':
-            self.urlbar.setText(url.toString())
-        # url显示最前端
-        self.urlbar.setCursorPosition(0)
-        self.focusInBrowser()
-        # 协议标识
-        if url.scheme() == 'https':
-            self.httpsicon.setPixmap(QPixmap("assets/img/lock-ssl.png"))
-        else:
-            self.httpsicon.setPixmap(QPixmap("assets/img/lock.png"))
+    def onUrlChanged(self, qurl, browser):
+        data = self.getDataByBrowser(browser)
+
+        if qurl.scheme() != 'data':
+            data['qurl'] = qurl
+        self.updateUrl(browser)
+        
+    def updateUrl(self, browser):
+        data = self.getDataByBrowser(browser)
+        if browser == self.browser:
+            qurl = data['qurl']
+            
+            # 协议标识
+            if qurl.scheme() == 'https':
+                self.httpsicon.setPixmap(QPixmap("assets/img/lock-ssl.png"))
+            else:
+                self.httpsicon.setPixmap(QPixmap("assets/img/lock.png"))
+            self.urlbar.setText(qurl.toString())
+            # url显示最前端
+            self.urlbar.setCursorPosition(0)
+            self.focusInBrowser()
     
-    def onLoadStarted(self):
-        self.setIsLoading(True)
-    def onLoadFinished(self, ok):
-        self.setIsLoading(False)
-    def onLoadProgress(self, progress):
-        self.loadProBar.setValue(progress)
-    def onTitleChanged(self, title):
-        self.setWindowTitle(title)
-    def onIconChanged(self, icon):
-        self.setWindowIcon(icon)
+    def onLoadStarted(self, browser):
+        data = self.getDataByBrowser(browser)
+        data['isLoading'] = True
+        self.updateLoading(browser)
+
+    def updateLoading(self, browser):
+        if browser == self.browser:
+            self.setIsLoading(self.data['isLoading'])
+
+    def onLoadFinished(self, ok, browser):
+        data = self.getDataByBrowser(browser)
+        data['isLoading'] = False
+        self.updateLoading(browser)
+    
+    def onLoadProgress(self, progress, browser):
+        data = self.getDataByBrowser(browser)
+        data['progress'] = progress
+        self.updateProgress(browser)
+    
+    def updateProgress(self, browser):
+        if browser == self.browser:
+            self.loadProBar.setValue(self.data['progress'])
+
+    def onTitleChanged(self, title, browser):
+        data = self.getDataByBrowser(browser)
+        data['title'] = title
+        self.updateTitle(browser)
+    
+    def updateTitle(self, browser):
+        data = self.getDataByBrowser(browser)
+        index = self.tabs.indexOf(browser)
+        self.tabs.setTabText(index, data['title'])
+
+    def onIconChanged(self, icon, browser):
+        data = self.getDataByBrowser(browser)
+        data['icon'] = icon
+        self.updateIcon(browser)
+
+    def updateIcon(self, browser):
+        data = self.getDataByBrowser(browser)
+        index = self.tabs.indexOf(browser)
+        self.tabs.setTabIcon(index, data['icon'])
     
     def setIsLoading(self, isLoading):
         if self.isLoading == isLoading:
@@ -302,6 +389,11 @@ class MainWindow(QMainWindow):
     # 标签页选择
     def onBrowserTabCurrentChanged(self, index):
         self.browser = self.tabs.currentWidget()
+        self.data = self.getDataByBrowser(self.browser)
+
+        self.updateUrl(self.browser)
+        self.updateLoading(self.browser)
+        self.updateProgress(self.browser)
 
     def onTimerForHide(self):
         self.loadProBar.setVisible(False)
@@ -325,7 +417,7 @@ class MainWindow(QMainWindow):
         browser.forward()
 
     def onNavigationHome(self):
-        self.navigateTo(self.homePage)
+        self.addNewTab(QUrl(self.homePage), self.homePage)
 
     def onNavigationBack(self):
         browser = self.browser
