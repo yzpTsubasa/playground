@@ -9,6 +9,21 @@ import os
 import sys
 import random
 
+class MyWebEnginePage(QWebEnginePage):
+
+    def __init__(self, *args, **kwargs):
+        super(MyWebEnginePage, self).__init__(*args, **kwargs)
+
+    def acceptNavigationRequest(self, qurl, navigationType, isMainFrame):
+        print(qurl, navigationType, isMainFrame)
+        return super(MyWebEnginePage, self).acceptNavigationRequest(qurl, navigationType, isMainFrame)
+    
+    def createWindow(self, type):
+        browser = window.addNewTab()
+        if browser:
+            return browser.page()
+        return super(MyWebEnginePage, self).createWindow(type)
+
 class MainWindow(QMainWindow):
 
     homePage = "https://www.bilibili.com/"
@@ -153,7 +168,7 @@ class MainWindow(QMainWindow):
 
 
         # 转到主页
-        self.onNavigationHome()
+        self.addNewTab(QUrl(self.homePage), self.homePage)
 
         
         # mac os 下要先调用这个方法
@@ -187,11 +202,13 @@ class MainWindow(QMainWindow):
     def onCloseCurrentTab(self):
         self.closeTab(self.tabs.currentIndex())
 
-    def addNewTab(self, qurl, label):
+    def addNewTab(self, qurl = None, label = ""):
         id = self.getValidId()
         if not id:
             return
         browser = QWebEngineView(self)
+        page = MyWebEnginePage(self)
+        browser.setPage(page)
         
         # 要先添加到数据中，否则 addTab 会先触发 currentChanged
         self.tab_datas.append({
@@ -217,7 +234,10 @@ class MainWindow(QMainWindow):
         browser.titleChanged.connect(lambda title, browser=browser: self.onTitleChanged(title, browser))
         browser.iconChanged.connect(lambda icon, browser=browser: self.onIconChanged(icon, browser))
         
-        browser.setUrl(qurl)
+        if qurl:
+            browser.setUrl(qurl)
+        self.tabs.setCurrentWidget(browser)
+        return browser
     
     def getDataByBrowser(self, browser):
         for index, data in enumerate(self.tab_datas):
@@ -244,10 +264,15 @@ class MainWindow(QMainWindow):
 
     # 焦点移到网页
     def focusInBrowser(self):
+        if not self.browser:
+            return
         self.browser.setFocus()
 
     # 重定向至~
     def navigateTo(self, url):
+        if not self.browser:
+            self.addNewTab(QUrl(url), url)
+            return
         self.focusInBrowser()
         if url == self.browser.url().toString():
             return
@@ -257,6 +282,8 @@ class MainWindow(QMainWindow):
         self.browser.setUrl(url)
 
     def onPrint(self):
+        if not self.browser:
+            return
         dlg = QPrintDialog(self.printer)
         if dlg.exec_():
             self.browser.page().print(self.printer, self.onPrintComplete)
@@ -269,6 +296,8 @@ class MainWindow(QMainWindow):
         self.addNewTab(QUrl(self.homePage), self.homePage)
     
     def onOpenFile(self):
+        if not self.browser:
+            return
         filename, filtername = QFileDialog.getOpenFileName(self, "打开一个网页", "", 
                     "Hypertext Markup Languarge (*.htm *.html);;All files (*.*)"
                     )
@@ -279,6 +308,8 @@ class MainWindow(QMainWindow):
             self.urlbar.setText(filename)
 
     def onSaveFile(self):
+        if not self.browser:
+            return
         filename, filtername = QFileDialog.getSaveFileName(self, "保存网页", "", 
                     "Hypertext Markup Languarge (*.htm *.html);;All files (*.*)"
                     )
@@ -304,66 +335,90 @@ class MainWindow(QMainWindow):
     # URL改变了
     def onUrlChanged(self, qurl, browser):
         data = self.getDataByBrowser(browser)
-
+        if not data:
+                    return
         if qurl.scheme() != 'data':
             data['qurl'] = qurl
         self.updateUrl(browser)
         
     def updateUrl(self, browser):
+        if not self.browser:
+            return
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         if browser == self.browser:
             qurl = data['qurl']
             
             # 协议标识
-            if qurl.scheme() == 'https':
+            if qurl and qurl.scheme() == 'https':
                 self.httpsicon.setPixmap(QPixmap("assets/img/lock-ssl.png"))
             else:
                 self.httpsicon.setPixmap(QPixmap("assets/img/lock.png"))
-            self.urlbar.setText(qurl.toString())
+            if qurl:
+                self.urlbar.setText(qurl.toString())
             # url显示最前端
             self.urlbar.setCursorPosition(0)
             self.focusInBrowser()
     
     def onLoadStarted(self, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         data['isLoading'] = True
         self.updateLoading(browser)
 
     def updateLoading(self, browser):
-        if browser == self.browser:
+        if not self.browser:
+            return
+        if browser == self.browser and self.data:
             self.setIsLoading(self.data['isLoading'])
 
     def onLoadFinished(self, ok, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         data['isLoading'] = False
         self.updateLoading(browser)
     
     def onLoadProgress(self, progress, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         data['progress'] = progress
         self.updateProgress(browser)
     
     def updateProgress(self, browser):
-        if browser == self.browser:
+        if not self.browser:
+            return
+        if browser == self.browser and self.data:
             self.loadProBar.setValue(self.data['progress'])
 
     def onTitleChanged(self, title, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         data['title'] = title
         self.updateTitle(browser)
     
     def updateTitle(self, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         index = self.tabs.indexOf(browser)
         self.tabs.setTabText(index, data['title'])
 
     def onIconChanged(self, icon, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         data['icon'] = icon
         self.updateIcon(browser)
 
     def updateIcon(self, browser):
         data = self.getDataByBrowser(browser)
+        if not data:
+            return
         index = self.tabs.indexOf(browser)
         self.tabs.setTabIcon(index, data['icon'])
     
@@ -417,7 +472,8 @@ class MainWindow(QMainWindow):
         browser.forward()
 
     def onNavigationHome(self):
-        self.addNewTab(QUrl(self.homePage), self.homePage)
+        # self.addNewTab(QUrl(self.homePage), self.homePage)
+        self.navigateTo(self.homePage)
 
     def onNavigationBack(self):
         browser = self.browser
