@@ -2,7 +2,7 @@ from PyQt5.QtCore import QSize, QUrl, Qt, QPropertyAnimation, QEasingCurve, QByt
 from PyQt5.QtGui import QIcon, QPixmap, QKeySequence
 from PyQt5.QtWidgets import QTabWidget, QDialog, QDialogButtonBox, QGraphicsOpacityEffect, QApplication, QWidget, QVBoxLayout, QStatusBar, QMainWindow, QToolBar, QAction, QLabel, QLineEdit, QProgressBar, QFileDialog
 # PyQtWebEngine
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 
 import os
@@ -42,6 +42,8 @@ class MainWindow(QMainWindow):
         # 标签页
         self.tabs = QTabWidget()
         self.tabs.currentChanged.connect(self.onBrowserTabCurrentChanged)
+        self.tabs.setTabsClosable(True)
+        self.tabs.tabCloseRequested.connect(self.onTabCloseRequested)
 
         self.tab_datas = []
         self.tab_valid_ids = []
@@ -56,7 +58,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
         # 工具栏
-        navtb = self.navtb = QToolBar("Navigation")
+        navtb = self.navtb = QToolBar("工具栏")
         navtb.setIconSize(QSize(16, 16))
         self.addToolBar(navtb)
 
@@ -84,6 +86,24 @@ class MainWindow(QMainWindow):
         # https 标识
         httpsicon = self.httpsicon = QLabel()
         navtb.addWidget(httpsicon)
+
+        self.addToolBarBreak()
+
+        # 书签栏
+        bookmarktb = self.bookmarktb = QToolBar("书签栏")
+        bookmarktb.setIconSize(QSize(16, 16))
+        self.addToolBar(bookmarktb)
+        bookmarkCfg = self.bookmarkCfg = [
+            {'url': 'https://www.bilibili.com', 'name': 'bilibili'},
+            {'url': 'https://www.youku.com', 'name': '优酷网'},
+        ]
+        for index, bookmarkCfg in enumerate(bookmarkCfg, 0):
+            action = QAction(QIcon(bookmarkCfg.get('icon')), bookmarkCfg.get('name'), self)
+            action.setStatusTip(bookmarkCfg.get('tip'))
+            action.triggered.connect(lambda checked, url=bookmarkCfg.get('url'): self.onBookmarkTriggerd(checked, url))
+            bookmarkCfg.setdefault('action', action)
+            bookmarktb.addAction(action)
+        
         
 
         # url输入
@@ -200,15 +220,38 @@ class MainWindow(QMainWindow):
         self.tab_datas.remove(data)
     
     def onCloseCurrentTab(self):
-        self.closeTab(self.tabs.currentIndex())
+        if self.tabs.count() == 1:
+            self.close()
+        else:
+            self.closeTab(self.tabs.currentIndex())
+
+    def fullScreenRequested(self, request, browser):
+        request.accept()
+        browser.showFullScreen()
+
+    def onWindowCloseReqeusted(self, browser):
+        data = self.getDataByBrowser(browser)
+        if not data:
+            return
+        index = self.tabs.indexOf(browser)
+        self.closeTab(index)
 
     def addNewTab(self, qurl = None, label = ""):
         id = self.getValidId()
         if not id:
             return
         browser = QWebEngineView(self)
+        settings = browser.settings()
+        settings.setAttribute(QWebEngineSettings.PluginsEnabled, True)
+        settings.setAttribute(QWebEngineSettings.JavascriptEnabled, True)
+        settings.setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+
         page = MyWebEnginePage(self)
+
         browser.setPage(page)
+        # 全屏请求
+        page.fullScreenRequested.connect(lambda request, browser=browser: self.fullScreenRequested(request,browser))
+        page.windowCloseRequested.connect(lambda browser=browser: self.onWindowCloseReqeusted(browser))
         
         # 要先添加到数据中，否则 addTab 会先触发 currentChanged
         self.tab_datas.append({
@@ -267,6 +310,9 @@ class MainWindow(QMainWindow):
         if not self.browser:
             return
         self.browser.setFocus()
+
+    def onBookmarkTriggerd(self, checked, url):
+        self.navigateTo(url)
 
     # 重定向至~
     def navigateTo(self, url):
@@ -449,6 +495,10 @@ class MainWindow(QMainWindow):
         self.updateUrl(self.browser)
         self.updateLoading(self.browser)
         self.updateProgress(self.browser)
+    
+    # 点击标签关闭按钮
+    def onTabCloseRequested(self, index):
+        self.closeTab(index)
 
     def onTimerForHide(self):
         self.loadProBar.setVisible(False)
@@ -547,7 +597,13 @@ class AboutDialog(QDialog):
 
         self.setLayout(layout)
 
+
+argvs = sys.argv
+# 支援flash
+argvs.append('--ppapi-flash-path=./pepflashplayer.dll')
+
 app = QApplication(sys.argv)
+
 
 # app.setApplicationName("Mozarella Ashbadger")
 # app.setOrganizationName("Mozarella")
