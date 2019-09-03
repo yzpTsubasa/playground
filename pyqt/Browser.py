@@ -58,7 +58,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
         # 工具栏
-        navtb = self.navtb = QToolBar("工具栏")
+        navtb = self.navtb = QToolBar("显示工具栏")
+        navtb.setMovable(False)
         navtb.setIconSize(QSize(16, 16))
         self.addToolBar(navtb)
 
@@ -90,7 +91,8 @@ class MainWindow(QMainWindow):
         self.addToolBarBreak()
 
         # 书签栏
-        bookmarktb = self.bookmarktb = QToolBar("书签栏")
+        bookmarktb = self.bookmarktb = QToolBar("显示书签栏")
+        bookmarktb.setMovable(False)
         bookmarktb.setIconSize(QSize(16, 16))
         self.addToolBar(bookmarktb)
         bookmarkCfg = self.bookmarkCfg = [
