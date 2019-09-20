@@ -15,9 +15,13 @@
         private guid = 1;
         private clsid2InsMap = {};
         private guidKey = '_cls_guid_asdf_';
+        /**
+         * 获取指定类cls的单例
+         * @param cls 
+         */
         public get<T>(cls: IClass<T>): T {
             if (!(cls instanceof Function)) {
-                console.error(`${cls} is not a constructor`);
+                console.error(`InsMgr error: ${cls} is not a constructor`);
                 return null;
             }
             let clsid;
@@ -33,11 +37,100 @@
             }
             return inst;
         }
+        
+        ////////// 静态方法
+        /**
+         * 获取指定类cls的单例
+         * @param cls 
+         */
+        public static get<T>(cls: IClass<T>): T {
+            return this.Ins.get(cls);
+        }
+    }
+
+    class PoolMgr {
+        public static Ins = new PoolMgr();
+        private guid = 1;
+        private clsid2PoolMap: {[id: string]: Array<any>} = {};
+        private poolKey = '_pool_asdf_';
+        /**
+         * 获取指定类的一个实例
+         * @param cls 
+         */
+        public get<T>(cls: IClass<T>): T {
+            if (!(cls instanceof Function)) {
+                console.error(`PoolMgr error: ${cls} is not a constructor`);
+                return null;
+            }
+            let clsid;
+            if (cls.hasOwnProperty(this.poolKey)) {
+                clsid = cls[this.poolKey];
+            } else {
+                clsid = cls[this.poolKey] = this.guid++;
+            }
+            let pool = this.clsid2PoolMap[clsid];
+            if (!pool) {
+                pool = [];
+                this.clsid2PoolMap[clsid] = pool;
+            }
+            let inst: T;
+            if (pool.length) {
+                inst = pool.pop();
+            } else {
+                inst = new cls();
+            }
+            return inst;
+        }
+
+        /**
+         * 回收一个实例
+         * @param inst 
+         */
+        public recycle(inst: any) {
+            let cls = inst && inst.constructor;
+            if (!cls) {
+                console.error(`PoolMgr error: ${inst} has no constructor`);
+                return;
+            }
+            let clsid;
+            if (cls.hasOwnProperty(this.poolKey)) {
+                clsid = cls[this.poolKey];
+            } else {
+                clsid = cls[this.poolKey] = this.guid++;
+            }
+            let pool = this.clsid2PoolMap[clsid];
+            if (!pool) {
+                pool = [];
+                this.clsid2PoolMap[clsid] = pool;
+            }
+            if (pool.indexOf(inst) != -1) {
+                return;
+            }
+            pool.push(inst);
+        }
+
+        //////////// 静态方法
+        /**
+         * 获取指定类的一个实例
+         * @param cls 
+         */
+        public static get<T>(cls: IClass<T>): T {
+            return this.Ins.get(cls);
+        }
+
+        /**
+         * 回收一个实例
+         * @param inst 
+         */
+        public static recycle(inst: any) {
+            return this.Ins.recycle(inst);
+        }
     }
     
     
     
     class TreeDataMgr {
+
         public setTreeData(root, value, ...params): void {
             // 开始嵌套遍历
             var paramLength = params.length;
@@ -52,6 +145,24 @@
                     if (!subData) {
                         subData = {};
                         data[key] = subData;
+                    }
+                }
+            }
+        }
+
+        public delTreeData(root, ...params): void {
+            // 开始嵌套遍历
+            var paramLength = params.length;
+            var subData = root;
+            for (var i = 0; i < paramLength; ++i) {
+                var data = subData;
+                var key = params[i];
+                if (i == paramLength - 1) {
+                    delete subData[key];
+                } else {
+                    subData = data[key];
+                    if (!subData) {
+                        break;
                     }
                 }
             }
@@ -132,7 +243,7 @@
             priority: number,
         }>} = {};
 
-        public send(type: any, ...datas): void {
+        public emit(type: any, ...datas): void {
             let list = this.handlerDataMap[type];
             if (!list) {
                 return;
@@ -193,12 +304,38 @@
                     continue;
                 }
                 if (handlerData.handler == handler && handlerData.type == type && handlerData.thisArg == thisArg) {
-                    list.splice(i, 0);
+                    list.splice(i, 1);
                     break;
                 }
             }
             if (!list.length) {
                 delete this.handlerDataMap[type];
+            }
+        }
+
+        public offAll(thisArg: any): void {
+            if (thisArg == null) {
+                return;
+            }
+            for (let type in this.handlerDataMap) {
+                let list = this.handlerDataMap[type];
+                if (!list) {
+                    continue;
+                }
+                for (let i = 0, len = list.length; i < len; ++i) {
+                    let handlerData = list[i];
+                    if (!handlerData) {
+                        continue;
+                    }
+                    if (handlerData.thisArg == thisArg) {
+                        list.splice(i, 1);
+                        len = list.length;
+                        --i;
+                    }
+                }
+                if (!list.length) {
+                    delete this.handlerDataMap[type];
+                }
             }
         }
     }
@@ -268,7 +405,7 @@
         }
     }
 
-    var test = new AsyncTest();
+    var test = InsMgr.get(AsyncTest);
     test.run();
 
 
