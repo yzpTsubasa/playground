@@ -197,7 +197,7 @@
                 if (v instanceof Array) {
                     result.push(v);
                 } else {
-                    result = result.concat(this.recursiveTreeData(v));
+                    Array.prototype.push.apply(result, this.recursiveTreeData(v));
                 }
             }
             return result;
