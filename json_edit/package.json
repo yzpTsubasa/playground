@@ -1,0 +1,17 @@
+{
+  "name": "default_res_checking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-json-editor": "^2.5.3",
+    "vinyl-paths": "^3.0.0"
+  }
+}
