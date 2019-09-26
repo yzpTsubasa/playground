@@ -88,3 +88,6 @@ typings/
 .dynamodb/
 
 .vscode
+
+package-lock.json
+out/

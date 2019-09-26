@@ -654,6 +654,8 @@ var wndID2Cls = {
     WND_LOOP_ACHIEVE_LOTTERY: "WndLoopAchieveLottery",
     WND_LOOP_ACHIEVE_RMB_LEV: "WndLoopAchieveRMBLev",
     WND_TIP_GEQP: "WndTipGuardEqp",
+    WND_ADD_RMB: "WndAddRmb",
+    WND_RECHARGE_FIRST: "WndRechargeFirst",
 };
 var wndCls2ID = {};
 for (var id in wndID2Cls) {
