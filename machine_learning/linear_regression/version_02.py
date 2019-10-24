@@ -59,7 +59,7 @@ def costFunction(X, y, theta):
     return np.sum(inner) / (2 * len(X))
 
 # 定义梯度下降函数
-def gradientDescent(X, y, theta, alpha, iters):
+def gradientDescent(X, y, theta, alpha, iters, isPrint = False):
     """
     梯度下降函数
 
@@ -94,33 +94,49 @@ def gradientDescent(X, y, theta, alpha, iters):
         # 代价值
         cost = costFunction(X, y, theta)
         costs.append(cost)
-        if i % 100 == 0: # 一定间隔后打印代价值
+        if isPrint and i % 100 == 0: # 一定间隔后打印代价值
             print('cost: %f' % cost)
     return theta, costs
 
 theta = np.zeros((X.shape[1], y.shape[1]))
 
-# 初始代价
+# 测试初始代价，可以不写
 cost_init = costFunction(X, y, theta)
 print(cost_init)
 
 # 不同alpha值下的效果
 alphas = [0.0003, 0.003, 0.03, 0.0001, 0.001, 0.01]
-fig_col = 3
-fig_row = math.ceil(len(alphas) / fig_col)
 # 迭代次数
 iters = 2000
-fig, ax = plt.subplots(fig_row, fig_col)
+# 在不同图上显示
+# fig_col = 3
+# fig_row = math.ceil(len(alphas) / fig_col)
+# fig, ax = plt.subplots(fig_row, fig_col)
+# for index in range(len(alphas)):
+#     alpha = alphas[index]
+#     ax_sub = ax if fig_col <= 1 and fig_row <= 1 else ax[index] if fig_col <= 1 or fig_col <= 1 else ax[math.floor(index / fig_col), index % fig_col]
+#     theta = np.zeros((X.shape[1], y.shape[1]))
+#     # 执行梯度下降算法
+#     theta, costs = gradientDescent(X, y, theta, alpha, iters)
+#     # 绘制梯度下降结果
+#     ax_sub.plot(np.arange(iters), costs)
+#     ax_sub.set(xlabel='iters',
+#         ylabel = 'costs',
+#         title = 'iters vs costs (alpha=%.6g)' % alpha)
+# 在同一张图上显示
+fig, ax = plt.subplots()
 for index in range(len(alphas)):
     alpha = alphas[index]
-    ax_sub = ax if fig_col <= 1 and fig_row <= 1 else ax[index] if fig_col <= 1 or fig_col <= 1 else ax[math.floor(index / fig_col), index % fig_col]
+    ax_sub = ax
     theta = np.zeros((X.shape[1], y.shape[1]))
     # 执行梯度下降算法
     theta, costs = gradientDescent(X, y, theta, alpha, iters)
     # 绘制梯度下降结果
-    ax_sub.plot(np.arange(iters), costs)
+    ax_sub.plot(np.arange(iters), costs, label = 'alpha=%.6g' % alpha)
     ax_sub.set(xlabel='iters',
         ylabel = 'costs',
-        title = 'iters vs costs (alpha=%.6g)' % alpha)
+        title = 'iters vs cost')
+    # 显示图例
+    ax_sub.legend()
 
 plt.show()
