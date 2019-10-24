@@ -80,8 +80,8 @@ def gradientDescent(X, y, theta, alpha, iters):
     costs : ndarray
         记录代价值的数组
     """
+    costs = []
     for i in range(iters):
-        costs = []
         theta = theta - (X.T @ (X @ theta - y)) * alpha / len(X)
         # 代价值
         cost = costFunction(X, y, theta)
@@ -106,5 +106,34 @@ print(theta)
 
 print('******')
 # 绘制散点图，用于观察数据
-data.plot.scatter('population', 'profit', c='b', label='population')
+# data.plot.scatter('population', 'profit', c='b', label='population')
+
+# fig 图像， ax 为实例或者实例数组，根据subplots参数决定
+fig, ax = plt.subplots(2, 1)
+ax1 = ax[0]
+# ax1 = ax
+# 横纵(x,y)坐标数据
+ax1.plot(np.arange(iters), costs)
+ax1.set(xlabel='iters',
+    ylabel = 'costs',
+    title = 'cost vs iters')
+
+# 绘制数据散点图
+ax2 = ax[1]
+ax2.scatter(X[:,1], y, label='training data')
+# 绘制theta拟合图形
+size = 100
+x_ = np.linspace(y.min(), y.max(), size)
+# y_ = x_ * theta[1, 0] + theta[0, 0]
+y_ = np.insert(x_, 0, np.linspace(1, 1, size))
+y_ = np.reshape(y_, (len(theta), size))
+y_ = y_.T @ theta
+ax2.plot(x_, y_, 'r', label='predict')
+ax2.set(xlabel = 'population',
+    ylabel = 'profit')
+
+# 显示所有标签label
+ax2.legend()
+
+# 显示图
 plt.show()
