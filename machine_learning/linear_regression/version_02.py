@@ -24,17 +24,19 @@ print(data.head())
 '''
 # 特征归一化函数
 def normalize_feature(data):
+    print(data.mean())
+    print(data.std())
     return (data - data.mean()) / data.std()
 
 data = normalize_feature(data)
-print(data.head())
+# print(data.head())
 
 # data.plot.scatter('size','price', label = 'size')
 # data.plot.scatter('bedrooms','price', label = 'bedrooms')
 
 # 添加 x_0 （全为1的列）
 data.insert(0, 'ones', 1)
-print(data.head())
+# print(data.head())
 
 # 把X和y分割开来
 X = data.iloc[:,0:-1] # X取第1列到最后一列（不取）的所有行
@@ -50,8 +52,8 @@ y = y.values
 
 y = y.reshape(len(y), 1) # 二维 [[y^(1)], [y^(2)],...,[y^(m)]]
 
-print(X[0:5,:])
-print(y[0:5,:])
+# print(X[0:5,:])
+# print(y[0:5,:])
 
 # 多变量线性回归的代价函数
 def costFunction(X, y, theta):
@@ -102,7 +104,7 @@ theta = np.zeros((X.shape[1], y.shape[1]))
 
 # 测试初始代价，可以不写
 cost_init = costFunction(X, y, theta)
-print(cost_init)
+# print(cost_init)
 
 # 不同alpha值下的效果
 alphas = [0.0003, 0.003, 0.03, 0.0001, 0.001, 0.01]
@@ -131,6 +133,7 @@ for index in range(len(alphas)):
     theta = np.zeros((X.shape[1], y.shape[1]))
     # 执行梯度下降算法
     theta, costs = gradientDescent(X, y, theta, alpha, iters)
+    print(theta)
     # 绘制梯度下降结果
     ax_sub.plot(np.arange(iters), costs, label = 'alpha=%.6g' % alpha)
     ax_sub.set(xlabel='iters',
