@@ -30,8 +30,8 @@ data2 = feature_mapping(x1, x2, power)
 print(data2.head())
 
 X = data2.values
-y = data.iloc[:,-1].values
-y = y.reshape(len(y), 1)
+y = data.iloc[:,-1:].values
+# y = y.reshape(len(y), 1)
 print (X.shape, y.shape)
 
 # sigmoid函数

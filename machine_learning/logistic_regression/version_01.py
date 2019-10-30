@@ -18,8 +18,7 @@ def get_Xy(data):
     X_ = data.iloc[:,0:-1]
     X = X_.values
 
-    y_ = data.iloc[:,-1]
-    y = y_.values.reshape(len(y_), 1)
+    y = data.iloc[:,-1:].values
     return X, y
 
 X, y = get_Xy(data)
