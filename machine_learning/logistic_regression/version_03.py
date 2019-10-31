@@ -3,6 +3,7 @@
 手写数字识别(0,1,...,9)
 @date 2019/10/30
 '''
+from PIL import Image
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,20 +17,29 @@ from scipy.optimize import minimize
 ...
 '''
 
+
+
+img_w = 20
+img_h = 20
+# 使用实际图片
+num_img = Image.open('number.png')
+num_img_data = np.array(num_img)
+num_img_data = (1 - num_img_data[:,:,0]/255)
+# 需要转置与matlab中的数据匹配
+num_img_data = num_img_data.reshape(img_w, img_h).T.flatten()
+draw_num_img_data = num_img_data
+
 # 读取 matlab 的数据
 data = sio.loadmat('ex3data1.mat')
 raw_X = data['X']
 raw_y = data['y']
-img_w = 20
-img_h = 20
 # (5000, 400) 20 * 20 = 400(图片的宽高都为20，即为400个特征)
 # (5000, 1)
 print(raw_X.shape, raw_y.shape)
 
 # 打印一张图片
-def plot_an_image(X):
-    index = np.random.randint(5000)
-    image = X[index,:]
+def plot_an_image():
+    image = draw_num_img_data
     fig, ax = plt.subplots(figsize = (1,1))
     ax.imshow(image.reshape(img_w, img_h).T, cmap = 'gray_r')
     # 不显示刻度
@@ -53,9 +63,6 @@ def plot_image(X, num = 100):
     plt.yticks([])
     plt.show()
     
-# plot_an_image(raw_X)
-
-# plot_image(raw_X)
 
 # sigmoid函数
 def sigmoid(z):
@@ -141,7 +148,7 @@ lamda = 1
 K = 10
 theta_final = one_vs_all(X, y, lamda, K)
 # (10, 401)
-print(theta_final)
+# print(theta_final)
 
 # 预测函数，评估结果
 def predict(X, theta_final):
@@ -153,4 +160,26 @@ def predict(X, theta_final):
 y_pred = predict(X, theta_final)
 acc = np.mean(y_pred == y)
 print(acc)
+
+# 测试自制图片
+# raw_X[1000]  2
+# num_img_data = raw_X[1000]
+for i in range(10):
+    num_img = Image.open('number_%g.png' % i)
+    num_img_data = np.array(num_img)
+    num_img_data = (1 - num_img_data[:,:,0]/255)
+    # 需要转置与matlab中的数据匹配
+    num_img_data = num_img_data.reshape(img_w, img_h).T.flatten()
+
+    num_img_data = np.insert(num_img_data, 0, values=1)
+    img_data_h = sigmoid(num_img_data.reshape(1, len(num_img_data)) @ theta_final.T )
+    result = (np.argmax(img_data_h, axis=1)[0] + 1) % 10
+    print('No.%g img is %g' % (i, result))
+    pass
+
+
+plot_an_image()
+
+# plot_image(raw_X)
+
 print("end")
