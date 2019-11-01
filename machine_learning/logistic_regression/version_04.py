@@ -52,8 +52,8 @@ for i in range(10):
     num_img_datas = np.insert(num_img_datas, len(num_img_datas), values=num_img_data, axis=0)
     y_real = np.append(y_real, 10 if i == 0 else i)
 
-# raw_X = np.insert(raw_X, 0, values=num_img_datas, axis=0)
-# raw_y = np.insert(raw_y, 0, values=y_real.reshape(len(y_real), 1), axis=0)
+raw_X = np.insert(raw_X, 0, values=num_img_datas, axis=0)
+raw_y = np.insert(raw_y, 0, values=y_real.reshape(len(y_real), 1), axis=0)
 
 # 打印一张图片
 def plot_an_image():
