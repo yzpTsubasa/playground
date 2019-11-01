@@ -22,13 +22,13 @@ theta = sio.loadmat('ex3weights.mat')
 print(theta.keys())
 theta1 = theta['Theta1'] # 输入层至隐藏层的theta (25, 401)
 theta2 = theta['Theta2'] # 隐藏层到输出层的theta (10, 26)
-
+# activation 激活函数
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
 # 输入层
 a1 = raw_X
-a1 = np.insert(a1, 0, values=1, axis=1) # 添加偏置项 (5000, 401)
+a1 = np.insert(a1, 0, values=1, axis=1) # 添加偏置项 bias units (5000, 401)
 
 z2 = a1 @ theta1.T # (5000, 25)
 a2 = sigmoid(z2) # (5000, 25)
