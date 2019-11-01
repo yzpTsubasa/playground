@@ -154,7 +154,7 @@ theta_final = one_vs_all(X, y, lamda, K)
 def predict(X, theta_final):
     # h 为 (5000, 10) 对5000个样本相对于10个分类器的概率值
     h = sigmoid(X @ theta_final.T)
-    # 取最大的概率,对比轴为每一行的所有列，返回的是列的索引(0开始)
+    # 取最大的概率,对比轴为每一行的所有列，返回的是标签的索引(0开始)
     h_argmax = np.argmax(h, axis=1)
     return h_argmax + 1
 y_pred = predict(X, theta_final)
