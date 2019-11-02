@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.io as sio
+from scipy.optimize import minimize
 
 data = sio.loadmat('ex3data1.mat')
 raw_X = data['X']
@@ -93,5 +94,74 @@ lamd = 1
 cost = cost_with_reg(theta_serialized, X, y, lamd)
 print(cost)
 
+
+# 反向传播
+
+# sigmoid的导数
+def sigmoid_derivative(z):
+    return sigmoid(z) * (1 - sigmoid(z))
+# 无正则化的梯度
+def gradient_without_reg(theta_serialized, X, y):
+    theta1, theta2 = deserialize(theta_serialized)
+    a1, z2, a2, z3, h = feed_forward(theta_serialized, X)
+    # 误差值（代价）
+    d3 = h - y # (K, 1)
+    d2 = d3 @ theta2[:,1:] * sigmoid_derivative(z2) # theta值的第一列是用于偏置项的，不参与反向传播计算
+    # J对theat2的梯度（求导）
+    D2 = (d3.T @ a2) / len(X)
+    D1 = (d2.T @ a1) / len(X)
+    return serialize(D1, D2)
+
+# 带正则化的梯度
+def gradient_with_reg(theta_serialized, X, y, lamd):
+    D = gradient_without_reg(theta_serialized, X, y)
+    D1, D2 = deserialize(D)
+    theta1, theta2 = deserialize(theta_serialized)
+    # 第一列不参与正则
+    D1[:,1:] = D1[:,1:] + theta1[:,1:] * lamd / len(X)
+    D2[:,1:] = D2[:,1:] + theta2[:,1:] * lamd / len(X)
+    return serialize(D1, D2)
+
+
+# 训练函数
+def nn_training(X, y, reg, lamd):
+    # theta初始值为 -0.5 ~ 0.5 
+    init_theta = np.random.uniform(-0.5, 0.5, theta1.size + theta2.size)
+    res = minimize(fun = cost_with_reg if reg else cost_without_reg, # 要优化的函数 
+        x0=init_theta, # 初始参数
+        args= (X, y, lamd) if reg else (X, y),
+        method='TNC',
+        jac = gradient_with_reg if reg else gradient_without_reg,
+        options={'maxiter': 300} # 最大迭代次数
+    )
+    return res
+# 执行训练
+reg = True # 是否执行正则，不执行正则，会导致“过拟合”
+lamd = 10 # 正则参数
+res = nn_training(X, y, reg, lamd)
+
+# 检测训练效果
+a1, z2, a2, z3, h = feed_forward(res.x, X)
+y_pred = np.argmax(h, axis=1) + 1
+actual_y = data['y'].reshape(data['y'].size, )
+acc = np.mean(y_pred == actual_y)
+print(acc)
+
+# 可视化隐藏层
+def plot_hidden_layer(theta):
+    theta1, theta2 = deserialize(theta)
+    hidden_layer = theta1[:,1:] # (25, 400)
+
+    fig, ax = plt.subplots(ncols = 5, nrows = 5, figsize = (8, 8), sharex=True, sharey=True)
+
+    for row in range(5):
+        for col in range(5):
+            ax[row, col].imshow(hidden_layer[5 * col + row].reshape(20, 20).T, cmap = 'gray_r')
+    
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
+plot_hidden_layer(res.x)
 
 print('end')
