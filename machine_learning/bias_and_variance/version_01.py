@@ -79,14 +79,14 @@ def plot_learning_curve(X_train, y_train, X_val, y_val, lamda, target = None):
     cv_cost = []
     for i in x:
         theta = train_model(X_train[:i,:], y_train[:i,:], lamda)
-        training_cost_i = cost_with_reg(theta, X_train[:i,:], y_train[:i,:], lamda)
-        cv_cost_i = cost_with_reg(theta, X_val, y_val, lamda)
+        training_cost_i = cost_with_reg(theta, X_train[:i,:], y_train[:i,:], lamda = 0)
+        cv_cost_i = cost_with_reg(theta, X_val, y_val, lamda = 0)
         train_cost.append(training_cost_i)
         cv_cost.append(cv_cost_i)
     # np.linspace(1, len(X_train), len(X_train)) 或者 x
     target = target if target else plt
     target.plot(x, train_cost, label = 'training cost')
-    target.plot(x, cv_cost, label = 'validation cost')
+    target.plot(x, cv_cost, label = 'cross validation cost')
     target.legend()
     plt.xlabel('number of training examples')
     plt.ylabel('cost')
