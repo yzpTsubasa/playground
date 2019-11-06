@@ -23,12 +23,27 @@ def load_data(download=False):
     data = pd.read_csv(data_path, names = col_names)
     return data
 
+# 转换数据成one-hot的形式
+def convert2onehot(data):
+    return pd.get_dummies(data, prefix=data.columns)
 
 
 
 if __name__ == "__main__":
+    # (m, 7)
     data = load_data(True)
 
     print(data.head())
+    num_feature = 0
     for name in data.keys():
+        # 可能取到的值 pd.unique
         print(name, pd.unique(data[name]))
+        num_feature += len(pd.unique(data[name]))
+    print('feature number %g' % num_feature)
+    # (m, 25)
+    newdata = convert2onehot(data)
+    # newdata.to_csv('car_onehot_index_true.csv', index=True)
+    # newdata.to_csv('car_onehot_index_false.csv', index=False)
+    newdata.to_csv('car_onehot.csv', index=False)
+
+    print('end')
