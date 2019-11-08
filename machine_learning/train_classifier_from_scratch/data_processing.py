@@ -1,15 +1,18 @@
 import pandas as pd
+import os
 
 from urllib.request import urlretrieve
 from urllib.error import URLError
 
-def load_data(download=False):
+def load_data():
     data_path = "car.csv"
-    try:
-        data_path, _ = urlretrieve("http://localhost:8686/E:/tsubasa/python/machine_learning/train_classifier_from_scratch/car.csv", data_path)
-        print ("Downloaded to car.csv")
-    except URLError as e:
-        print(e)
+    download = not os.path.exists(data_path)
+    if download:
+        try:
+            data_path, _ = urlretrieve("http://localhost:8686/E:/tsubasa/python/machine_learning/train_classifier_from_scratch/car.csv", data_path)
+            print ("Downloaded to car.csv")
+        except URLError as e:
+            print(e)
     
     col_names = [
         "buying",
@@ -31,7 +34,7 @@ def convert2onehot(data):
 
 if __name__ == "__main__":
     # (m, 7)
-    data = load_data(True)
+    data = load_data()
 
     print(data.head())
     num_feature = 0
