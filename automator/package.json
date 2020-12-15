@@ -1,0 +1,14 @@
+{
+  "name": "automator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "progress-stream": "^2.0.0",
+    "through2": "^4.0.2",
+    "yargs": "^16.2.0",
+    "yml": "^1.0.0"
+  }
+}
